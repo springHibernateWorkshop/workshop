@@ -14,7 +14,7 @@ public class ExpensesApplication {
 		SpringApplication.run(ExpensesApplication.class, args);
 	}
 
-	@GetMapping("/dzien_dobry")
+	@GetMapping("/dobry_wieczor_kochanie")
     public String hello(@RequestParam(value = "imie", defaultValue = "World") String name) {
       	return String.format("Hello11 %s!", name);
     }
