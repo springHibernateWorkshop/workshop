@@ -16,7 +16,7 @@ public class ExpensesApplication {
 
 	@GetMapping("/dobry_wieczor_kochanie")
     public String hello(@RequestParam(value = "imie", defaultValue = "World") String name) {
-      	return String.format("Hello12 %s!", name);
+      	return String.format("Hello13 %s!", name);
     }
 
 }
