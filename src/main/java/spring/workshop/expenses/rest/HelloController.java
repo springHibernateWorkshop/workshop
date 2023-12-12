@@ -20,13 +20,14 @@ public class HelloController {
     }
 
     @GetMapping("/wie_ist_das_wetter")
+
     public String wetter(@RequestParam(value = "name_der_stadt", required = false) String stadtname) {
         return "Das Wetter in " + stadtname + " ist hervorragend. ";
     }
 
     @GetMapping("/users")
-    public String getAllUsers() {
+    public List<String> getAllUsers() {
         List<String> names = jdbcTemplate.queryForList("SELECT NAME FROM USER_TAB", String.class);
-        return names.toString();
+        return names;
     }
 }
