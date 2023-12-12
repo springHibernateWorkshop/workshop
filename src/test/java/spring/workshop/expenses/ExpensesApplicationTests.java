@@ -23,7 +23,7 @@ class ExpensesApplicationTests {
 
 	@Test
 	void testMyTableRowCount() {
-		int actualRowCount = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM USER_TAB", Integer.class);
+		Integer actualRowCount = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM USER_TAB", Integer.class);
 		assertEquals(5, actualRowCount);
 	}
 
