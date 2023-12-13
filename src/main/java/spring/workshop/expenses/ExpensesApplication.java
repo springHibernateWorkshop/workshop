@@ -9,9 +9,9 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 public class ExpensesApplication extends SpringBootServletInitializer {
 
 	@Override
-    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        return application.sources(ExpensesApplication.class);
-    }
+	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+		return application.sources(ExpensesApplication.class);
+	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(ExpensesApplication.class, args);
