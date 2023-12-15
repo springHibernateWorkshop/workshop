@@ -21,14 +21,22 @@ class ExpensesApplicationTests {
 	@Value("${example.propertyCheck}")
 	private String propertyCheck;
 
+	@Value("${example.property.value}")
+	private String propertyValue;
+
 	@Test
 	void testMyTableRowCount() {
-		Integer actualRowCount = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM USER_TAB", Integer.class);
+		Integer actualRowCount = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM user_tab", Integer.class);
 		assertEquals(5, actualRowCount);
 	}
 
 	@Test
 	public void shouldTestPropertyOverrideProdProperty() {
 		assertEquals("test", propertyCheck);
+	}
+
+	@Test
+	public void testPropertyValue() {
+		assertEquals("qwerty12345", propertyValue);
 	}
 }
