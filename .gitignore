@@ -34,3 +34,6 @@ build/
 
 ### MAVEN REPO ###
 ${M2_REPO}/
+
+### Database Credentials ###
+src/main/resources/config/application.properties
