@@ -12,7 +12,7 @@ import jakarta.persistence.Table;
 @Table(name="user_tab")
 public class User {
 
-  @Id
+@Id
   @Column(name="user_id")
   @GeneratedValue(strategy=GenerationType.AUTO)
   private Integer id;
@@ -20,6 +20,13 @@ public class User {
   @Column
   @NonNull
   private String name;
+
+    public User() {
+    }
+
+    public User(String name) {
+    this.name = name;
+    }
 
     public Integer getId() {
         return id;
