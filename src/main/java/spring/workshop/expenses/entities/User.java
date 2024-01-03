@@ -1,5 +1,5 @@
 package spring.workshop.expenses.entities;
- 
+
 import org.springframework.lang.NonNull;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,23 +9,23 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="user_tab")
+@Table(name = "user_tab")
 public class User {
 
-@Id
-  @Column(name="user_id")
-  @GeneratedValue(strategy=GenerationType.AUTO)
-  private Integer id;
+    @Id
+    @Column(name = "user_id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer id;
 
-  @Column
-  @NonNull
-  private String name;
+    @Column
+    @NonNull
+    private String name;
 
     public User() {
     }
 
-    public User(String name) {
-    this.name = name;
+    public User(@NonNull String name) {
+        this.name = name;
     }
 
     public Integer getId() {
@@ -43,5 +43,5 @@ public class User {
     public void setName(String name) {
         this.name = name;
     }
-    
+
 }
