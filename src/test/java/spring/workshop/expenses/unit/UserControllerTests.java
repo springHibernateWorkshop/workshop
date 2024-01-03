@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,46 +27,47 @@ class UserControllerTests {
 
     @Autowired
     private UserRepository userRepository;
-    
+
     @Test
     public void testAddNewUser() {
-    // Calling the method to create an entity    
-    userController.addNewUser("Test");
+        // Calling the method to create an entity
+        userController.addNewUser("Test");
 
-    // Verify that the entity was created and returned
-    User userCreated = userRepository.findByName("Test");
-    assertNotNull(userCreated, "Entity should not be null");
+        // Verify that the entity was created and returned
+        Optional<User> user = userRepository.findByName("Test");
+        assertNotNull(user, "Entity should not be null");
     }
 
     @Test
     public void testDeleteUser() {
-    // Create an entity to be deleted later
-    User user = new User("Test");
-    userRepository.save(user);
+        // Create an entity to be deleted later
+        User user = new User("Test");
+        userRepository.save(user);
 
-    // Verify that the entity was created and returned
-    assertNotNull(user, "Entity should not be null");    
+        // Verify that the entity was created and returned
+        assertNotNull(user, "Entity should not be null");
 
-    // Calling the method to delete the entity
-    userController.deleteUser("Test");
+        // Calling the method to delete the entity
+        userController.deleteUser("Test");
 
-    // Verify that the entity was deleted
-    User userDeleted = userRepository.findByName("Test");
-    assertNull(userDeleted, "Entity should be null");
+        // Verify that the entity was deleted
+        Optional<User> userDeleted = userRepository.findByName("Test");
+        assertNull(userDeleted, "Entity should be null");
     }
 
     @Test
     public void testGetAllUsers() {
-    // Create an entity
-    User user = new User("Test");
-    userRepository.save(user);
+        // Create an entity
+        User user = new User("Test");
+        userRepository.save(user);
 
-    // Verify that the entity was created and returned
-    assertNotNull(user, "Entity should not be null");    
+        // Verify that the entity was created and returned
+        assertNotNull(user, "Entity should not be null");
 
-    // Calling the method to find all entities and verify that the created entity is returned
-    List<User> users = userController.getAllUsers();
-    assertEquals(1, users.size(), "Size should be 1");
+        // Calling the method to find all entities and verify that the created entity is
+        // returned
+        List<User> users = userController.getAllUsers();
+        assertEquals(1, users.size(), "Size should be 1");
     }
 
 }
