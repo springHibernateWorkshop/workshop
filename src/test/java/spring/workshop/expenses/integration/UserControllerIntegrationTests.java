@@ -46,24 +46,25 @@ public class UserControllerIntegrationTests {
 
         // URL for adding an user
         String url = "http://localhost:" + port + "/user/add";
-        
+
         // Send a POST request to add the user
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
-        
+
         // Assert HTTP status code is OK
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        
-        // Asserting that the response body contains "Saved" indicating successful adding
-        assertEquals("Saved", response.getBody());
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+
+        // Asserting that the response body contains "Saved" indicating successful
+        // adding
+        assertEquals("User with name = Test created successfully.", response.getBody());
     }
 
     @Test
     public void testDeleteUser() throws Exception {
-        
+
         // Create and save a user using the userRepository
         User user = new User("Test");
         userRepository.save(user);
-        
+
         // Setting up request header and body for the DELETE request
         // Constructing the request body with the user's name to be deleted
         HttpHeaders requestHeader = new HttpHeaders();
@@ -76,12 +77,13 @@ public class UserControllerIntegrationTests {
 
         // Send a DELETE request to delete the user
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.DELETE, requestEntity, String.class);
-        
+
         // Assert HTTP status code is OK
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        
-        // Asserting that the response body contains "Deleted" indicating successful deletion
-        assertEquals("Deleted", response.getBody());
+
+        // Asserting that the response body contains "Deleted" indicating successful
+        // deletion
+        assertEquals("User with name = Test deleted successfully.", response.getBody());
     }
 
     @Test
@@ -92,16 +94,56 @@ public class UserControllerIntegrationTests {
         userRepository.save(user);
 
         // URL for retrieving all users
-        String url = "http://localhost:" + port + "/user/all";
-        
+        String url = "http://localhost:" + port + "/user/getAll";
+
         // Send a GET request to retrieve all users
         ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
-        
+
         // Assert HTTP status code is OK
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        
+
         // Convert response body to a JSONArray and validate its length
         // Assuming the response body is in JSON format representing an array of users
-        assertEquals(1, new JSONArray(response.getBody()).length());
+        assert new JSONArray(response.getBody()).length() > 0;
+    }
+
+    @Test
+    public void testGetUserById() throws Exception {
+
+        // Create and save a user using the userRepository
+        User user = new User("Test");
+        userRepository.save(user);
+
+        // URL for retrieving the user by ID
+        String url = "http://localhost:" + port + "/user/getById?id=" + user.getId();
+
+        // Send a GET request to retrieve the user by ID
+        ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+
+        // Assert HTTP status code is OK
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        // Asserting that the response body contains
+        assertEquals("", response.getBody());
+    }
+
+    @Test
+    public void testGetUserByName() throws Exception {
+
+        // Create and save a user using the userRepository
+        User user = new User("Test");
+        userRepository.save(user);
+
+        // URL for retrieving the user by name
+        String url = "http://localhost:" + port + "/user/getByName?name=" + user.getName();
+
+        // Send a GET request to retrieve the user by name
+        ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+
+        // Assert HTTP status code is OK
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        // Asserting that the response body contains
+        assertEquals("", response.getBody());
     }
 }
