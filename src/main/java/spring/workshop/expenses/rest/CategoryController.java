@@ -25,7 +25,7 @@ import spring.workshop.expenses.entities.Category;
 import spring.workshop.expenses.services.CategoryService;
 
 @RestController
-@RequestMapping(path = "/category")
+@RequestMapping(path = "/categories")
 public class CategoryController {
 
   private CategoryService categoryService;
@@ -60,7 +60,7 @@ public class CategoryController {
 
   }
 
-  @GetMapping(path = "/all")
+  @GetMapping()
   public List<Category> getAllCategories() {
     return categoryService.findAll();
   }

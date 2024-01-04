@@ -2,6 +2,7 @@ package spring.workshop.expenses.integration;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import java.net.URI;
 import java.util.List;
 
@@ -28,13 +29,14 @@ public class CategoryControllerIntegrationTests {
 
     @Autowired
     CategoryController controller;
+    private static final String BASE_URL = "/categories";
 
     /**
      * Test case to verify the functionality of getting all categories.
      */
     @Test
     public void testGetAllCategories() {
-        ResponseEntity<List> response = restTemplate.getForEntity("/category/all", List.class);
+        ResponseEntity<List> response = restTemplate.getForEntity(BASE_URL, List.class);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
     }
@@ -44,7 +46,7 @@ public class CategoryControllerIntegrationTests {
      */
     @Test
     public void testGetCategoryByIdPositive() {
-        ResponseEntity<Category> response = restTemplate.getForEntity("/category/{id}", Category.class, 2);
+        ResponseEntity<Category> response = restTemplate.getForEntity(BASE_URL + "/{id}", Category.class, 2);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         Category category = response.getBody();
         Assertions.assertNotNull(category);
@@ -57,7 +59,7 @@ public class CategoryControllerIntegrationTests {
      */
     @Test
     public void testGetCategoryByIdNegative() {
-        ResponseEntity<Category> response = restTemplate.getForEntity("/category/{id}", Category.class, 10);
+        ResponseEntity<Category> response = restTemplate.getForEntity(BASE_URL + "/{id}", Category.class, 10);
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
@@ -67,7 +69,7 @@ public class CategoryControllerIntegrationTests {
     @Test
     public void testAddCategoryPositive() {
         Category category = new Category(4, "Category4");
-        URI newCategoryLocation = restTemplate.postForLocation("/category", category);
+        URI newCategoryLocation = restTemplate.postForLocation(BASE_URL, category);
         ResponseEntity<Category> response = restTemplate.getForEntity(newCategoryLocation, Category.class);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         category = response.getBody();
@@ -76,16 +78,16 @@ public class CategoryControllerIntegrationTests {
 
     /**
      * Test case to verify the negative scenario of adding a category.
-     * It sends a POST request to the "/category" endpoint with a category that
+     * It sends a POST request to the "/categories" endpoint with a category that
      * already exists.
      * Expects a response with HTTP status code 409 (CONFLICT) because there is an
      * exception handler for this case.
      */
     @Test
     public void testAddCategoryNegative() {
-        restTemplate.postForEntity("/category", new Category(4, "Category5"),
+        restTemplate.postForEntity(BASE_URL, new Category(4, "Category5"),
                 Category.class);
-        ResponseEntity<Category> response = restTemplate.postForEntity("/category", new Category(4, "Category5"),
+        ResponseEntity<Category> response = restTemplate.postForEntity(BASE_URL, new Category(4, "Category5"),
                 Category.class);
         assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
     }
@@ -95,10 +97,10 @@ public class CategoryControllerIntegrationTests {
      */
     @Test
     public void testDeleteCategoryPositive() {
-        ResponseEntity<Category> response = restTemplate.getForEntity("/category/{id}", Category.class, 1);
+        ResponseEntity<Category> response = restTemplate.getForEntity(BASE_URL+"/{id}", Category.class, 1);
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        restTemplate.delete("/category/{id}", 1);
-        ResponseEntity<Category> responseAfterDelete = restTemplate.getForEntity("/category/{id}", Category.class, 1);
+        restTemplate.delete("/categories/{id}", 1);
+        ResponseEntity<Category> responseAfterDelete = restTemplate.getForEntity(BASE_URL+"/{id}", Category.class, 1);
         assertEquals(HttpStatus.NOT_FOUND, responseAfterDelete.getStatusCode());
     }
 
@@ -111,9 +113,9 @@ public class CategoryControllerIntegrationTests {
      */
     @Test
     public void testDeleteCategoryNegative() {
-        ResponseEntity<Category> response = restTemplate.getForEntity("/category/{id}", Category.class, 6);
+        ResponseEntity<Category> response = restTemplate.getForEntity(BASE_URL+"/{id}", Category.class, 6);
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        ResponseEntity<Void> responseAfterDelete = restTemplate.exchange("/category/{id}", HttpMethod.DELETE,
+        ResponseEntity<Void> responseAfterDelete = restTemplate.exchange(BASE_URL+"/{id}", HttpMethod.DELETE,
                 null, Void.class, 6);
         assertEquals(HttpStatus.NOT_FOUND, responseAfterDelete.getStatusCode());
     }
@@ -121,17 +123,17 @@ public class CategoryControllerIntegrationTests {
     @Test
     public void testUpdateCategoryPositive() {
         Category category = new Category(3, "Category8");
-        Category response = restTemplate.getForObject("/category/{id}", Category.class, 3);
+        Category response = restTemplate.getForObject(BASE_URL+"/{id}", Category.class, 3);
         assertEquals("Category3", response.getName());
-        restTemplate.put("/category/{id}", category, 3);
-        Category responseAfterUpdate = restTemplate.getForObject("/category/{id}", Category.class, 3);
+        restTemplate.put("/categories/{id}", category, 3);
+        Category responseAfterUpdate = restTemplate.getForObject(BASE_URL+"/{id}", Category.class, 3);
         assertEquals("Category8", responseAfterUpdate.getName());
     }
 
     @Test
     public void testUpdateCategoryNegative() {
         Category category = new Category(3, "Category9");
-        ResponseEntity<Category> response = restTemplate.exchange("/category/{id}", HttpMethod.PUT,
+        ResponseEntity<Category> response = restTemplate.exchange(BASE_URL+"/{id}", HttpMethod.PUT,
                 new HttpEntity<>(category), Category.class, 9);
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }

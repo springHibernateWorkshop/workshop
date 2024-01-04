@@ -2,6 +2,8 @@ package spring.workshop.expenses.unit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -20,6 +22,9 @@ import spring.workshop.expenses.entities.Category;
 import spring.workshop.expenses.rest.CategoryController;
 import spring.workshop.expenses.services.CategoryService;
 
+/**
+ * This class contains unit tests for the CategoryController class.
+ */
 @WebMvcTest(CategoryController.class)
 public class CategoryControllerTests {
 
@@ -68,11 +73,24 @@ public class CategoryControllerTests {
 
     @Test
     public void testUpdateCategory() {
-        // TODO: Implement test for updating a category
+        // Given
+        Category c = new Category("Test");
+        // When
+        sut.updateCategory(1, c);
+        // Then
+        verify(categoryService, times(1)).updateCategory(1, c);
     }
 
     @Test
     public void testDeleteCategory() {
-        // TODO: Implement test for deleting a category
+        // Arrange
+        Integer categoryId = 1;
+
+        // Act
+        sut.deleteCategory(categoryId);
+
+        // Assert
+        verify(categoryService, times(1)).deleteCategory(categoryId);
     }
+
 }
