@@ -29,6 +29,7 @@ import spring.workshop.expenses.services.CategoryService;
 public class CategoryControllerTests {
 
     private CategoryController sut;
+
     @MockBean
     private CategoryService categoryService;
 
