@@ -15,6 +15,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -26,6 +27,7 @@ import spring.workshop.expenses.services.CategoryService;
  * This class contains unit tests for the CategoryController class.
  */
 @WebMvcTest(CategoryController.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public class CategoryControllerTests {
 
     private CategoryController sut;
@@ -67,31 +69,49 @@ public class CategoryControllerTests {
         // Given
         when(categoryService.addCategory(any())).thenReturn(new Category(1, "Test Category"));
         // When
-        ResponseEntity<Void> response = sut.addNewCategory(new Category("Test Category"));
+        ResponseEntity<Category> response = sut.addNewCategory("Test Category");
         // Then
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertEquals("Test Category", response.getBody().getName());
     }
 
     @Test
     public void testUpdateCategory() {
         // Given
-        Category c = new Category("Test");
+        Category c = new Category(100, "Test");
         // When
-        sut.updateCategory(1, c);
+        sut.updateCategory(c);
         // Then
-        verify(categoryService, times(1)).updateCategory(1, c);
+        verify(categoryService, times(1)).updateCategory(c);
     }
 
     @Test
-    public void testDeleteCategory() {
+    public void testDeleteCategoryPositive() {
         // Arrange
         Integer categoryId = 1;
 
+        when(categoryService.deleteCategory(categoryId)).thenReturn(Boolean.TRUE);
+
         // Act
-        sut.deleteCategory(categoryId);
+        Boolean result = sut.deleteCategory(categoryId);
 
         // Assert
         verify(categoryService, times(1)).deleteCategory(categoryId);
+        assertEquals(Boolean.TRUE, result);
+    }
+
+    @Test
+    public void testDeleteCategoryNegative() {
+        // Arrange
+        Integer categoryId = 1;
+        when(categoryService.deleteCategory(categoryId)).thenReturn(Boolean.FALSE);
+
+        // Act
+        Boolean result = sut.deleteCategory(categoryId);
+
+        // Assert
+        verify(categoryService, times(1)).deleteCategory(categoryId);
+        assertEquals(Boolean.FALSE, result);
     }
 
 }

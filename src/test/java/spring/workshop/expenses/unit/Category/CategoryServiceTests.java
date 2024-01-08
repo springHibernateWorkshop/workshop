@@ -11,6 +11,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.annotation.Order;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
 import spring.workshop.expenses.entities.Category;
@@ -22,6 +23,7 @@ import spring.workshop.expenses.services.CategoryService;
 @SpringBootTest
 @ActiveProfiles("test")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public class CategoryServiceTests {
 
     @Autowired
@@ -62,11 +64,11 @@ public class CategoryServiceTests {
     @Order(4)
     public void testUpdateCategory() {
         // Given
-        Category c = new Category("Test");
+        Category category = new Category(100, "Test");
         // When
-        sut.updateCategory(100, c);
+        Category updatedCategory = sut.updateCategory(category);
         // Then
-        assertEquals("Test", sut.findById(100).getName());
+        assertEquals("Test", sut.findById(updatedCategory.getId()).getName());
     }
 
     @Test
