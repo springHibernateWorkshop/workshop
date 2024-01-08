@@ -37,26 +37,25 @@ public class CategoryController {
   }
 
   @PostMapping()
-  public ResponseEntity<Void> addNewCategory(@RequestBody @NonNull Category category) {
-    Category newCategory = categoryService.addCategory(category);
+  public ResponseEntity<Category> addNewCategory(@RequestBody @NonNull String name) {
+    Category newCategory = categoryService.addCategory(new Category(name));
 
     return ResponseEntity
         .created(
             ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").buildAndExpand(newCategory.getId())
                 .toUri())
-        .build();
+        .body(newCategory);
   }
 
-  @PutMapping(path = "/{id}")
+  @PutMapping()
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  public void updateCategory(@PathVariable Integer id, @RequestBody Category category) {
-    categoryService.updateCategory(id, category);
+  public Category updateCategory(@RequestBody Category category) {
+    return categoryService.updateCategory(category);
   }
 
   @DeleteMapping(path = "/{id}")
-  @ResponseStatus(HttpStatus.NO_CONTENT) // 204
-  public void deleteCategory(@PathVariable Integer id) {
-    categoryService.deleteCategory(id);
+  public Boolean deleteCategory(@PathVariable Integer id) {
+    return categoryService.deleteCategory(id);
 
   }
 

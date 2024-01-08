@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -37,6 +38,7 @@ import spring.workshop.expenses.repos.CategoryRepository;
 @ActiveProfiles("test")
 @Transactional
 @Rollback
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public class CategoryControllerMockTests {
     @Autowired
     private MockMvc mockMvc;
@@ -75,7 +77,7 @@ public class CategoryControllerMockTests {
         assertEquals(3, repo.findAll().size());
 
         // Act
-        mockMvc.perform(get(BASE_URL + "/{id}", 1))
+        mockMvc.perform(get(BASE_URL + "/{id}", 100))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Category1"));
 
@@ -111,17 +113,18 @@ public class CategoryControllerMockTests {
     @Test
     public void testUpdateCategory() throws Exception {
         // Arrange
-        Category category = new Category("Update Test Category");
-        assertEquals("Category1", repo.findById(1).get().getName());
+        Category category = new Category(100, "Update Test Category");
+        assertEquals("Category1", repo.findById(100).get().getName());
 
         // Act
-        mockMvc.perform(put(BASE_URL + "/{id}", 1)
+        mockMvc.perform(put(BASE_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(category)))
-                .andExpect(status().isNoContent());
+                .andExpect(status().isNoContent())
+                .andExpect(jsonPath("$.name").value("Update Test Category"));
 
         // Assert
-        assertEquals(category.getName(), repo.findById(1).get().getName());
+        assertEquals(category.getName(), repo.findById(100).get().getName());
     }
 
     /**
@@ -135,8 +138,9 @@ public class CategoryControllerMockTests {
         assertEquals(3, repo.findAll().size());
 
         // Act
-        mockMvc.perform(delete(BASE_URL + "/{id}", 1))
-                .andExpect(status().isNoContent());
+        mockMvc.perform(delete(BASE_URL + "/{id}", 100))
+                .andExpect(status().isOk())
+                .andExpect(content().string("true"));
 
         // Assert
         assertEquals(2, repo.findAll().size());

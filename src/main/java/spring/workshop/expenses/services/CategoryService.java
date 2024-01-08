@@ -6,9 +6,9 @@ import spring.workshop.expenses.entities.Category;
 
 public interface CategoryService {
 
-    void updateCategory(Integer id, Category category);
+    Category updateCategory(Category category);
 
-    void deleteCategory(Integer id);
+    Boolean deleteCategory(Integer id);
 
     Category addCategory(Category category);
 
