@@ -46,7 +46,7 @@ public class CategoryControllerIntegrationTests {
      */
     @Test
     public void testGetCategoryByIdPositive() {
-        ResponseEntity<Category> response = restTemplate.getForEntity(BASE_URL + "/{id}", Category.class, 2);
+        ResponseEntity<Category> response = restTemplate.getForEntity(BASE_URL + "/{id}", Category.class, 200);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         Category category = response.getBody();
         Assertions.assertNotNull(category);
@@ -97,10 +97,11 @@ public class CategoryControllerIntegrationTests {
      */
     @Test
     public void testDeleteCategoryPositive() {
-        ResponseEntity<Category> response = restTemplate.getForEntity(BASE_URL + "/{id}", Category.class, 1);
+        ResponseEntity<Category> response = restTemplate.getForEntity(BASE_URL + "/{id}", Category.class, 100);
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        restTemplate.delete("/categories/{id}", 1);
-        ResponseEntity<Category> responseAfterDelete = restTemplate.getForEntity(BASE_URL + "/{id}", Category.class, 1);
+        restTemplate.delete("/categories/{id}", 100);
+        ResponseEntity<Category> responseAfterDelete = restTemplate.getForEntity(BASE_URL + "/{id}", Category.class,
+                100);
         assertEquals(HttpStatus.NOT_FOUND, responseAfterDelete.getStatusCode());
     }
 
@@ -123,10 +124,10 @@ public class CategoryControllerIntegrationTests {
     @Test
     public void testUpdateCategoryPositive() {
         Category category = new Category(3, "Category8");
-        Category response = restTemplate.getForObject(BASE_URL + "/{id}", Category.class, 3);
+        Category response = restTemplate.getForObject(BASE_URL + "/{id}", Category.class, 300);
         assertEquals("Category3", response.getName());
-        restTemplate.put("/categories/{id}", category, 3);
-        Category responseAfterUpdate = restTemplate.getForObject(BASE_URL + "/{id}", Category.class, 3);
+        restTemplate.put("/categories/{id}", category, 300);
+        Category responseAfterUpdate = restTemplate.getForObject(BASE_URL + "/{id}", Category.class, 300);
         assertEquals("Category8", responseAfterUpdate.getName());
     }
 

@@ -1,22 +1,21 @@
 package spring.workshop.expenses.entities;
 
 import org.springframework.lang.NonNull;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "category_tab")
-@SequenceGenerator(name = "categorySeq", sequenceName = "CATEGORY_SEQ", allocationSize = 1, initialValue = 100)
 public class Category {
 
     @Id
     @Column(name = "category_id")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "categorySeq")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
     @Column

@@ -75,7 +75,7 @@ public class CategoryControllerMockTests {
         assertEquals(3, repo.findAll().size());
 
         // Act
-        mockMvc.perform(get(BASE_URL + "/{id}", 1))
+        mockMvc.perform(get(BASE_URL + "/{id}", 100))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Category1"));
 
@@ -112,16 +112,16 @@ public class CategoryControllerMockTests {
     public void testUpdateCategory() throws Exception {
         // Arrange
         Category category = new Category("Update Test Category");
-        assertEquals("Category1", repo.findById(1).get().getName());
+        assertEquals("Category1", repo.findById(100).get().getName());
 
         // Act
-        mockMvc.perform(put(BASE_URL + "/{id}", 1)
+        mockMvc.perform(put(BASE_URL + "/{id}", 100)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(category)))
                 .andExpect(status().isNoContent());
 
         // Assert
-        assertEquals(category.getName(), repo.findById(1).get().getName());
+        assertEquals(category.getName(), repo.findById(100).get().getName());
     }
 
     /**
@@ -135,7 +135,7 @@ public class CategoryControllerMockTests {
         assertEquals(3, repo.findAll().size());
 
         // Act
-        mockMvc.perform(delete(BASE_URL + "/{id}", 1))
+        mockMvc.perform(delete(BASE_URL + "/{id}", 100))
                 .andExpect(status().isNoContent());
 
         // Assert
