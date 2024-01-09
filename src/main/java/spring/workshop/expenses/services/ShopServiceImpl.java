@@ -29,7 +29,7 @@ public class ShopServiceImpl implements ShopService{
     }
 
     @Override
-    public Shop replaceShop(Shop shop, Long id) {
+    public Shop updateShop(Shop shop, Long id) {
         Shop replaceShop = shopRepository.findById(id).map(upShop -> {
             upShop.setName(shop.getName());
             upShop.setAddress(shop.getAddress());
@@ -44,6 +44,11 @@ public class ShopServiceImpl implements ShopService{
         Shop shop = shopRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         shopRepository.deleteById(id);
         return shop;
+    }
+
+    @Override
+    public Shop addNewShop(Shop shop) {
+        return shopRepository.save(shop);
     }
     
 }

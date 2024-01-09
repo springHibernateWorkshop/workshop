@@ -15,22 +15,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import spring.workshop.expenses.entities.Shop;
-import spring.workshop.expenses.repos.ShopRepository;
 import spring.workshop.expenses.services.ShopService;
 
 @Controller
-@RequestMapping(path = "/shop")
+@RequestMapping(path = "/shops")
 public class ShopController {
-
-    @Autowired
-    private ShopRepository shopRepository;
 
     @Autowired
     private ShopService shopService;
 
     @PostMapping
     public ResponseEntity<Shop> addNewShop(@RequestBody Shop shop){
-        shopRepository.save(shop);
+        shopService.addNewShop(shop);
 
         return new ResponseEntity<>(shop, HttpStatus.CREATED);
     }
@@ -46,8 +42,8 @@ public class ShopController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Shop> replaceRoom(@RequestBody Shop room, @PathVariable Long id) {
-        return new ResponseEntity<>(shopService.replaceShop(room,id), HttpStatus.OK);
+    public ResponseEntity<Shop> updateShop(@RequestBody Shop room, @PathVariable Long id) {
+        return new ResponseEntity<>(shopService.updateShop(room,id), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
