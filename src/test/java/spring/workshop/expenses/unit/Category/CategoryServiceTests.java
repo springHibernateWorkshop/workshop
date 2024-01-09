@@ -1,38 +1,48 @@
 package spring.workshop.expenses.unit.Category;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 import java.util.List;
+import java.util.Optional;
 
-import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.annotation.Order;
-import org.springframework.test.annotation.DirtiesContext;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import spring.workshop.expenses.entities.Category;
+import spring.workshop.expenses.repos.CategoryRepository;
 import spring.workshop.expenses.services.CategoryService;
+import spring.workshop.expenses.services.CategoryServiceImpl;
 
 /**
  * This class contains unit tests for the CategoryController class.
  */
-@SpringBootTest
+@ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public class CategoryServiceTests {
 
-    @Autowired
     private CategoryService sut;
 
+    @Mock
+    CategoryRepository categoryRepositoryMock;
+
+    @BeforeEach
+    public void setup() {
+        // CategoryRepository categoryRepositoryMock =
+        // Mockito.mock(CategoryRepository.class);
+        sut = new CategoryServiceImpl(categoryRepositoryMock);
+    }
+
     @Test
-    @Order(1)
     public void testGetAllCategories() {
         // Given
+        when(categoryRepositoryMock.findByOrderById())
+                .thenReturn(List.of(new Category(), new Category(), new Category()));
         // When
         List<Category> allCategories = sut.findAll();
         // Then
@@ -40,31 +50,36 @@ public class CategoryServiceTests {
     }
 
     @Test
-    @Order(2)
     public void testGetCategoryById() {
         // Given
+        when(categoryRepositoryMock.findById(any()))
+                .thenReturn(Optional.of(new Category("Category1")));
         // When
-        Category category = sut.findById(200);
+        Category category = sut.findById(1);
         // Then
-        assertEquals("Category2", category.getName());
+        assertEquals("Category1", category.getName());
     }
 
     @Test
-    @Order(3)
     public void testCreateCategory() {
         // Given
-        Category c = new Category("TestCreat");
+        Category category = new Category("TestCreat");
+        when(categoryRepositoryMock.save(any()))
+                .thenReturn(category);
         // When
-        sut.addCategory(c);
+        Category newCategory = sut.addCategory(category);
         // Then
-        assertEquals(4, sut.findAll().size());
+        assertEquals(category.getName(), newCategory.getName());
     }
 
     @Test
-    @Order(4)
     public void testUpdateCategory() {
         // Given
-        Category category = new Category(100, "Test");
+        Category category = new Category(1, "Test");
+        when(categoryRepositoryMock.save(any()))
+                .thenReturn(category);
+        when(categoryRepositoryMock.findById(any()))
+                .thenReturn(Optional.of(new Category("Category1")));
         // When
         Category updatedCategory = sut.updateCategory(category);
         // Then
@@ -72,16 +87,16 @@ public class CategoryServiceTests {
     }
 
     @Test
-    @Order(5)
     public void testDeleteCategory() {
         // Arrange
-        Integer categoryId = 100;
-
+        Integer categoryId = 1;
+        when(categoryRepositoryMock.findById(categoryId))
+                .thenReturn(Optional.of(new Category("Category1")));
         // Act
-        sut.deleteCategory(categoryId);
+        Boolean result = sut.deleteCategory(categoryId);
 
         // Assert
-        assertThrows(IllegalArgumentException.class, () -> sut.findById(100));
+        assertEquals(Boolean.TRUE, result);
     }
 
 }

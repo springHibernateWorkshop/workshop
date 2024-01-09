@@ -1,6 +1,5 @@
 package spring.workshop.expenses.services;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -56,8 +55,8 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<Category> findAll() {
-        List<Category> categories = categoryRepository.findAll();
-        categories.sort(Comparator.comparing(Category::getId));
+        List<Category> categories = categoryRepository.findByOrderById();
+        // categories.sort(Comparator.comparing(Category::getId));
         return categories;
     }
 
