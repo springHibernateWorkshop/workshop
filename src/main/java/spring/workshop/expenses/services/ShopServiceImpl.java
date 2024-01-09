@@ -16,10 +16,6 @@ public class ShopServiceImpl implements ShopService{
     @Autowired
     private ShopRepository shopRepository;
 
-    public ShopServiceImpl() {
-        super();
-    }
-
     @Override
     public List<Shop> getAllShops() {
         List<Shop> shops = shopRepository.findAll();
