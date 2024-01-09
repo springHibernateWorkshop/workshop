@@ -26,9 +26,8 @@ public class ShopController {
 
     @PostMapping
     public ResponseEntity<Shop> addNewShop(@RequestBody Shop shop){
-        shopService.addNewShop(shop);
 
-        return new ResponseEntity<>(shop, HttpStatus.CREATED);
+        return new ResponseEntity<>(shopService.addNewShop(shop), HttpStatus.CREATED);
     }
 
     @GetMapping
