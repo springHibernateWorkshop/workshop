@@ -28,7 +28,7 @@ import spring.workshop.expenses.services.ShopService;
 
 @WebMvcTest(ShopController.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-public class ShopControllerMockTests {
+public class ShopControllerSliceTests {
 
     @Autowired
     private ShopController shopController;
