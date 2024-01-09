@@ -30,7 +30,7 @@ import spring.workshop.expenses.repos.CategoryRepository;
  * MockMvc is a Spring class that allows us to test the controller without
  * starting the server.
  * Unlike the integration tests, we are not testing the entire application, but
- * only the controller. This is a unit test.
+ * only the controller.
  */
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
@@ -58,7 +58,7 @@ public class CategoryControllerMockTests {
         // Arrange
         assertEquals(3, repo.findAll().size());
 
-        // Act
+        // Act & Assert
         mockMvc.perform(get(BASE_URL))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -76,7 +76,7 @@ public class CategoryControllerMockTests {
         // Arrange
         assertEquals(3, repo.findAll().size());
 
-        // Act
+        // Act & Assert
         mockMvc.perform(get(BASE_URL + "/{id}", 100))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Category1"));
