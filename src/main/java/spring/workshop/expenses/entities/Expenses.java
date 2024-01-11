@@ -11,11 +11,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="expence_tab")
-public class Expences {
+@Table(name="expense_tab")
+public class Expenses {
 
   @Id
-  @Column(name="expence_id")
+  @Column(name="expense_id")
   @GeneratedValue(strategy=GenerationType.AUTO)
   private Integer id;
 
@@ -28,12 +28,13 @@ public class Expences {
   private Integer shopId;
   private Integer userId;
   private String note;
+  private Date expenseDate;
 
     public Integer getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(@NonNull Integer id) {
         this.id = id;
     }
 
@@ -41,7 +42,7 @@ public class Expences {
         return total;
     }
 
-    public void setTotal(Float total) {
+    public void setTotal(@NonNull Float total) {
         this.total = total;
     }
 
@@ -49,15 +50,31 @@ public class Expences {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(@NonNull Date date) {
         this.date = date;
+    }
+
+    public Date getExpenseDate() {
+        return expenseDate;
+    }
+
+    public void setExpenseDate(@NonNull Date expenseDate) {
+        this.expenseDate = expenseDate;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Integer getCategoryId() {
         return categoryId;
     }
 
-    public void setCategoryId(Integer categoryId) {
+    public void setCategoryId(@NonNull Integer categoryId) {
         this.categoryId = categoryId;
     }
 
@@ -65,7 +82,7 @@ public class Expences {
         return shopId;
     }
 
-    public void setShopId(Integer shopId) {
+    public void setShopId(@NonNull Integer shopId) {
         this.shopId = shopId;
     }
 
@@ -73,7 +90,7 @@ public class Expences {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
+    public void setUserId(@NonNull Integer userId) {
         this.userId = userId;
     }
 
