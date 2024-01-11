@@ -19,22 +19,29 @@ public class Expenses {
   @GeneratedValue(strategy=GenerationType.AUTO)
   private Integer id;
 
-  @Column
-  @NonNull
-  private String name;
+  @Column(name="Total")
   private Float total;
+
+  @Column(name="expense_date")
   private Date date;
+
+  @Column(name="category_id")
   private Integer categoryId;
+
+  @Column(name="shop_id")
   private Integer shopId;
+
+  @Column(name="user_id")
   private Integer userId;
+
+  @Column
   private String note;
-  private Date expenseDate;
 
     public Integer getId() {
         return id;
     }
 
-    public void setId(@NonNull Integer id) {
+    public void setId( Integer id) {
         this.id = id;
     }
 
@@ -54,21 +61,6 @@ public class Expenses {
         this.date = date;
     }
 
-    public Date getExpenseDate() {
-        return expenseDate;
-    }
-
-    public void setExpenseDate(@NonNull Date expenseDate) {
-        this.expenseDate = expenseDate;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public Integer getCategoryId() {
         return categoryId;
