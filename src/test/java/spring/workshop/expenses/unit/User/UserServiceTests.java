@@ -14,7 +14,6 @@ import org.mockito.Mock;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import spring.workshop.expenses.entities.Category;
 import spring.workshop.expenses.entities.User;
 import spring.workshop.expenses.repos.UserRepository;
 import spring.workshop.expenses.services.UserService;

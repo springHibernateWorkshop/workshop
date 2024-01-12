@@ -5,8 +5,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
-import java.util.Optional;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -18,7 +16,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import spring.workshop.expenses.entities.Category;
 import spring.workshop.expenses.entities.User;
 import spring.workshop.expenses.rest.UserController;
 import spring.workshop.expenses.services.UserService;
