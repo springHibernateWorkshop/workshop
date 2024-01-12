@@ -3,11 +3,14 @@ package spring.workshop.expenses.entities;
 import java.sql.Date;
 
 import io.micrometer.common.lang.NonNull;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -25,14 +28,17 @@ public class Expenses {
   @Column(name="expense_date")
   private Date date;
 
-  @Column(name="category_id")
-  private Integer categoryId;
+  @OneToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "category_id", referencedColumnName = "category_id")
+  private Category category;
 
-  @Column(name="shop_id")
-  private Integer shopId;
+  @OneToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "shop_id", referencedColumnName = "shop_id")
+  private Shop shop;
 
-  @Column(name="user_id")
-  private Integer userId;
+  @OneToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+  private User user;
 
   @Column
   private String note;
@@ -62,27 +68,27 @@ public class Expenses {
     }
 
 
-    public Integer getCategoryId() {
+    public Category getCategoryId() {
         return categoryId;
     }
 
-    public void setCategoryId(@NonNull Integer categoryId) {
+    public void setCategoryId(@NonNull Category categoryId) {
         this.categoryId = categoryId;
     }
 
-    public Integer getShopId() {
+    public Shop getShopId() {
         return shopId;
     }
 
-    public void setShopId(@NonNull Integer shopId) {
+    public void setShopId(@NonNull Shop shopId) {
         this.shopId = shopId;
     }
 
-    public Integer getUserId() {
+    public User getUserId() {
         return userId;
     }
 
-    public void setUserId(@NonNull Integer userId) {
+    public void setUserId(@NonNull User userId) {
         this.userId = userId;
     }
 
