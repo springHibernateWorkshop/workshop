@@ -25,8 +25,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.transaction.Transactional;
-import spring.workshop.expenses.entities.Expenses;
-import spring.workshop.expenses.repos.ExpensesRepository;
+import spring.workshop.expenses.entities.Expense;
+import spring.workshop.expenses.repos.ExpenseRepository;
 
 /**
  * These tests are using the MockMvc class to test the CExpensesController class.
@@ -47,7 +47,7 @@ public class ExpensesControllerMockTest {
     private MockMvc mockMvc;
 
     @Autowired
-    private ExpensesRepository repo;
+    private ExpenseRepository repo;
 
     private final String BASE_URL = "/expenses";
 
@@ -94,7 +94,7 @@ public class ExpensesControllerMockTest {
     @Test
     public void testAddNewExpenses() throws Exception {
         // Arrange
-        Expenses expenses = new Expenses();
+        Expense expenses = new Expense();
         expenses.setId(999);
         expenses.setTotal((float) 99.99);
         expenses.setDate((java.sql.Date) new SimpleDateFormat("dd/MM/yyyy").parse("01/01/2024"));
@@ -123,7 +123,7 @@ public class ExpensesControllerMockTest {
     @Test
     public void testUpdateExpenses() throws Exception {
         // Arrange
-        Expenses expenses = new Expenses();
+        Expense expenses = new Expense();
         expenses.setId(999);
         expenses.setTotal((float) 999.99);
         expenses.setDate((java.sql.Date) new SimpleDateFormat("dd/MM/yyyy").parse("01/01/2000"));

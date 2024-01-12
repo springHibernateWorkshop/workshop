@@ -20,8 +20,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
-import spring.workshop.expenses.entities.Expenses;
-import spring.workshop.expenses.rest.ExpensesController;
+import spring.workshop.expenses.entities.Expense;
+import spring.workshop.expenses.rest.ExpenseController;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
@@ -36,7 +36,7 @@ public class ExpensesControllerIntegrationTests {
     private TestRestTemplate restTemplate;
 
     @Autowired
-    ExpensesController controller;
+    ExpenseController controller;
     private static final String BASE_URL = "/expenses";
 
     /**
@@ -55,9 +55,9 @@ public class ExpensesControllerIntegrationTests {
      */
     @Test
     public void testGetExpensesByIdPositive() {
-        ResponseEntity<Expenses> response = restTemplate.getForEntity(BASE_URL + "/{id}", Expenses.class, 200);
+        ResponseEntity<Expense> response = restTemplate.getForEntity(BASE_URL + "/{id}", Expense.class, 200);
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        Expenses expenses = response.getBody();
+        Expense expenses = response.getBody();
         Assertions.assertNotNull(expenses);
         assertEquals("Expenses2", expenses.getNote());
     }
@@ -67,7 +67,7 @@ public class ExpensesControllerIntegrationTests {
      */
     @Test
     public void testGetExpensesByIdNegative() {
-        ResponseEntity<Expenses> response = restTemplate.getForEntity(BASE_URL + "/{id}", Expenses.class, 10);
+        ResponseEntity<Expense> response = restTemplate.getForEntity(BASE_URL + "/{id}", Expense.class, 10);
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
@@ -77,9 +77,9 @@ public class ExpensesControllerIntegrationTests {
     @Test
     public void testAddExpensesPositive() {
         URI newExpensesLocation = restTemplate.postForLocation(BASE_URL, "Expenses4");
-        ResponseEntity<Expenses> response = restTemplate.getForEntity(newExpensesLocation, Expenses.class);
+        ResponseEntity<Expense> response = restTemplate.getForEntity(newExpensesLocation, Expense.class);
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        Expenses expenses = response.getBody();
+        Expense expenses = response.getBody();
         assertEquals("Expenses4", expenses.getNote());
     }
 
@@ -89,10 +89,10 @@ public class ExpensesControllerIntegrationTests {
      */
     @Test
     public void testDeleteExpensesPositive() {
-        ResponseEntity<Expenses> response = restTemplate.getForEntity(BASE_URL + "/{id}", Expenses.class, 100);
+        ResponseEntity<Expense> response = restTemplate.getForEntity(BASE_URL + "/{id}", Expense.class, 100);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         restTemplate.delete("/expenses/{id}", 100);
-        ResponseEntity<Expenses> responseAfterDelete = restTemplate.getForEntity(BASE_URL + "/{id}", Expenses.class,
+        ResponseEntity<Expense> responseAfterDelete = restTemplate.getForEntity(BASE_URL + "/{id}", Expense.class,
                 100);
         assertEquals(HttpStatus.NOT_FOUND, responseAfterDelete.getStatusCode());
     }
@@ -106,7 +106,7 @@ public class ExpensesControllerIntegrationTests {
      */
     @Test
     public void testDeleteExpensesNegative() {
-        ResponseEntity<Expenses> response = restTemplate.getForEntity(BASE_URL + "/{id}", Expenses.class, 6);
+        ResponseEntity<Expense> response = restTemplate.getForEntity(BASE_URL + "/{id}", Expense.class, 6);
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         ResponseEntity<Boolean> responseAfterDelete = restTemplate.exchange(BASE_URL + "/{id}", HttpMethod.DELETE,
                 null, Boolean.class, 6);
@@ -115,7 +115,7 @@ public class ExpensesControllerIntegrationTests {
 
     @Test
     public void testUpdateExpensesPositive() throws ParseException {
-        Expenses expenses = new Expenses();
+        Expense expenses = new Expense();
         expenses.setId(9999);
         expenses.setTotal((float) 1.99);
         expenses.setDate((java.sql.Date) new SimpleDateFormat("dd/MM/yyyy").parse("01/01/1994"));
@@ -123,16 +123,16 @@ public class ExpensesControllerIntegrationTests {
         expenses.setShopId(1);
         expenses.setUserId(1);
         expenses.setNote("Expenses3");
-        Expenses response = restTemplate.getForObject(BASE_URL + "/{id}", Expenses.class, 300);
+        Expense response = restTemplate.getForObject(BASE_URL + "/{id}", Expense.class, 300);
         assertEquals("Expenses3", response.getNote());
         restTemplate.put("/expenses", expenses);
-        Expenses responseAfterUpdate = restTemplate.getForObject(BASE_URL + "/{id}", Expenses.class, 300);
+        Expense responseAfterUpdate = restTemplate.getForObject(BASE_URL + "/{id}", Expense.class, 300);
         assertEquals("Expenses3", responseAfterUpdate.getNote());
     }
 
     @Test
     public void testUpdateExpensesNegative() throws ParseException {
-        Expenses expenses = new Expenses();
+        Expense expenses = new Expense();
         expenses.setId(9999);
         expenses.setTotal((float) 1.99);
         expenses.setDate((java.sql.Date) new SimpleDateFormat("dd/MM/yyyy").parse("01/01/1904"));
@@ -140,8 +140,8 @@ public class ExpensesControllerIntegrationTests {
         expenses.setShopId(1);
         expenses.setUserId(1);
         expenses.setNote("Expenses3");
-        ResponseEntity<Expenses> response = restTemplate.exchange(BASE_URL, HttpMethod.PUT,
-                new HttpEntity<>(expenses), Expenses.class);
+        ResponseEntity<Expense> response = restTemplate.exchange(BASE_URL, HttpMethod.PUT,
+                new HttpEntity<>(expenses), Expense.class);
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 

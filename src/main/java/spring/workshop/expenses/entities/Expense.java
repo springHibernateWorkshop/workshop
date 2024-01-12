@@ -1,6 +1,7 @@
 package spring.workshop.expenses.entities;
 
-import java.sql.Date;
+
+import java.time.LocalDate;
 
 import io.micrometer.common.lang.NonNull;
 import jakarta.persistence.CascadeType;
@@ -15,7 +16,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name="expense_tab")
-public class Expenses {
+public class Expense {
 
   @Id
   @Column(name="expense_id")
@@ -26,7 +27,7 @@ public class Expenses {
   private Float total;
 
   @Column(name="expense_date")
-  private Date date;
+  private LocalDate date;
 
   @OneToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "category_id", referencedColumnName = "category_id")
@@ -59,37 +60,37 @@ public class Expenses {
         this.total = total;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(@NonNull Date date) {
+    public void setDate(@NonNull LocalDate date) {
         this.date = date;
     }
 
 
-    public Category getCategoryId() {
-        return categoryId;
+    public Category getCategory() {
+        return category;
     }
 
-    public void setCategoryId(@NonNull Category categoryId) {
-        this.categoryId = categoryId;
+    public void setCategory(@NonNull Category category) {
+        this.category = category;
     }
 
-    public Shop getShopId() {
-        return shopId;
+    public Shop getShop() {
+        return shop;
     }
 
-    public void setShopId(@NonNull Shop shopId) {
-        this.shopId = shopId;
+    public void setShop(@NonNull Shop shop) {
+        this.shop = shop;
     }
 
-    public User getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(@NonNull User userId) {
-        this.userId = userId;
+    public void setUser(@NonNull User user) {
+        this.user = user;
     }
 
     public String getNote() {
