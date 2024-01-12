@@ -1,33 +1,31 @@
 package spring.workshop.expenses.rest;
 
+import java.sql.Date;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import spring.workshop.expenses.entities.Expenses;
+import spring.workshop.expenses.repos.ExpensesRepository;
+import spring.workshop.expenses.repos.UserRepository;
 import spring.workshop.expenses.services.ExpensesService;
 
 
 @RestController
 @RequestMapping(path = "/expenses")
 public class ExpensesController {
+
+    private ExpensesRepository expensesRepository;
 
     @Autowired
     private ExpensesService expensesService;
@@ -58,6 +56,24 @@ public class ExpensesController {
         return new ResponseEntity<>(expensesService.deleteExpenses(id), HttpStatus.OK);
     }
     
+    @GetMapping(path = "/findByDate")
+    public ResponseEntity<List<Expenses>> getExpensesByDate(@PathVariable Date date) {
+        return new ResponseEntity<>(expensesRepository.getExpensesByDate(date), HttpStatus.OK);
+    }
 
+    @GetMapping(path = "/findByCategory")
+    public ResponseEntity<List<Expenses>> getExpensesByCategoryId(@PathVariable Long categoryId) {
+        return new ResponseEntity<>(expensesRepository.getExpensesByCategoryId(categoryId), HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/findByShop")
+    public ResponseEntity<List<Expenses>> getExpensesByShopId(@PathVariable Long shopId) {
+        return new ResponseEntity<>(expensesRepository.getExpensesByShopId(shopId), HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/findByUser")
+    public ResponseEntity<List<Expenses>> getExpensesByUserId(@PathVariable Long userId) {
+        return new ResponseEntity<>(expensesRepository.getExpensesByUserId(userId), HttpStatus.OK);
+    }
 
 }
