@@ -1,61 +1,41 @@
 package spring.workshop.expenses.aspect;
 
-import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.After;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
-
-import spring.workshop.expenses.entities.Shop;
+import org.springframework.util.StopWatch;
 
 @Aspect
 @Component
 public class ShopServiceAspect {
 
-    @Before(value = "execution(* spring.workshop.expenses.services.ShopService.*(..)) and args(shop)")
-    public void beforeAddNewShop(JoinPoint joinPoint, Shop shop) {
-        System.out.println("Before method:" + joinPoint.getSignature());
+	private static final Logger LOGGER = LogManager.getLogger(ShopServiceAspect.class);
 
-        System.out.println("Creating Shop with name - " + shop.getName() + " and address - " + shop.getAddress());
-    }
+	// AOP expression for which methods shall be intercepted
+	@Around("execution(* spring.workshop.expenses.services..*(..)))")
+	public Object profileAllMethods(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
+		MethodSignature methodSignature = (MethodSignature) proceedingJoinPoint.getSignature();
 
-    @After(value = "execution(* spring.workshop.expenses.services.ShopService.*(..)) and args(shop)")
-    public void afterAddNewShop(JoinPoint joinPoint, Shop shop) {
-        System.out.println("After method:" + joinPoint.getSignature());
+		// Get intercepted method details
+		String className = methodSignature.getDeclaringType().getSimpleName();
+		String methodName = methodSignature.getName();
 
-        System.out.println(
-                "Successfully created Shop with name - " + shop.getName() + " and address - " + shop.getAddress());
-    }
+		final StopWatch stopWatch = new StopWatch();
 
-    @Before(value = "execution(* spring.workshop.expenses.services.ShopService.*(..)) and args(shop, id)")
-    public void beforeUpdateShop(JoinPoint joinPoint, Shop shop, Long id) {
-        System.out.println("Before method:" + joinPoint.getSignature());
+		// Measure method execution time
+		stopWatch.start();
+		Object result = proceedingJoinPoint.proceed();
+		stopWatch.stop();
 
-        System.out.println("updating Shop with id - " + id);
-    }
+		// Log method execution time
+		LOGGER.info(
+				"Execution time of " + className + "." + methodName + " :: " + stopWatch.getTotalTimeMillis() + " ms");
 
-    @After(value = "execution(* spring.workshop.expenses.services.ShopService.*(..)) and args(shop, id)")
-    public void afterUpdateShop(JoinPoint joinPoint, Shop shop, Long id) {
-        System.out.println("After method:" + joinPoint.getSignature());
-
-        System.out.println(
-                "Successfully updated Shop with id " + id + " and new Name - " + shop.getName() + " and new address - "
-                        + shop.getAddress());
-    }
-
-    @Before(value = "execution(* spring.workshop.expenses.services.ShopService.*(..)) and args(id)")
-    public void beforeDeleteShop(JoinPoint joinPoint, Long id) {
-        System.out.println("Before method:" + joinPoint.getSignature());
-
-        System.out.println("deleting Shop with id - " + id);
-    }
-
-    @After(value = "execution(* spring.workshop.expenses.services.ShopService.*(..)) and args(id)")
-    public void afterdeleteShop(JoinPoint joinPoint, Long id) {
-        System.out.println("After method:" + joinPoint.getSignature());
-
-        System.out.println(
-                "Successfully deleted Shop with id " + id);
-    }
+		return result;
+	}
 
 }
