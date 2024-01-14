@@ -11,9 +11,9 @@ import org.springframework.util.StopWatch;
 
 @Aspect
 @Component
-public class ShopServiceAspect {
+public class PerformanceLoggingAspect {
 
-	private static final Logger LOGGER = LogManager.getLogger(ShopServiceAspect.class);
+	private static final Logger LOGGER = LogManager.getLogger(PerformanceLoggingAspect.class);
 
 	// AOP expression for which methods shall be intercepted
 	@Around("execution(* spring.workshop.expenses.services..*(..)))")
