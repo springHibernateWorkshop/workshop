@@ -21,18 +21,15 @@ import spring.workshop.expenses.services.ShopServiceImpl;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public class PerformanceLoggingAspectTest {
 
-    private ListAppender<ILoggingEvent> listAppender;
+    Logger logger = (Logger) LoggerFactory.getLogger(PerformanceLoggingAspect.class);
+    private ListAppender<ILoggingEvent> listAppender = new ListAppender<>();
 
     @Autowired
     private ShopServiceImpl shopService;
 
-    @Autowired
-    private PerformanceLoggingAspect performanceLoggingAspect;
-
     @BeforeEach
     public void setup() {
-        Logger logger = (Logger) LoggerFactory.getLogger(PerformanceLoggingAspect.class);
-        listAppender = new ListAppender<>();
+
         listAppender.start();
         logger.addAppender(listAppender);
     }
@@ -54,4 +51,14 @@ public class PerformanceLoggingAspectTest {
 
     }
 
+    @Test
+    public void shouldLogPerformanceGet() {
+
+        shopService.getShop(100l);
+
+        ILoggingEvent event = listAppender.list.get(0);
+
+        assertEquals(true, event.getMessage().contains("Execution time of ShopServiceImpl.getShop"));
+
+    }
 }
