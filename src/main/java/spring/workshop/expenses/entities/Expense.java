@@ -23,17 +23,16 @@ public class Expense {
   @GeneratedValue(strategy=GenerationType.AUTO)
   private Integer id;
 
-  @Column(name="Total")
+  @Column(name="total")
   private Float total;
 
   @Column(name="expense_date")
   private LocalDate date;
 
-  @OneToOne(cascade = CascadeType.ALL)
-  @JoinColumn(name = "category_id", referencedColumnName = "category_id")
-  private Category category;
+  @Column(name = "category_id")
+  private Integer categoryId;
 
-  @OneToOne(cascade = CascadeType.ALL)
+  @OneToOne(cascade = CascadeType.REFRESH)
   @JoinColumn(name = "shop_id", referencedColumnName = "shop_id")
   private Shop shop;
 
@@ -69,12 +68,12 @@ public class Expense {
     }
 
 
-    public Category getCategory() {
-        return category;
+    public Integer getCategoryId() {
+        return categoryId;
     }
 
-    public void setCategory(@NonNull Category category) {
-        this.category = category;
+    public void setCategoryId(@NonNull Integer categoryId) {
+        this.categoryId = categoryId;
     }
 
     public Shop getShop() {

@@ -72,7 +72,7 @@ public class ExpenseController {
 
     @GetMapping(path = "/findByCategory/{id}")
     public ResponseEntity<List<Expense>> findByCategory(@PathVariable int id) {
-        return new ResponseEntity<>(expenseRepository.findByCategory(categoryService.findById(id)), HttpStatus.OK);
+        return new ResponseEntity<>(expenseRepository.findByCategoryId(id), HttpStatus.OK);
     }
 
     /**

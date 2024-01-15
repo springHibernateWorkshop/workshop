@@ -1,9 +1,10 @@
 package spring.workshop.expenses.services;
 
-import org.springframework.stereotype.Service;
-import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import spring.workshop.expenses.entities.Expense;
@@ -31,7 +32,7 @@ public class ExpenseServiceImpl implements ExpenseService {
         Expense replaceExpenses = expensesRepository.findById(id).map(upExpenses -> {
             upExpenses.setTotal(expense.getTotal());
             upExpenses.setDate(expense.getDate());
-            upExpenses.setCategory(expense.getCategory());
+            upExpenses.setCategoryId(expense.getCategoryId());
             upExpenses.setShop(expense.getShop());
             upExpenses.setUser(expense.getUser());
             upExpenses.setNote(expense.getNote());
