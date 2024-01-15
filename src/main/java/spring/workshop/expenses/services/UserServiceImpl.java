@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserById(Integer id) {
+    public User getUserById(Long id) {
         Optional<User> user = userRepository.findById(id);
         if (!user.isPresent())
             throw new IllegalArgumentException("User with id = " + id + " not found.");

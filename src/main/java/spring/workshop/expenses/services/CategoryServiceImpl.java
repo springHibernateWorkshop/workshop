@@ -29,7 +29,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Boolean deleteCategory(Integer id) {
+    public Boolean deleteCategory(Long id) {
         return categoryRepository.findById(id).map(c -> {
             categoryRepository.delete(c);
             LOG.info("Category {} deleted", c.getName());
@@ -56,7 +56,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Category findById(Integer id) {
+    public Category findById(Long id) {
         Optional<Category> category = categoryRepository.findById(id);
         if (!category.isPresent())
             throw new IllegalArgumentException("No such category with id " + id);

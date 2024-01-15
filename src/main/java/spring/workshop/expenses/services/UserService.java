@@ -1,6 +1,7 @@
 package spring.workshop.expenses.services;
 
 import java.util.List;
+
 import spring.workshop.expenses.entities.User;
 
 public interface UserService {
@@ -13,7 +14,7 @@ public interface UserService {
 
     List<User> getAllUsers();
 
-    User getUserById(Integer id);
+    User getUserById(Long id);
 
     User getUserByName(String name);
 
