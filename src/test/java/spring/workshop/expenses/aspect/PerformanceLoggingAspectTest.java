@@ -40,14 +40,13 @@ public class PerformanceLoggingAspectTest {
     }
 
     @Test
-    public void shouldPerformanceLoggingAspect() {
+    public void shouldLogPerformance() {
 
         shopService.getAllShops();
 
         ILoggingEvent event = listAppender.list.get(0);
 
-        assertEquals(true, event.getMessage().contains("Execution time of"));
-        assertEquals(true, event.getMessage().contains("ShopServiceImpl.getAllShops"));
+        assertEquals(true, event.getMessage().contains("Execution time of ShopServiceImpl.getAllShops"));
 
     }
 
