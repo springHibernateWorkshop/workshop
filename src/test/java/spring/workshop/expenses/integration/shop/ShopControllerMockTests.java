@@ -1,16 +1,12 @@
 package spring.workshop.expenses.integration.shop;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +21,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.transaction.Transactional;
-import spring.workshop.expenses.entities.Category;
 import spring.workshop.expenses.entities.Shop;
 import spring.workshop.expenses.repos.ShopRepository;
 
@@ -81,7 +76,7 @@ public class ShopControllerMockTests {
 
     }
 
-        /**
+    /**
      * Test case to verify the behavior of adding a new shop.
      * 
      * @throws Exception if an error occurs during the test
@@ -105,7 +100,6 @@ public class ShopControllerMockTests {
         assertEquals(4, repo.findAll().size());
     }
 
-
     /**
      * Test case to verify the functionality of deleting a shop.
      *
@@ -117,7 +111,7 @@ public class ShopControllerMockTests {
         assertEquals(3, repo.findAll().size());
 
         // Act
-        mockMvc.perform(delete(BASE_URL + "/{id}", 100))
+        mockMvc.perform(delete(BASE_URL + "/{id}", 300))
                 .andExpect(status().isOk());
 
         // Assert

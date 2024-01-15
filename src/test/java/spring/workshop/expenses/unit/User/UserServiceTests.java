@@ -43,7 +43,7 @@ public class UserServiceTests {
         String name = "Test";
         // Given
         User user = new User(name);
-        when(userRepositoryMock.save(user)).thenReturn(new User(1, "Test"));
+        when(userRepositoryMock.save(user)).thenReturn(new User(1L, "Test"));
         // When
         User response = sut.addUser("Test");
         // Then
@@ -55,7 +55,7 @@ public class UserServiceTests {
         // Arrange
         String name = "Test";
         // Given
-        when(userRepositoryMock.findByName(name)).thenReturn(Optional.of(new User(1, "Test")));
+        when(userRepositoryMock.findByName(name)).thenReturn(Optional.of(new User(1L, "Test")));
         // When
         Boolean response = sut.deleteUser(name);
         // Then
@@ -77,10 +77,10 @@ public class UserServiceTests {
     @Test
     public void testUpdateUser() {
         // Arrange
-        Integer id = 1;
+        Long id = 1L;
         User updatedUser = new User(id, "Test2");
         // Given
-        when(userRepositoryMock.findById(1)).thenReturn(Optional.of(new User(1, "Test1")));
+        when(userRepositoryMock.findById(1L)).thenReturn(Optional.of(new User(1L, "Test1")));
         when(userRepositoryMock.save(any())).thenReturn(updatedUser);
         // When
         User response = sut.updateUser(updatedUser);
@@ -102,9 +102,9 @@ public class UserServiceTests {
     @Test
     public void testGetUserById() {
         // Arrange
-        Integer id = 1;
+        Long id = 1L;
         // Given
-        when(userRepositoryMock.findById(id)).thenReturn(Optional.of(new User(1, "Test")));
+        when(userRepositoryMock.findById(id)).thenReturn(Optional.of(new User(1L, "Test")));
         // When
         User response = sut.getUserById(id);
         // Then
@@ -116,7 +116,7 @@ public class UserServiceTests {
         // Arrange
         String name = "Test";
         // Given
-        when(userRepositoryMock.findByName(name)).thenReturn(Optional.of(new User(1, "Test")));
+        when(userRepositoryMock.findByName(name)).thenReturn(Optional.of(new User(1L, "Test")));
         // When
         User response = sut.getUserByName(name);
         // Then
