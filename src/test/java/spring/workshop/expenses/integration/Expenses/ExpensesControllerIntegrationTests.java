@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.net.URI;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.junit.jupiter.api.Assertions;
@@ -21,16 +21,14 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
 import spring.workshop.expenses.entities.Expense;
+import spring.workshop.expenses.entities.Shop;
+import spring.workshop.expenses.entities.User;
 import spring.workshop.expenses.rest.ExpenseController;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-
-
-
 public class ExpensesControllerIntegrationTests {
-    
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -59,11 +57,12 @@ public class ExpensesControllerIntegrationTests {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         Expense expenses = response.getBody();
         Assertions.assertNotNull(expenses);
-        assertEquals("Expenses2", expenses.getNote());
+        assertEquals("Note 2", expenses.getNote());
     }
 
     /**
-     * Test Case - negative scenario getting a expenses by ID - expenses does not exist.
+     * Test Case - negative scenario getting a expenses by ID - expenses does not
+     * exist.
      */
     @Test
     public void testGetExpensesByIdNegative() {
@@ -76,13 +75,15 @@ public class ExpensesControllerIntegrationTests {
      */
     @Test
     public void testAddExpensesPositive() {
-        URI newExpensesLocation = restTemplate.postForLocation(BASE_URL, "Expenses4");
+        Expense expensetoAdd = new Expense(500L, 1.99f, LocalDate.of(1994, 10, 1), 100L, new Shop(100L),
+                new User(100L, "Test"),
+                "Expense 4");
+        URI newExpensesLocation = restTemplate.postForLocation(BASE_URL, expensetoAdd);
         ResponseEntity<Expense> response = restTemplate.getForEntity(newExpensesLocation, Expense.class);
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        Expense expenses = response.getBody();
-        assertEquals("Expenses4", expenses.getNote());
+        Expense expense = response.getBody();
+        assertEquals("Expense 4", expense.getNote());
     }
-
 
     /**
      * Test Case - positive scenario of deleting a expenses.
@@ -115,33 +116,23 @@ public class ExpensesControllerIntegrationTests {
 
     @Test
     public void testUpdateExpensesPositive() throws ParseException {
-        Expense expenses = new Expense();
-        expenses.setId(9999);
-        expenses.setTotal((float) 1.99);
-        expenses.setDate((java.sql.Date) new SimpleDateFormat("dd/MM/yyyy").parse("01/01/1994"));
-        expenses.setCategoryId(1);
-        expenses.setShopId(1);
-        expenses.setUserId(1);
-        expenses.setNote("Expenses3");
+        Expense expense = new Expense(300L, 1.99f, LocalDate.of(1994, 10, 1), 100L, new Shop(100L),
+                new User(100L, "Test"),
+                "Expenses3");
         Expense response = restTemplate.getForObject(BASE_URL + "/{id}", Expense.class, 300);
-        assertEquals("Expenses3", response.getNote());
-        restTemplate.put("/expenses", expenses);
+        assertEquals("Note 3", response.getNote());
+        restTemplate.put("/expenses", expense);
         Expense responseAfterUpdate = restTemplate.getForObject(BASE_URL + "/{id}", Expense.class, 300);
         assertEquals("Expenses3", responseAfterUpdate.getNote());
     }
 
     @Test
     public void testUpdateExpensesNegative() throws ParseException {
-        Expense expenses = new Expense();
-        expenses.setId(9999);
-        expenses.setTotal((float) 1.99);
-        expenses.setDate((java.sql.Date) new SimpleDateFormat("dd/MM/yyyy").parse("01/01/1904"));
-        expenses.setCategoryId(1);
-        expenses.setShopId(1);
-        expenses.setUserId(1);
-        expenses.setNote("Expenses3");
+        Expense expense = new Expense(9999L, 1.99f, LocalDate.of(1994, 10, 1), 300L, new Shop(300L),
+                new User(300L, "Test"),
+                "Expenses3");
         ResponseEntity<Expense> response = restTemplate.exchange(BASE_URL, HttpMethod.PUT,
-                new HttpEntity<>(expenses), Expense.class);
+                new HttpEntity<>(expense), Expense.class);
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 

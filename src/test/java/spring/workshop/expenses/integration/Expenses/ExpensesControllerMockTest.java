@@ -9,8 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +22,17 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import jakarta.transaction.Transactional;
 import spring.workshop.expenses.entities.Expense;
+import spring.workshop.expenses.entities.Shop;
+import spring.workshop.expenses.entities.User;
 import spring.workshop.expenses.repos.ExpenseRepository;
 
 /**
- * These tests are using the MockMvc class to test the CExpensesController class.
+ * These tests are using the MockMvc class to test the CExpensesController
+ * class.
  * MockMvc is a Spring class that allows us to test the controller without
  * starting the server.
  * Unlike the integration tests, we are not testing the entire application, but
@@ -42,7 +45,7 @@ import spring.workshop.expenses.repos.ExpenseRepository;
 @Rollback
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public class ExpensesControllerMockTest {
-  
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -51,8 +54,10 @@ public class ExpensesControllerMockTest {
 
     private final String BASE_URL = "/expenses";
 
+    private ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
+
     /**
-     * Test Case - retrieving all categories.
+     * Test Case - retrieving all expenses.
      * 
      * @throws Exception if an error occurs during the test
      */
@@ -70,19 +75,18 @@ public class ExpensesControllerMockTest {
     }
 
     /**
-     * Test Case - getting a expenses by its ID.
+     * Test Case - getting an expenses by its ID.
      * 
      * @throws Exception if an error occurs during the test
      */
     @Test
-    public void testGetExpensesById() throws Exception {
+    public void testGetExpenseById() throws Exception {
         // Arrange
-        assertEquals(3, repo.findAll().size());
 
         // Act & Assert
         mockMvc.perform(get(BASE_URL + "/{id}", 100))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("Expenses1"));
+                .andExpect(jsonPath("$.note").value("Note 1"));
 
     }
 
@@ -92,23 +96,18 @@ public class ExpensesControllerMockTest {
      * @throws Exception if an error occurs during the test
      */
     @Test
-    public void testAddNewExpenses() throws Exception {
+    public void testAddNewExpense() throws Exception {
         // Arrange
-        Expense expenses = new Expense();
-        expenses.setId(999);
-        expenses.setTotal((float) 99.99);
-        expenses.setDate((java.sql.Date) new SimpleDateFormat("dd/MM/yyyy").parse("01/01/2024"));
-        expenses.setCategoryId(1);
-        expenses.setShopId(1);
-        expenses.setUserId(1);
-        expenses.setNote("example_note_1");
+        Expense expenses = new Expense(999L, 999.99f, LocalDate.of(1994, 10, 1), 100L, new Shop(100L),
+                new User(100L, "Test"),
+                "example_note_1");
 
         assertEquals(3, repo.findAll().size());
 
         // Act
         mockMvc.perform(post(BASE_URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(expenses)))
+                .content(objectMapper.writeValueAsString(expenses)))
                 .andExpect(status().isCreated());
 
         // Assert
@@ -116,41 +115,37 @@ public class ExpensesControllerMockTest {
     }
 
     /**
-     * Test Case - updating a expenses.
+     * Test Case - updating an expense.
      *
      * @throws Exception if an error occurs during the test
      */
     @Test
-    public void testUpdateExpenses() throws Exception {
+    public void testUpdateExpense() throws Exception {
         // Arrange
-        Expense expenses = new Expense();
-        expenses.setId(999);
-        expenses.setTotal((float) 999.99);
-        expenses.setDate((java.sql.Date) new SimpleDateFormat("dd/MM/yyyy").parse("01/01/2000"));
-        expenses.setCategoryId(12);
-        expenses.setShopId(12);
-        expenses.setUserId(12);
-        expenses.setNote("example_note_11");
-        assertEquals("example_note_11", repo.findById((long) 999).get().getNote());
+
+        Expense expense = new Expense(100L, 999.99f, LocalDate.of(1994, 10, 1), 100L, new Shop(100L),
+                new User(100L, "Test"),
+                "Expense 1");
+        assertEquals("Note 1", repo.findById(100L).get().getNote());
 
         // Act
         mockMvc.perform(put(BASE_URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(expenses)))
-                .andExpect(status().isNoContent())
-                .andExpect(jsonPath("$.name").value("example_note_11"));
+                .content(objectMapper.writeValueAsString(expense)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.note").value("Expense 1"));
 
         // Assert
-        assertEquals(expenses.getNote(), repo.findById((long) 999).get().getNote());
+        assertEquals(expense.getNote(), repo.findById(100L).get().getNote());
     }
 
     /**
-     * Test Case - functionality of deleting a category.
+     * Test Case - functionality of deleting an expanse.
      *
      * @throws Exception if an error occurs during the test
      */
     @Test
-    public void testDeleteCategory() throws Exception {
+    public void testDeleteExpense() throws Exception {
         // Arrange
         assertEquals(3, repo.findAll().size());
 
