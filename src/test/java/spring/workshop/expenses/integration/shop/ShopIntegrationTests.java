@@ -3,21 +3,18 @@ package spring.workshop.expenses.integration.shop;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import java.net.URI;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
-import spring.workshop.expenses.entities.Category;
 import spring.workshop.expenses.entities.Shop;
 import spring.workshop.expenses.rest.ShopController;
 
@@ -73,7 +70,7 @@ public class ShopIntegrationTests {
         newShop.setName("shop_name_5");
         newShop.setAddress("shop_address_5");
         ResponseEntity<Shop> response = restTemplate.postForEntity(BASE_URL, newShop, Shop.class);
-        
+
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         Shop shop = response.getBody();
         assertEquals("shop_name_5", shop.getName());
@@ -90,7 +87,7 @@ public class ShopIntegrationTests {
         newShop.setName("shop_name_6");
         newShop.setAddress("shop_address_6");
         ResponseEntity<Shop> res = restTemplate.postForEntity(BASE_URL, newShop, Shop.class);
-        
+
         Shop shop = res.getBody();
 
         ResponseEntity<Shop> response = restTemplate.getForEntity(BASE_URL + "/{id}", Shop.class, shop.getId());
@@ -116,5 +113,5 @@ public class ShopIntegrationTests {
                 null, Shop.class, 7);
         assertEquals(HttpStatus.NOT_FOUND, responseAfterDelete.getStatusCode());
     }
-    
+
 }
