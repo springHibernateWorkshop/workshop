@@ -21,29 +21,24 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category updateCategory(Category category) {
-        Optional<Category> oldCategory = categoryRepository.findById(category.getId());
-        if (oldCategory.isPresent()) {
-            Category updatedCategory = oldCategory.get();
-            updatedCategory.setName(category.getName());
+        return categoryRepository.findById(category.getId()).map(c -> {
+            c.setName(category.getName());
             LOG.info("Category {} updated", category.getName());
-            return categoryRepository.save(updatedCategory);
-        } else {
-            LOG.warn("Category {} not found for update", category.getName());
-            throw new IllegalArgumentException("No such category with id " + category.getId());
-        }
+            return categoryRepository.save(c);
+        }).orElseThrow(() -> new IllegalArgumentException("No such category with id " + category.getId()));
     }
 
     @Override
     public Boolean deleteCategory(Integer id) {
-        Optional<Category> category = categoryRepository.findById(id);
-        if (category.isPresent()) {
-            categoryRepository.delete(category.get());
-            LOG.info("Category {} deleted", category.get().getName());
+        return categoryRepository.findById(id).map(c -> {
+            categoryRepository.delete(c);
+            LOG.info("Category {} deleted", c.getName());
             return true;
-        } else {
+        }).orElseGet(() -> {
             LOG.warn("Category ID {} not found for delete", id);
             return false;
-        }
+        });
+
     }
 
     @Override
