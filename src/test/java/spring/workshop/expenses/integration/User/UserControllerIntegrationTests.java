@@ -39,7 +39,7 @@ public class UserControllerIntegrationTests {
         HttpEntity<String> requestEntity = new HttpEntity<>(requestBody, requestHeader);
 
         // URL for adding an user
-        String url = "/user/add";
+        String url = "/users/add";
 
         // Send a POST request to add the user
         ResponseEntity<User> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, User.class);
@@ -63,7 +63,7 @@ public class UserControllerIntegrationTests {
         HttpEntity<String> requestEntity = new HttpEntity<>(requestBody, requestHeader);
 
         // URL for deleting an user
-        String url = "/user/delete";
+        String url = "/users/delete";
 
         // Send a DELETE request to delete the user
         ResponseEntity<Boolean> response = restTemplate.exchange(url, HttpMethod.DELETE, requestEntity, Boolean.class);
@@ -85,7 +85,7 @@ public class UserControllerIntegrationTests {
         String requestBody = new ObjectMapper().writeValueAsString(new User(300, "Test2"));
         HttpEntity<String> requestEntity = new HttpEntity<>(requestBody, requestHeader);
 
-        String url = "/user/update";
+        String url = "/users/update";
 
         // Send a DELETE request to delete the user
         ResponseEntity<User> response = restTemplate.exchange(url, HttpMethod.PUT, requestEntity, User.class);
@@ -102,7 +102,7 @@ public class UserControllerIntegrationTests {
     public void testGetAllUsers() throws Exception {
 
         // URL for retrieving all users
-        String url = "/user/get_all";
+        String url = "/users/get_all";
 
         // Send a GET request to retrieve all users
         ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
@@ -118,7 +118,7 @@ public class UserControllerIntegrationTests {
     public void testGetUserById() throws Exception {
 
         // URL for retrieving the user by ID
-        String url = "/user/get_by_id?id=100";
+        String url = "/users/get_by_id?id=100";
 
         // Send a GET request to retrieve the user by ID
         ResponseEntity<User> response = restTemplate.getForEntity(url, User.class);
@@ -134,7 +134,7 @@ public class UserControllerIntegrationTests {
     public void testGetUserByName() throws Exception {
 
         // URL for retrieving the user by name
-        String url = "/user/get_by_name?name=Victoria";
+        String url = "/users/get_by_name?name=Victoria";
 
         // Send a GET request to retrieve the user by name
         ResponseEntity<User> response = restTemplate.getForEntity(url, User.class);

@@ -22,7 +22,7 @@ import spring.workshop.expenses.entities.User;
 import spring.workshop.expenses.services.UserService;
 
 @RestController
-@RequestMapping(path = "/user")
+@RequestMapping(path = "/users")
 public class UserController {
 
   private UserService userService;
