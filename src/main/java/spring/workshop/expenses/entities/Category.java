@@ -26,6 +26,10 @@ public class Category {
         this.name = "";
     }
 
+    public Category(Long id) {
+        this.id = id;
+    }
+
     public Category(@NonNull String name) {
         this.name = name;
     }
