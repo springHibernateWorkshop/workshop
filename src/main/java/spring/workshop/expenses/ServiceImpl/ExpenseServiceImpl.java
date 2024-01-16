@@ -1,4 +1,4 @@
-package spring.workshop.expenses.ServiceImpl;
+package spring.workshop.expenses.serviceImpl;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -11,8 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import spring.workshop.expenses.entities.Expense;
-import spring.workshop.expenses.entities.Shop;
-import spring.workshop.expenses.entities.User;
 import spring.workshop.expenses.repos.ExpenseRepository;
 import spring.workshop.expenses.services.ExpenseService;
 
@@ -74,18 +72,18 @@ public class ExpenseServiceImpl implements ExpenseService {
     }
 
     @Override
-    public List<Expense> findByCategoryId(int id) {
-        return expensesRepository.findByCategoryId(id);
+    public List<Expense> findByCategoryId(Long categoryId) {
+        return expensesRepository.findByCategoryId(categoryId);
     }
 
     @Override
-    public List<Expense> findByShop(Shop shop) {
-        return expensesRepository.findByShop(shop);
+    public List<Expense> findByShopId(Long shopId) {
+        return expensesRepository.findByShopId(shopId);
     }
 
     @Override
-    public List<Expense> findByUser(User user) {
-        return expensesRepository.findByUser(user);
+    public List<Expense> findByUserId(Long userId) {
+        return expensesRepository.findByUserId(userId);
     }
 
 }
