@@ -16,8 +16,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import spring.workshop.expenses.entities.User;
 import spring.workshop.expenses.repos.UserRepository;
+import spring.workshop.expenses.serviceImpl.UserServiceImpl;
 import spring.workshop.expenses.services.UserService;
-import spring.workshop.expenses.services.UserServiceImpl;
 
 // This class contains unit tests for the UserController class
 

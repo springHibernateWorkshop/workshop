@@ -98,11 +98,11 @@ public class CategoryControllerIntegrationTests {
      */
     @Test
     public void testDeleteCategoryPositive() {
-        ResponseEntity<Category> response = restTemplate.getForEntity(BASE_URL + "/{id}", Category.class, 100);
+        ResponseEntity<Category> response = restTemplate.getForEntity(BASE_URL + "/{id}", Category.class, 300L);
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        restTemplate.delete("/categories/{id}", 100);
+        restTemplate.delete("/categories/{id}", 300L);
         ResponseEntity<Category> responseAfterDelete = restTemplate.getForEntity(BASE_URL + "/{id}", Category.class,
-                100);
+                300L);
         assertEquals(HttpStatus.NOT_FOUND, responseAfterDelete.getStatusCode());
     }
 
@@ -124,11 +124,11 @@ public class CategoryControllerIntegrationTests {
 
     @Test
     public void testUpdateCategoryPositive() {
-        Category category = new Category(300L, "Category8");
-        Category response = restTemplate.getForObject(BASE_URL + "/{id}", Category.class, 300);
-        assertEquals("Category3", response.getName());
+        Category category = new Category(100L, "Category8");
+        Category response = restTemplate.getForObject(BASE_URL + "/{id}", Category.class, 100L);
+        assertEquals("Category1", response.getName());
         restTemplate.put("/categories", category);
-        Category responseAfterUpdate = restTemplate.getForObject(BASE_URL + "/{id}", Category.class, 300);
+        Category responseAfterUpdate = restTemplate.getForObject(BASE_URL + "/{id}", Category.class, 100);
         assertEquals("Category8", responseAfterUpdate.getName());
     }
 

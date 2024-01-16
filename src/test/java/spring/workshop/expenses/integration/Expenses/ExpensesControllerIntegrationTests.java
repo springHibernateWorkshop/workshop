@@ -20,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
+import spring.workshop.expenses.entities.Category;
 import spring.workshop.expenses.entities.Expense;
 import spring.workshop.expenses.entities.Shop;
 import spring.workshop.expenses.entities.User;
@@ -75,7 +76,7 @@ public class ExpensesControllerIntegrationTests {
      */
     @Test
     public void testAddExpensesPositive() {
-        Expense expensetoAdd = new Expense(500L, 1.99f, LocalDate.of(1994, 10, 1), 100L, new Shop(100L),
+        Expense expensetoAdd = new Expense(500L, 1.99f, LocalDate.of(1994, 10, 1), new Category(100L), new Shop(100L),
                 new User(100L, "Test"),
                 "Expense 4");
         URI newExpensesLocation = restTemplate.postForLocation(BASE_URL, expensetoAdd);
@@ -92,19 +93,12 @@ public class ExpensesControllerIntegrationTests {
     public void testDeleteExpensesPositive() {
         ResponseEntity<Expense> response = restTemplate.getForEntity(BASE_URL + "/{id}", Expense.class, 100);
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        restTemplate.delete("/expenses/{id}", 100);
+        restTemplate.delete(BASE_URL + "/{id}", 100);
         ResponseEntity<Expense> responseAfterDelete = restTemplate.getForEntity(BASE_URL + "/{id}", Expense.class,
                 100);
         assertEquals(HttpStatus.NOT_FOUND, responseAfterDelete.getStatusCode());
     }
 
-    /**
-     * Test Case - negative scenario of deleting a expenses.
-     * It sends a GET request to retrieve a expenses with the specified ID,
-     * and expects a NOT_FOUND status code in the response.
-     * Then, it sends a DELETE request to delete the expenses with the same ID,
-     * and again expects a NOT_FOUND status code in the response.
-     */
     @Test
     public void testDeleteExpensesNegative() {
         ResponseEntity<Expense> response = restTemplate.getForEntity(BASE_URL + "/{id}", Expense.class, 6);
@@ -116,24 +110,40 @@ public class ExpensesControllerIntegrationTests {
 
     @Test
     public void testUpdateExpensesPositive() throws ParseException {
-        Expense expense = new Expense(300L, 1.99f, LocalDate.of(1994, 10, 1), 100L, new Shop(100L),
+        Expense expense = new Expense(300L, 1.99f, LocalDate.of(1994, 10, 1), new Category(100L), new Shop(100L),
                 new User(100L, "Test"),
                 "Expenses3");
         Expense response = restTemplate.getForObject(BASE_URL + "/{id}", Expense.class, 300);
         assertEquals("Note 3", response.getNote());
-        restTemplate.put("/expenses", expense);
+        restTemplate.put(BASE_URL, expense);
         Expense responseAfterUpdate = restTemplate.getForObject(BASE_URL + "/{id}", Expense.class, 300);
         assertEquals("Expenses3", responseAfterUpdate.getNote());
     }
 
     @Test
     public void testUpdateExpensesNegative() throws ParseException {
-        Expense expense = new Expense(9999L, 1.99f, LocalDate.of(1994, 10, 1), 300L, new Shop(300L),
+        // WHEN: Sending a PUT request to update expenses with invalid ID
+        Expense expense = new Expense(9999L, 1.99f, LocalDate.of(1994, 10, 1), new Category(300L), new Shop(300L),
                 new User(300L, "Test"),
                 "Expenses3");
         ResponseEntity<Expense> response = restTemplate.exchange(BASE_URL, HttpMethod.PUT,
                 new HttpEntity<>(expense), Expense.class);
+
+        // THEN: Expecting a NOT_FOUND response
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @Test
+    public void testGetExpensesByShopPositive() {
+        // WHEN: Sending a GET request to retrieve expenses by shop ID
+        ResponseEntity<List> response = restTemplate.getForEntity(BASE_URL + "/shop/{id}", List.class, 200L);
+
+        // THEN: Expecting a successful response with a list of expenses
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        List expenses = response.getBody();
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        Assertions.assertNotNull(expenses);
+        assertEquals(2, expenses.size());
     }
 
 }

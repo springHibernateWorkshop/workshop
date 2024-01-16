@@ -137,7 +137,7 @@ public class CategoryControllerMockTests {
         assertEquals(3, repo.findAll().size());
 
         // Act
-        mockMvc.perform(delete(BASE_URL + "/{id}", 100))
+        mockMvc.perform(delete(BASE_URL + "/{id}", 300L))
                 .andExpect(status().isOk())
                 .andExpect(content().string("true"));
 

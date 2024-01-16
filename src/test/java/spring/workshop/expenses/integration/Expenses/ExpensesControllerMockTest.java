@@ -25,6 +25,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import jakarta.transaction.Transactional;
+import spring.workshop.expenses.entities.Category;
 import spring.workshop.expenses.entities.Expense;
 import spring.workshop.expenses.entities.Shop;
 import spring.workshop.expenses.entities.User;
@@ -46,116 +47,118 @@ import spring.workshop.expenses.repos.ExpenseRepository;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public class ExpensesControllerMockTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+        @Autowired
+        private MockMvc mockMvc;
 
-    @Autowired
-    private ExpenseRepository repo;
+        @Autowired
+        private ExpenseRepository repo;
 
-    private final String BASE_URL = "/expenses";
+        private final String BASE_URL = "/expenses";
 
-    private ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
+        private ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
-    /**
-     * Test Case - retrieving all expenses.
-     * 
-     * @throws Exception if an error occurs during the test
-     */
-    @Test
-    public void TestGetAllExpenses() throws Exception {
-        // Arrange
-        assertEquals(3, repo.findAll().size());
+        /**
+         * Test Case - retrieving all expenses.
+         * 
+         * @throws Exception if an error occurs during the test
+         */
+        @Test
+        public void TestGetAllExpenses() throws Exception {
+                // Arrange
+                assertEquals(3, repo.findAll().size());
 
-        // Act & Assert
-        mockMvc.perform(get(BASE_URL))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.length()").value(3));
+                // Act & Assert
+                mockMvc.perform(get(BASE_URL))
+                                .andExpect(status().isOk())
+                                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                                .andExpect(jsonPath("$.length()").value(3));
 
-    }
+        }
 
-    /**
-     * Test Case - getting an expenses by its ID.
-     * 
-     * @throws Exception if an error occurs during the test
-     */
-    @Test
-    public void testGetExpenseById() throws Exception {
-        // Arrange
+        /**
+         * Test Case - getting an expenses by its ID.
+         * 
+         * @throws Exception if an error occurs during the test
+         */
+        @Test
+        public void testGetExpenseById() throws Exception {
+                // Arrange
 
-        // Act & Assert
-        mockMvc.perform(get(BASE_URL + "/{id}", 100))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.note").value("Note 1"));
+                // Act & Assert
+                mockMvc.perform(get(BASE_URL + "/{id}", 100))
+                                .andExpect(status().isOk())
+                                .andExpect(jsonPath("$.note").value("Note 1"));
 
-    }
+        }
 
-    /**
-     * Test Case - behavior of adding a new expenses.
-     * 
-     * @throws Exception if an error occurs during the test
-     */
-    @Test
-    public void testAddNewExpense() throws Exception {
-        // Arrange
-        Expense expenses = new Expense(999L, 999.99f, LocalDate.of(1994, 10, 1), 100L, new Shop(100L),
-                new User(100L, "Test"),
-                "example_note_1");
+        /**
+         * Test Case - behavior of adding a new expenses.
+         * 
+         * @throws Exception if an error occurs during the test
+         */
+        @Test
+        public void testAddNewExpense() throws Exception {
+                // Arrange
+                Expense expenses = new Expense(999L, 999.99f, LocalDate.of(1994, 10, 1), new Category(100L),
+                                new Shop(100L),
+                                new User(100L, "Test"),
+                                "example_note_1");
 
-        assertEquals(3, repo.findAll().size());
+                assertEquals(3, repo.findAll().size());
 
-        // Act
-        mockMvc.perform(post(BASE_URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(expenses)))
-                .andExpect(status().isCreated());
+                // Act
+                mockMvc.perform(post(BASE_URL)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(expenses)))
+                                .andExpect(status().isCreated());
 
-        // Assert
-        assertEquals(4, repo.findAll().size());
-    }
+                // Assert
+                assertEquals(4, repo.findAll().size());
+        }
 
-    /**
-     * Test Case - updating an expense.
-     *
-     * @throws Exception if an error occurs during the test
-     */
-    @Test
-    public void testUpdateExpense() throws Exception {
-        // Arrange
+        /**
+         * Test Case - updating an expense.
+         *
+         * @throws Exception if an error occurs during the test
+         */
+        @Test
+        public void testUpdateExpense() throws Exception {
+                // Arrange
 
-        Expense expense = new Expense(100L, 999.99f, LocalDate.of(1994, 10, 1), 100L, new Shop(100L),
-                new User(100L, "Test"),
-                "Expense 1");
-        assertEquals("Note 1", repo.findById(100L).get().getNote());
+                Expense expense = new Expense(100L, 999.99f, LocalDate.of(1994, 10, 1), new Category(100L),
+                                new Shop(100L),
+                                new User(100L, "Test"),
+                                "Expense 1");
+                assertEquals("Note 1", repo.findById(100L).get().getNote());
 
-        // Act
-        mockMvc.perform(put(BASE_URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(expense)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.note").value("Expense 1"));
+                // Act
+                mockMvc.perform(put(BASE_URL)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(expense)))
+                                .andExpect(status().isOk())
+                                .andExpect(jsonPath("$.note").value("Expense 1"));
 
-        // Assert
-        assertEquals(expense.getNote(), repo.findById(100L).get().getNote());
-    }
+                // Assert
+                assertEquals(expense.getNote(), repo.findById(100L).get().getNote());
+        }
 
-    /**
-     * Test Case - functionality of deleting an expanse.
-     *
-     * @throws Exception if an error occurs during the test
-     */
-    @Test
-    public void testDeleteExpense() throws Exception {
-        // Arrange
-        assertEquals(3, repo.findAll().size());
+        /**
+         * Test Case - functionality of deleting an expanse.
+         *
+         * @throws Exception if an error occurs during the test
+         */
+        @Test
+        public void testDeleteExpense() throws Exception {
+                // Arrange
+                assertEquals(3, repo.findAll().size());
 
-        // Act
-        mockMvc.perform(delete(BASE_URL + "/{id}", 100))
-                .andExpect(status().isOk())
-                .andExpect(content().string("true"));
+                // Act
+                mockMvc.perform(delete(BASE_URL + "/{id}", 100))
+                                .andExpect(status().isOk())
+                                .andExpect(content().string("true"));
 
-        // Assert
-        assertEquals(2, repo.findAll().size());
-    }
+                // Assert
+                assertEquals(2, repo.findAll().size());
+        }
 
 }
