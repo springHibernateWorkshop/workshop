@@ -1,4 +1,4 @@
-package spring.workshop.expenses.services;
+package spring.workshop.expenses.ServiceImpl;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -14,6 +14,7 @@ import spring.workshop.expenses.entities.Expense;
 import spring.workshop.expenses.entities.Shop;
 import spring.workshop.expenses.entities.User;
 import spring.workshop.expenses.repos.ExpenseRepository;
+import spring.workshop.expenses.services.ExpenseService;
 
 @Service
 public class ExpenseServiceImpl implements ExpenseService {
@@ -39,7 +40,7 @@ public class ExpenseServiceImpl implements ExpenseService {
         Expense replaceExpenses = expensesRepository.findById(expense.getId()).map(upExpenses -> {
             upExpenses.setTotal(expense.getTotal());
             upExpenses.setDate(expense.getDate());
-            upExpenses.setCategoryId(expense.getCategoryId());
+            upExpenses.setCategory(expense.getCategory());
             upExpenses.setShop(expense.getShop());
             upExpenses.setUser(expense.getUser());
             upExpenses.setNote(expense.getNote());

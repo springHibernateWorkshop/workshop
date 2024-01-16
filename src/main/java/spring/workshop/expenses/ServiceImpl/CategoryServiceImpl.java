@@ -1,4 +1,4 @@
-package spring.workshop.expenses.services;
+package spring.workshop.expenses.ServiceImpl;
 
 import java.util.List;
 import java.util.Optional;
@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import spring.workshop.expenses.entities.Category;
 import spring.workshop.expenses.repos.CategoryRepository;
+import spring.workshop.expenses.services.CategoryService;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
