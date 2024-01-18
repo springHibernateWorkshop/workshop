@@ -58,7 +58,7 @@ jobs:
 
     - name: Deploy to Tomcat
       run: |
-        curl -T target/workshop.war http://admin:springHibernateCGZ9462@http://85.215.71.60:8080/manager/text/deploy?path=/workshop&update=true
+        curl -T target/expenses.war http://admin:springHibernateCGZ9462@http://85.215.71.60:8080/manager/text/deploy?path=/expenses&update=true
 
 
     
