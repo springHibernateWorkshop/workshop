@@ -61,7 +61,7 @@ jobs:
       with:
         host: ${{ secrets.TOMCAT_SERVER }}
         username: ${{ secrets.TOMCAT_USER }}
-        key: ${{ secrets.TOMCAT_PASSWORD }}
+        password: ${{ secrets.TOMCAT_PASSWORD }}
         source: "target/*.war"
         target: "/opt/tomcat/webapps"
 
