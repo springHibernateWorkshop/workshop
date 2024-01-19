@@ -57,8 +57,13 @@ jobs:
       run: mvn clean package -DskipTests
 
     - name: Deploy to Tomcat
-      run: |
-        curl -T target/expenses-0.0.1-SNAPSHOT.war http://admin:springHibernateCGZ9462@85.215.71.60:8080/manager/text/deploy?path=/expenses&update=true
+      uses: appleboy/scp-action@master
+      with:
+      host: ${{ secrets.TOMCAT_SERVER }}
+      username: ${{ secrets.TOMCAT_USER }}
+      key: ${{ secrets.TOMCAT_PASSWORD }}
+      source: "target/*.war"
+      target: "/opt/tomcat/webapps"
 
 
     
