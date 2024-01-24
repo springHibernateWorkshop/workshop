@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -41,7 +42,7 @@ public class UserControllerSliceTests {
     @Test
     public void testAddUser() {
         // Given
-        when(userServiceMock.addUser(any())).thenReturn(new User(1, "Test"));
+        when(userServiceMock.addUser(any())).thenReturn(new User(1L, "Test"));
         // When
         ResponseEntity<User> response = sut.addUser("Test");
         // Then
@@ -78,7 +79,7 @@ public class UserControllerSliceTests {
     @Test
     public void testUpdateUser() {
         // Arrange
-        Integer id = 1;
+        Long id = 1L;
         User updatedUser = new User(id, "Test2");
         // Given
         when(userServiceMock.getUserById(id)).thenReturn(new User(id, "Test1"));
@@ -105,9 +106,9 @@ public class UserControllerSliceTests {
     @Test
     public void testGetUserById() {
         // Arrange
-        Integer id = 1;
+        Long id = 1L;
         // Given
-        when(userServiceMock.getUserById(id)).thenReturn(new User(1, "Test"));
+        when(userServiceMock.getUserById(id)).thenReturn(new User(1L, "Test"));
         // When
         ResponseEntity<User> response = sut.getUserById(id);
         // Then
@@ -120,7 +121,7 @@ public class UserControllerSliceTests {
         // Arrange
         String name = "Test";
         // Given
-        when(userServiceMock.getUserByName(name)).thenReturn(new User(1, "Test"));
+        when(userServiceMock.getUserByName(name)).thenReturn(new User(1L, "Test"));
         // When
         ResponseEntity<User> response = sut.getUserByName(name);
         // Then

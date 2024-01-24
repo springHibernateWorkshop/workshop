@@ -111,7 +111,7 @@ public class ShopControllerMockTests {
         assertEquals(3, repo.findAll().size());
 
         // Act
-        mockMvc.perform(delete(BASE_URL + "/{id}", 100))
+        mockMvc.perform(delete(BASE_URL + "/{id}", 300))
                 .andExpect(status().isOk());
 
         // Assert
