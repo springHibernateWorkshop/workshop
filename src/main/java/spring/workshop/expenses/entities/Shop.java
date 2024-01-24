@@ -9,22 +9,35 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table( name = "shop_tab")
+@Table(name = "shop_tab")
 public class Shop {
 
     @Id
-  @Column(name="shop_id")
-  @GeneratedValue(strategy=GenerationType.AUTO)
-  private Integer id;
+    @Column(name = "shop_id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
-  @Column
-  @NonNull
-  private String name;
+    @Column
+    @NonNull
+    private String name;
 
-  @Column
-  private String address;
+    @Column
+    private String address;
 
-    public Integer getId() {
+    public Shop() {
+    }
+
+    public Shop(Long id) {
+        this.id = id;
+    }
+
+    public Shop(Long id, String name, String address) {
+        this.id = id;
+        this.name = name;
+        this.address = address;
+    }
+
+    public Long getId() {
         return id;
     }
 
@@ -44,6 +57,4 @@ public class Shop {
         this.address = address;
     }
 
-    
-    
 }

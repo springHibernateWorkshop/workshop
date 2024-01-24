@@ -1,6 +1,7 @@
 package spring.workshop.expenses.entities;
 
 import org.springframework.lang.NonNull;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -15,7 +16,7 @@ public class User {
     @Id
     @Column(name = "user_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private Long id;
 
     @Column
     @NonNull
@@ -28,16 +29,16 @@ public class User {
         this.name = name;
     }
 
-    public User(Integer id, @NonNull String name) {
+    public User(Long id, @NonNull String name) {
         this.id = id;
         this.name = name;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

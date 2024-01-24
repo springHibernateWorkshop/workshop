@@ -1,4 +1,4 @@
-package spring.workshop.expenses.services;
+package spring.workshop.expenses.serviceImpl;
 
 import java.util.List;
 
@@ -9,9 +9,10 @@ import org.springframework.web.server.ResponseStatusException;
 
 import spring.workshop.expenses.entities.Shop;
 import spring.workshop.expenses.repos.ShopRepository;
+import spring.workshop.expenses.services.ShopService;
 
 @Service
-public class ShopServiceImpl implements ShopService{
+public class ShopServiceImpl implements ShopService {
 
     @Autowired
     private ShopRepository shopRepository;
@@ -35,7 +36,7 @@ public class ShopServiceImpl implements ShopService{
             upShop.setAddress(shop.getAddress());
             return shopRepository.save(upShop);
         })
-        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         return replaceShop;
     }
 
@@ -50,5 +51,5 @@ public class ShopServiceImpl implements ShopService{
     public Shop addNewShop(Shop shop) {
         return shopRepository.save(shop);
     }
-    
+
 }
