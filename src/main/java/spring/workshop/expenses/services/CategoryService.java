@@ -8,12 +8,12 @@ public interface CategoryService {
 
     Category updateCategory(Category category);
 
-    Boolean deleteCategory(Integer id);
+    Boolean deleteCategory(Long id);
 
     Category addCategory(Category category);
 
     List<Category> findAll();
 
-    Category findById(Integer id);
+    Category findById(Long id);
 
 }

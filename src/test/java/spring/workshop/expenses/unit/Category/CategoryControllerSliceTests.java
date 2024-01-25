@@ -56,9 +56,9 @@ public class CategoryControllerSliceTests {
     @Test
     public void testGetCategoryById() {
         // Given
-        when(categoryService.findById(1)).thenReturn(new Category("Test Category"));
+        when(categoryService.findById(1l)).thenReturn(new Category("Test Category"));
         // When
-        ResponseEntity<Category> category = sut.getCategoryById(1);
+        ResponseEntity<Category> category = sut.getCategoryById(1l);
         // Then
         assertEquals("Test Category", category.getBody().getName());
         assertEquals(HttpStatus.OK, category.getStatusCode());
@@ -67,7 +67,7 @@ public class CategoryControllerSliceTests {
     @Test
     public void testCreateCategory() {
         // Given
-        when(categoryService.addCategory(any())).thenReturn(new Category(1, "Test Category"));
+        when(categoryService.addCategory(any())).thenReturn(new Category(1l, "Test Category"));
         // When
         ResponseEntity<Category> response = sut.addNewCategory("Test Category");
         // Then
@@ -78,7 +78,7 @@ public class CategoryControllerSliceTests {
     @Test
     public void testUpdateCategory() {
         // Given
-        Category c = new Category(100, "Test");
+        Category c = new Category(100l, "Test");
         // When
         sut.updateCategory(c);
         // Then
@@ -88,7 +88,7 @@ public class CategoryControllerSliceTests {
     @Test
     public void testDeleteCategoryPositive() {
         // Arrange
-        Integer categoryId = 1;
+        Long categoryId = 1L;
 
         when(categoryService.deleteCategory(categoryId)).thenReturn(Boolean.TRUE);
 
@@ -103,7 +103,7 @@ public class CategoryControllerSliceTests {
     @Test
     public void testDeleteCategoryNegative() {
         // Arrange
-        Integer categoryId = 1;
+        Long categoryId = 1l;
         when(categoryService.deleteCategory(categoryId)).thenReturn(Boolean.FALSE);
 
         // Act
