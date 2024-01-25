@@ -1,4 +1,4 @@
-package spring.workshop.expenses.services;
+package spring.workshop.expenses.serviceImpl;
 
 import java.util.List;
 import java.util.Optional;
@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import spring.workshop.expenses.entities.User;
 import spring.workshop.expenses.repos.UserRepository;
+import spring.workshop.expenses.services.UserService;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -69,7 +70,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserById(Integer id) {
+    public User getUserById(Long id) {
         Optional<User> user = userRepository.findById(id);
         if (!user.isPresent())
             throw new IllegalArgumentException("User with id = " + id + " not found.");

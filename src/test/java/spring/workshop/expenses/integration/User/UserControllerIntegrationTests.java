@@ -82,7 +82,7 @@ public class UserControllerIntegrationTests {
         // Constructing the request body with the user to be updated
         HttpHeaders requestHeader = new HttpHeaders();
         requestHeader.setContentType(MediaType.APPLICATION_JSON);
-        String requestBody = new ObjectMapper().writeValueAsString(new User(300, "Test2"));
+        String requestBody = new ObjectMapper().writeValueAsString(new User(300l, "Test2"));
         HttpEntity<String> requestEntity = new HttpEntity<>(requestBody, requestHeader);
 
         String url = "/users/update";

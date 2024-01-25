@@ -8,16 +8,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
 import spring.workshop.expenses.entities.User;
 import spring.workshop.expenses.services.UserService;
 
@@ -62,7 +63,7 @@ public class UserController {
   }
 
   @GetMapping(path = "/get_by_id")
-  public ResponseEntity<User> getUserById(@RequestParam Integer id) {
+  public ResponseEntity<User> getUserById(@RequestParam Long id) {
     return ResponseEntity.status(HttpStatus.OK)
         .body(userService.getUserById(id));
   }

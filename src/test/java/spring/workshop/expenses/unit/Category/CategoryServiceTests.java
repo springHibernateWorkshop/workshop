@@ -16,8 +16,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import spring.workshop.expenses.entities.Category;
 import spring.workshop.expenses.repos.CategoryRepository;
+import spring.workshop.expenses.serviceImpl.CategoryServiceImpl;
 import spring.workshop.expenses.services.CategoryService;
-import spring.workshop.expenses.services.CategoryServiceImpl;
 
 /**
  * This class contains unit tests for the CategoryController class.
@@ -55,7 +55,7 @@ public class CategoryServiceTests {
         when(categoryRepositoryMock.findById(any()))
                 .thenReturn(Optional.of(new Category("Category1")));
         // When
-        Category category = sut.findById(1);
+        Category category = sut.findById(1l);
         // Then
         assertEquals("Category1", category.getName());
     }
@@ -75,7 +75,7 @@ public class CategoryServiceTests {
     @Test
     public void testUpdateCategory() {
         // Given
-        Category category = new Category(1, "Test");
+        Category category = new Category(1l, "Test");
         when(categoryRepositoryMock.save(any()))
                 .thenReturn(category);
         when(categoryRepositoryMock.findById(any()))
@@ -89,7 +89,7 @@ public class CategoryServiceTests {
     @Test
     public void testDeleteCategory() {
         // Arrange
-        Integer categoryId = 1;
+        Long categoryId = 1l;
         when(categoryRepositoryMock.findById(categoryId))
                 .thenReturn(Optional.of(new Category("Category1")));
         // Act
