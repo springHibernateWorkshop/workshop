@@ -81,16 +81,6 @@ public class CategoryController {
   }
 
   /**
-   * Maps IllegalArgumentExceptions to a 404 Not Found HTTP status code.
-   */
-  @ResponseStatus(HttpStatus.NOT_FOUND)
-  @ExceptionHandler(IllegalArgumentException.class)
-  public void handleNotFound(Exception ex) {
-    LOG.error("Exception is: ", ex);
-    // return empty 404
-  }
-
-  /**
    * Maps DataIntegrityViolationException to a 409 Conflict HTTP status code.
    */
   @ResponseStatus(HttpStatus.CONFLICT)
