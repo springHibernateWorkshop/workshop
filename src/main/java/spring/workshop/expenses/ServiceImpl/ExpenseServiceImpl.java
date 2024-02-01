@@ -1,4 +1,4 @@
-package spring.workshop.expenses.serviceImpl;
+package spring.workshop.expenses.ServiceImpl;
 
 import java.time.LocalDate;
 import java.util.List;

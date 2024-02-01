@@ -1,4 +1,4 @@
-package spring.workshop.expenses.serviceImpl;
+package spring.workshop.expenses.ServiceImpl;
 
 import java.util.List;
 

@@ -16,7 +16,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import spring.workshop.expenses.entities.Category;
 import spring.workshop.expenses.repos.CategoryRepository;
-import spring.workshop.expenses.serviceImpl.CategoryServiceImpl;
+import spring.workshop.expenses.ServiceImpl.CategoryServiceImpl;
 import spring.workshop.expenses.services.CategoryService;
 
 /**
