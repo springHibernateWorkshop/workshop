@@ -5,12 +5,10 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -67,36 +65,5 @@ public class CategoryController {
   @GetMapping(path = "/{id}")
   public ResponseEntity<Category> getCategoryById(@PathVariable Long id) {
     return ResponseEntity.ok().body(categoryService.findById(id));
-  }
-
-  /**
-   * Maps UnsupportedOperationException to a 501 Not Implemented HTTP status
-   * code.
-   */
-  @ResponseStatus(HttpStatus.NOT_IMPLEMENTED)
-  @ExceptionHandler({ UnsupportedOperationException.class })
-  public void handleUnabletoReallocate(Exception ex) {
-    LOG.error("Exception is: ", ex);
-    // just return empty 501
-  }
-
-  /**
-   * Maps IllegalArgumentExceptions to a 404 Not Found HTTP status code.
-   */
-  @ResponseStatus(HttpStatus.NOT_FOUND)
-  @ExceptionHandler(IllegalArgumentException.class)
-  public void handleNotFound(Exception ex) {
-    LOG.error("Exception is: ", ex);
-    // return empty 404
-  }
-
-  /**
-   * Maps DataIntegrityViolationException to a 409 Conflict HTTP status code.
-   */
-  @ResponseStatus(HttpStatus.CONFLICT)
-  @ExceptionHandler({ DataIntegrityViolationException.class })
-  public void handleAlreadyExists(Exception ex) {
-    LOG.error("Exception is: ", ex);
-    // return empty 409
   }
 }
