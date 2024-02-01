@@ -5,8 +5,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
+import spring.actuator.HealthIndicator.DBHealthIndicator;
+
 @SpringBootApplication
 public class ExpensesApplication extends SpringBootServletInitializer {
+	DBHealthIndicator healthIndicator=new DBHealthIndicator();
 
 	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
