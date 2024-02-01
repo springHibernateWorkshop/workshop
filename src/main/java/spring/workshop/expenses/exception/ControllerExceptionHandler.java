@@ -38,7 +38,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public ErrorMessage notFoundExceptionHandler(Exception ex, WebRequest request) {
+    public ErrorMessage badRequestExceptionHandler(Exception ex, WebRequest request) {
         ErrorMessage message = new ErrorMessage(
                 HttpStatus.NOT_FOUND.value(),
                 LocalDate.now(),
@@ -50,9 +50,21 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(UnsupportedOperationException.class)
     @ResponseStatus(value = HttpStatus.NOT_IMPLEMENTED)
-    public ErrorMessage UnsupportedOperationExceptionHandler(Exception ex, WebRequest request) {
+    public ErrorMessage unsupportedOperationExceptionHandler(Exception ex, WebRequest request) {
         ErrorMessage message = new ErrorMessage(
                 HttpStatus.NOT_IMPLEMENTED.value(),
+                LocalDate.now(),
+                ex.getMessage(),
+                request.getDescription(false));
+
+        return message;
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
+    public ErrorMessage unAuthorizedExceptionHandler(Exception ex, WebRequest request) {
+        ErrorMessage message = new ErrorMessage(
+                HttpStatus.UNAUTHORIZED.value(),
                 LocalDate.now(),
                 ex.getMessage(),
                 request.getDescription(false));
