@@ -1,4 +1,4 @@
-package spring.workshop.expenses.services;
+package spring.workshop.expenses.actuator;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,7 +13,7 @@ public class WebSecurity{
         @SuppressWarnings("removal")
         @Bean
         public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-            http.authorizeHttpRequests().requestMatchers("/custom/**").hasRole("ADMIN")
+            http.authorizeHttpRequests().requestMatchers("/actuator_poc/**").hasRole("ACTUATOR_ADMIN")
             .anyRequest().authenticated()
             .and()
             .httpBasic();
