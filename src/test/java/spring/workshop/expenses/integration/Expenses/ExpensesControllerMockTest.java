@@ -101,7 +101,7 @@ public class ExpensesControllerMockTest {
                 // Arrange
                 Expense expenses = new Expense(999L, 999.99f, LocalDate.of(1994, 10, 1), new Category(100L),
                                 new Shop(100L),
-                                new User(100L, "Test"),
+                                new User(100L, "username", "pass", 2L),
                                 "example_note_1");
 
                 assertEquals(3, repo.findAll().size());
@@ -127,7 +127,7 @@ public class ExpensesControllerMockTest {
 
                 Expense expense = new Expense(100L, 999.99f, LocalDate.of(1994, 10, 1), new Category(100L),
                                 new Shop(100L),
-                                new User(100L, "Test"),
+                                new User(100L, "username", "pass", 2L),
                                 "Expense 1");
                 assertEquals("Note 1", repo.findById(100L).get().getNote());
 

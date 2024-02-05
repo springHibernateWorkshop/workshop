@@ -20,18 +20,30 @@ public class User {
 
     @Column
     @NonNull
-    private String name;
+    private String username;
+
+    @Column(name = "password")
+    @NonNull
+    private String passwd;
+
+    @Column(name = "role_id")
+    @NonNull
+    private Long role;
 
     public User() {
     }
 
-    public User(@NonNull String name) {
-        this.name = name;
+    public User(@NonNull String username, @NonNull String password, @NonNull Long role) {
+        this.username = username;
+        this.passwd = password;
+        this.role = role;
     }
 
-    public User(Long id, @NonNull String name) {
+    public User(Long id, @NonNull String username, @NonNull String password, @NonNull Long role) {
         this.id = id;
-        this.name = name;
+        this.username = username;
+        this.passwd = password;
+        this.role = role;
     }
 
     public Long getId() {
@@ -42,12 +54,28 @@ public class User {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
-    public void setName(@NonNull String name) {
-        this.name = name;
+    public void setUsername(@NonNull String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return passwd;
+    }
+
+    public void setPassword(@NonNull String password) {
+        this.passwd = password;
+    }
+
+    public Long getRole() {
+        return role;
+    }
+
+    public void setRole(@NonNull Long roleId) {
+        this.role = roleId;
     }
 
 }

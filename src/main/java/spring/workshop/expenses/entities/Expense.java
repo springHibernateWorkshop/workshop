@@ -28,6 +28,7 @@ public class Expense {
     private LocalDate date;
 
     @Column
+    // note / name???
     private String note;
 
     @ManyToOne(optional = false)

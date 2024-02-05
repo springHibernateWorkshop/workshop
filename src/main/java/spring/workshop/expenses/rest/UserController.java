@@ -35,17 +35,19 @@ public class UserController {
   }
 
   @PostMapping(path = "/add")
-  public ResponseEntity<User> addUser(@RequestParam String name) {
-    User newUser = userService.addUser(name);
+  public ResponseEntity<User> addUser(@RequestParam String username,
+      @RequestParam String password,
+      @RequestParam Long roleId) {
+    User newUser = userService.addUser(username, password, roleId);
 
     return ResponseEntity.status(HttpStatus.CREATED)
         .body(newUser);
   }
 
   @DeleteMapping(path = "/delete")
-  public ResponseEntity<Boolean> deleteUser(@RequestParam String name) {
+  public ResponseEntity<Boolean> deleteUser(@RequestParam String username) {
     return ResponseEntity.status(HttpStatus.OK)
-        .body(userService.deleteUser(name));
+        .body(userService.deleteUser(username));
   }
 
   @PutMapping(path = "/update")
@@ -68,10 +70,10 @@ public class UserController {
         .body(userService.getUserById(id));
   }
 
-  @GetMapping(path = "/get_by_name")
-  public ResponseEntity<User> getUserByName(@RequestParam String name) {
+  @GetMapping(path = "/get_by_username")
+  public ResponseEntity<User> getUserByUsername(@RequestParam String username) {
     return ResponseEntity.status(HttpStatus.OK)
-        .body(userService.getUserByName(name));
+        .body(userService.getUserByUsername(username));
   }
 
   // Maps UnsupportedOperationException to a 501 Not Implemented HTTP status code

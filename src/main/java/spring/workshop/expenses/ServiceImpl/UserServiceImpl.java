@@ -24,17 +24,23 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User addUser(String name) {
-        if (name == null || name.trim().isEmpty())
-            throw new IllegalArgumentException("User with empty name cannot be created.");
+    public User addUser(String username, String pass, Long roleId) {
+        if (username == null || username.trim().isEmpty())
+            throw new IllegalArgumentException("User with empty username cannot be created.");
 
-        Optional<User> user = userRepository.findByName(name);
+        if (pass == null || pass.trim().isEmpty())
+            throw new IllegalArgumentException("User with empty password cannot be created.");
+
+        if (roleId == null)
+            throw new IllegalArgumentException("User with empty roleID cannot be created.");
+
+        Optional<User> user = userRepository.findByUsername(username);
         if (user.isPresent())
-            throw new IllegalArgumentException("User with name = " + name + " already exists.");
+            throw new IllegalArgumentException("User with username = " + username + " already exists.");
 
-        User newUser = new User(name);
+        User newUser = new User(username, pass, roleId);
         userRepository.save(newUser);
-        LOG.info("User with name = " + name + " created successfully.");
+        LOG.info("User with name = " + username + " created successfully.");
         return newUser;
     }
 
@@ -43,7 +49,9 @@ public class UserServiceImpl implements UserService {
         Optional<User> oldUser = userRepository.findById(user.getId());
         if (oldUser.isPresent()) {
             User updatedUser = oldUser.get();
-            updatedUser.setName(user.getName());
+            updatedUser.setUsername(user.getUsername());
+            updatedUser.setPassword(user.getPassword());
+            updatedUser.setRole(user.getRole());
             LOG.info("User with id = " + user.getId() + " updated succesfully.");
             return userRepository.save(updatedUser);
         } else {
@@ -52,14 +60,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Boolean deleteUser(String name) {
-        Optional<User> user = userRepository.findByName(name);
+    public Boolean deleteUser(String username) {
+        Optional<User> user = userRepository.findByUsername(username);
         if (user.isPresent()) {
-            userRepository.deleteByName(name);
-            LOG.info("User with name = " + name + " deleted successfully.");
+            userRepository.deleteByUsername(username);
+            LOG.info("User with username = " + username + " deleted successfully.");
             return true;
         } else {
-            LOG.info("User with name = " + name + " not found.");
+            LOG.info("User with username = " + username + " not found.");
             return false;
         }
     }
@@ -79,10 +87,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserByName(String name) {
-        Optional<User> user = userRepository.findByName(name);
+    public User getUserByUsername(String username) {
+        Optional<User> user = userRepository.findByUsername(username);
         if (!user.isPresent())
-            throw new IllegalArgumentException("User with name = " + name + " not found.");
+            throw new IllegalArgumentException("User with username = " + username + " not found.");
 
         return user.get();
     }

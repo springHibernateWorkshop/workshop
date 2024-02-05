@@ -40,24 +40,31 @@ public class UserServiceTests {
     @Test
     public void testAddUser() {
         // Arrange
-        String name = "Test";
+        String username = "usrname";
+        String pass = "pass";
+        Long roleID = 2L;
         // Given
-        User user = new User(name);
-        when(userRepositoryMock.save(user)).thenReturn(new User(1L, "Test"));
+        User user = new User(username, pass, roleID);
+        when(userRepositoryMock.save(user)).thenReturn(new User(username, pass, roleID));
         // When
-        User response = sut.addUser("Test");
+        User response = sut.addUser(username, pass, roleID);
         // Then
-        assertEquals(user.getName(), response.getName());
+        assertEquals(user.getUsername(), response.getUsername());
+        assertEquals(user.getPassword(), response.getPassword());
+        assertEquals(user.getRole(), response.getRole());
     }
 
     @Test
     public void testDeleteUserPositive() {
         // Arrange
-        String name = "Test";
+        String username = "usrname";
+        String pass = "pass";
+        Long roleID = 2L;
         // Given
-        when(userRepositoryMock.findByName(name)).thenReturn(Optional.of(new User(1L, "Test")));
+        when(userRepositoryMock.findByUsername(username))
+                .thenReturn(Optional.of(new User(1L, username, pass, roleID)));
         // When
-        Boolean response = sut.deleteUser(name);
+        Boolean response = sut.deleteUser(username);
         // Then
         assertEquals(Boolean.TRUE, response);
     }
@@ -65,11 +72,11 @@ public class UserServiceTests {
     @Test
     public void testDeleteCategoryNegative() {
         // Arrange
-        String name = "Test";
+        String username = "Test";
         // Given
-        when(userRepositoryMock.findByName(name)).thenReturn(Optional.empty());
+        when(userRepositoryMock.findByUsername(username)).thenReturn(Optional.empty());
         // When
-        Boolean response = sut.deleteUser(name);
+        Boolean response = sut.deleteUser(username);
         // Then
         assertEquals(Boolean.FALSE, response);
     }
@@ -78,15 +85,17 @@ public class UserServiceTests {
     public void testUpdateUser() {
         // Arrange
         Long id = 1L;
-        User updatedUser = new User(id, "Test2");
+        User updatedUser = new User(id, "usrname", "passX", 4L);
         // Given
-        when(userRepositoryMock.findById(1L)).thenReturn(Optional.of(new User(1L, "Test1")));
+        when(userRepositoryMock.findById(1L)).thenReturn(Optional.of(new User(1L, "usern", "passZ", 4L)));
         when(userRepositoryMock.save(any())).thenReturn(updatedUser);
         // When
         User response = sut.updateUser(updatedUser);
         // Then
         assertEquals(id, response.getId());
-        assertEquals("Test2", response.getName());
+        assertEquals("usrname", response.getUsername());
+        assertEquals("passX", response.getPassword());
+        assertEquals(4L, response.getRole());
     }
 
     @Test
@@ -104,7 +113,7 @@ public class UserServiceTests {
         // Arrange
         Long id = 1L;
         // Given
-        when(userRepositoryMock.findById(id)).thenReturn(Optional.of(new User(1L, "Test")));
+        when(userRepositoryMock.findById(id)).thenReturn(Optional.of(new User(1L, "user", "password", 1L)));
         // When
         User response = sut.getUserById(id);
         // Then
@@ -112,15 +121,15 @@ public class UserServiceTests {
     }
 
     @Test
-    public void testGetUserByName() {
+    public void testGetUserByUsername() {
         // Arrange
-        String name = "Test";
+        String username = "Test";
         // Given
-        when(userRepositoryMock.findByName(name)).thenReturn(Optional.of(new User(1L, "Test")));
+        when(userRepositoryMock.findByUsername(username)).thenReturn(Optional.of(new User(1L, "Test", "pass", 2L)));
         // When
-        User response = sut.getUserByName(name);
+        User response = sut.getUserByUsername(username);
         // Then
-        assertEquals(name, response.getName());
+        assertEquals(username, response.getUsername());
     }
 
 }

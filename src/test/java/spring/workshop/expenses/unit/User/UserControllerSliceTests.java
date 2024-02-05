@@ -42,12 +42,13 @@ public class UserControllerSliceTests {
     @Test
     public void testAddUser() {
         // Given
-        when(userServiceMock.addUser(any())).thenReturn(new User(1L, "Test"));
+        when(userServiceMock.addUser(any(), any(), any())).thenReturn(new User(1L, "usr", "pass", 2L));
         // When
-        ResponseEntity<User> response = sut.addUser("Test");
+        ResponseEntity<User> response = sut.addUser("usr", "pass", 2L);
         // Then
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        assertEquals("Test", response.getBody().getName());
+        assertEquals("usr", response.getBody().getUsername());
+        assertEquals("pass", response.getBody().getPassword());
     }
 
     @Test
@@ -80,16 +81,18 @@ public class UserControllerSliceTests {
     public void testUpdateUser() {
         // Arrange
         Long id = 1L;
-        User updatedUser = new User(id, "Test2");
+        User updatedUser = new User(id, "usr", "pass", 2L);
         // Given
-        when(userServiceMock.getUserById(id)).thenReturn(new User(id, "Test1"));
+        when(userServiceMock.getUserById(id)).thenReturn(new User(id, "user", "passXYZ", 2L));
         when(userServiceMock.updateUser(updatedUser)).thenReturn(updatedUser);
         // When
         ResponseEntity<User> response = sut.updateUser(updatedUser);
         // Then
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(id, response.getBody().getId());
-        assertEquals("Test2", response.getBody().getName());
+        assertEquals("usr", response.getBody().getUsername());
+        assertEquals("pass", response.getBody().getPassword());
+        assertEquals(2L, response.getBody().getRole());
     }
 
     @Test
@@ -108,25 +111,30 @@ public class UserControllerSliceTests {
         // Arrange
         Long id = 1L;
         // Given
-        when(userServiceMock.getUserById(id)).thenReturn(new User(1L, "Test"));
+        when(userServiceMock.getUserById(id)).thenReturn(new User(1L, "username", "pass", 3L));
         // When
         ResponseEntity<User> response = sut.getUserById(id);
         // Then
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(id, response.getBody().getId());
+        assertEquals("username", response.getBody().getUsername());
+        assertEquals("pass", response.getBody().getPassword());
+        assertEquals(3L, response.getBody().getRole());
     }
 
     @Test
-    public void testGetUserByName() {
+    public void testGetUserByUsername() {
         // Arrange
         String name = "Test";
         // Given
-        when(userServiceMock.getUserByName(name)).thenReturn(new User(1L, "Test"));
+        when(userServiceMock.getUserByUsername(name)).thenReturn(new User(1L, "username", "pass", 3L));
         // When
-        ResponseEntity<User> response = sut.getUserByName(name);
+        ResponseEntity<User> response = sut.getUserByUsername(name);
         // Then
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(name, response.getBody().getName());
+        assertEquals("username", response.getBody().getUsername());
+        assertEquals("pass", response.getBody().getPassword());
+        assertEquals(3L, response.getBody().getRole());
     }
 
 }

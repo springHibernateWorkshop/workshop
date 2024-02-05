@@ -6,9 +6,9 @@ import spring.workshop.expenses.entities.User;
 
 public interface UserService {
 
-    User addUser(String name);
+    User addUser(String username, String pass, Long roleId);
 
-    Boolean deleteUser(String name);
+    Boolean deleteUser(String username);
 
     User updateUser(User user);
 
@@ -16,6 +16,6 @@ public interface UserService {
 
     User getUserById(Long id);
 
-    User getUserByName(String name);
+    User getUserByUsername(String username);
 
 }

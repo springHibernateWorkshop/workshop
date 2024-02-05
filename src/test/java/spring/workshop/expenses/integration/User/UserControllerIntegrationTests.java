@@ -32,10 +32,10 @@ public class UserControllerIntegrationTests {
     public void testAddNewUser() throws Exception {
 
         // Setting up request header and body for the POST request
-        // Constructing the request body with the user's name to be added
+        // Constructing the request body with the username to be added
         HttpHeaders requestHeader = new HttpHeaders();
         requestHeader.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        String requestBody = "name=Test1";
+        String requestBody = "username=user001&password=pass001&roleId=1";
         HttpEntity<String> requestEntity = new HttpEntity<>(requestBody, requestHeader);
 
         // URL for adding an user
@@ -49,17 +49,17 @@ public class UserControllerIntegrationTests {
 
         // Asserting that the response body contains the new user indicating
         // successful adding
-        assertEquals("Test1", response.getBody().getName());
+        assertEquals("user001", response.getBody().getUsername());
     }
 
     @Test
     public void testDeleteUser() throws Exception {
 
         // Setting up request header and body for the DELETE request
-        // Constructing the request body with the user's name to be deleted
+        // Constructing the request body with the username to be deleted
         HttpHeaders requestHeader = new HttpHeaders();
         requestHeader.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        String requestBody = "name=Bartosz";
+        String requestBody = "username=user001";
         HttpEntity<String> requestEntity = new HttpEntity<>(requestBody, requestHeader);
 
         // URL for deleting an user
@@ -82,7 +82,7 @@ public class UserControllerIntegrationTests {
         // Constructing the request body with the user to be updated
         HttpHeaders requestHeader = new HttpHeaders();
         requestHeader.setContentType(MediaType.APPLICATION_JSON);
-        String requestBody = new ObjectMapper().writeValueAsString(new User(300l, "Test2"));
+        String requestBody = new ObjectMapper().writeValueAsString(new User(300l, "username", "pass", 2L));
         HttpEntity<String> requestEntity = new HttpEntity<>(requestBody, requestHeader);
 
         String url = "/users/update";
@@ -95,7 +95,9 @@ public class UserControllerIntegrationTests {
 
         // Asserting that the response body contains the updated user
         assertEquals(300, response.getBody().getId());
-        assertEquals("Test2", response.getBody().getName());
+        assertEquals("username", response.getBody().getUsername());
+        assertEquals("pass", response.getBody().getPassword());
+        assertEquals(2L, response.getBody().getRole());
     }
 
     @Test
@@ -134,7 +136,7 @@ public class UserControllerIntegrationTests {
     public void testGetUserByName() throws Exception {
 
         // URL for retrieving the user by name
-        String url = "/users/get_by_name?name=Victoria";
+        String url = "/users/get_by_username?username=usr1";
 
         // Send a GET request to retrieve the user by name
         ResponseEntity<User> response = restTemplate.getForEntity(url, User.class);
@@ -143,6 +145,6 @@ public class UserControllerIntegrationTests {
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
         // Asserting that the response body contains the user
-        assertEquals("Victoria", response.getBody().getName());
+        assertEquals("usr1", response.getBody().getUsername());
     }
 }
