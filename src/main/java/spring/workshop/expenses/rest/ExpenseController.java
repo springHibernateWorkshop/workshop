@@ -72,9 +72,9 @@ public class ExpenseController {
         return new ResponseEntity<>(expenseService.findByShopId(shopId), HttpStatus.OK);
     }
 
-    @GetMapping(path = "/user/{userId}")
-    public ResponseEntity<List<Expense>> getExpensesByUserId(@PathVariable Long userId) {
-        return new ResponseEntity<>(expenseService.findByUserId(userId), HttpStatus.OK);
+    @GetMapping(path = "/user/{employeeId}")
+    public ResponseEntity<List<Expense>> getExpensesByEmployeeId(@PathVariable Long employeeId) {
+        return new ResponseEntity<>(expenseService.findByEmployeeId(employeeId), HttpStatus.OK);
     }
 
 }

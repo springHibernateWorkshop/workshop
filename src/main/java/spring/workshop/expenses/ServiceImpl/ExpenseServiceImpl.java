@@ -40,7 +40,7 @@ public class ExpenseServiceImpl implements ExpenseService {
             upExpenses.setDate(expense.getDate());
             upExpenses.setCategory(expense.getCategory());
             upExpenses.setShop(expense.getShop());
-            upExpenses.setUser(expense.getUser());
+            upExpenses.setEmployee(expense.getEmployee());
             upExpenses.setNote(expense.getNote());
             return expensesRepository.save(upExpenses);
         })
@@ -82,8 +82,8 @@ public class ExpenseServiceImpl implements ExpenseService {
     }
 
     @Override
-    public List<Expense> findByUserId(Long userId) {
-        return expensesRepository.findByUserId(userId);
+    public List<Expense> findByEmployeeId(Long employeeId) {
+        return expensesRepository.findByEmployeeId(employeeId);
     }
 
 }

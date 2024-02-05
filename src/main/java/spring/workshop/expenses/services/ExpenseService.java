@@ -22,5 +22,5 @@ public interface ExpenseService {
 
     public List<Expense> findByShopId(Long shopId);
 
-    public List<Expense> findByUserId(Long userId);
+    public List<Expense> findByEmployeeId(Long employeeId);
 }
