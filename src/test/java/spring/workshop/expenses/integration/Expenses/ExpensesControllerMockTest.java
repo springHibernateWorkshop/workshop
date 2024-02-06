@@ -26,8 +26,10 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import jakarta.transaction.Transactional;
 import spring.workshop.expenses.entities.Category;
+import spring.workshop.expenses.entities.Employee;
 import spring.workshop.expenses.entities.Expense;
 import spring.workshop.expenses.entities.Shop;
+import spring.workshop.expenses.entities.Superior;
 import spring.workshop.expenses.entities.User;
 import spring.workshop.expenses.repos.ExpenseRepository;
 
@@ -101,7 +103,7 @@ public class ExpensesControllerMockTest {
                 // Arrange
                 Expense expenses = new Expense(999L, 999.99f, LocalDate.of(1994, 10, 1), new Category(100L),
                                 new Shop(100L),
-                                new User(100L, "Test"),
+                                new Employee(100L, "Test", new User("Test"), new Superior("Test")),
                                 "example_note_1");
 
                 assertEquals(3, repo.findAll().size());
@@ -127,7 +129,7 @@ public class ExpensesControllerMockTest {
 
                 Expense expense = new Expense(100L, 999.99f, LocalDate.of(1994, 10, 1), new Category(100L),
                                 new Shop(100L),
-                                new User(100L, "Test"),
+                                new Employee(100L, "Test", new User("Test"), new Superior("Test")),
                                 "Expense 1");
                 assertEquals("Note 1", repo.findById(100L).get().getNote());
 
