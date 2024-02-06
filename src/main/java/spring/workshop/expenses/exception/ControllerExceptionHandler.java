@@ -12,6 +12,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @RestControllerAdvice
 public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
+
     @ExceptionHandler(ResourceNotFoundException.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     public ErrorMessage resourceNotFoundException(ResourceNotFoundException ex, WebRequest request) {
@@ -65,6 +66,18 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     public ErrorMessage unAuthorizedExceptionHandler(Exception ex, WebRequest request) {
         ErrorMessage message = new ErrorMessage(
                 HttpStatus.UNAUTHORIZED.value(),
+                LocalDate.now(),
+                ex.getMessage(),
+                request.getDescription(false));
+
+        return message;
+    }
+
+    @ExceptionHandler(ForbiddenResourceException.class)
+    @ResponseStatus(value = HttpStatus.FORBIDDEN)
+    public ErrorMessage forbiddenResourceException(ForbiddenResourceException ex, WebRequest request) {
+        ErrorMessage message = new ErrorMessage(
+                HttpStatus.FORBIDDEN.value(),
                 LocalDate.now(),
                 ex.getMessage(),
                 request.getDescription(false));
