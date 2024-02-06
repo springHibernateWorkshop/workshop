@@ -8,8 +8,6 @@ import spring.workshop.expenses.entities.Employee;
 
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
-    Optional<Employee> findByName(String name);
-
-    Optional<Employee> findById(Integer id);
+    Optional<Employee> findById(Long id);
 
 }
