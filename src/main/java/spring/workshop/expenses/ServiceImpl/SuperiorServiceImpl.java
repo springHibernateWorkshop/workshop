@@ -4,45 +4,33 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import spring.workshop.expenses.entities.Expense;
-import spring.workshop.expenses.services.ExpenseService;
+import spring.workshop.expenses.entities.Superior;
+import spring.workshop.expenses.exception.ResourceNotFoundException;
+import spring.workshop.expenses.repos.SuperiorRepository;
 import spring.workshop.expenses.services.SuperiorService;
 
 public class SuperiorServiceImpl implements SuperiorService {
 
     @Autowired
-    private ExpenseService expenseService;
+    private SuperiorRepository superiorRepository;
+
 
     @Override
-    public Expense viewExpense(Long userId, Long expenseId) {
-        Expense expense = expenseService.getExpenseById(expenseId);
-        //TODO check if employee that owns the expense, reports to this superior
-        return expense;  
+    public Superior getSuperiorById(Long id) {
+        return superiorRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("No Superior with id: " + id));
     }
 
-    @Override
-    public List<Expense> viewExpenses(Long userId, Long employeeId, String year, String month, Long categoryId,
-            Long shopId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'viewExpenses'");
-    }
 
     @Override
-    public List<Expense> viewAllExpenses(Long userId, String year, String month, Long categoryId, Long shopId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'viewAllExpenses'");
+    public List<Superior> getAllSuperiors() {
+        return superiorRepository.findAll();
     }
 
-    @Override
-    public Object viewReport(Long userId, String year, String month, Long categoryId, Long shopId, String format) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'viewReport'");
-    }
 
     @Override
-    public void approveExpense(Long userId, Long expenseId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'approveExpense'");
+    public Superior createSuperior(Superior superior){
+        return superiorRepository.save(superior);
     }
+
     
 }
