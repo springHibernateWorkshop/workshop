@@ -1,4 +1,4 @@
-package spring.workshop.expenses.exception;
+package spring.workshop.expenses.exceptions;
 
 import java.time.LocalDate;
 

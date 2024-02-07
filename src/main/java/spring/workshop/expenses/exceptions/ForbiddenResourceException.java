@@ -1,4 +1,4 @@
-package spring.workshop.expenses.exception;
+package spring.workshop.expenses.exceptions;
 
 public class ForbiddenResourceException extends RuntimeException {
     private static final long serialVersionUID = 1L;

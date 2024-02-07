@@ -1,4 +1,4 @@
-package spring.workshop.expenses.repos;
+package spring.workshop.expenses.repositories;
 
 import java.time.LocalDate;
 import java.util.List;

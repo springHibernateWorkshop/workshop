@@ -19,8 +19,8 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import spring.workshop.expenses.controllers.CategoryController;
 import spring.workshop.expenses.entities.Category;
-import spring.workshop.expenses.rest.CategoryController;
 import spring.workshop.expenses.services.CategoryService;
 
 /**

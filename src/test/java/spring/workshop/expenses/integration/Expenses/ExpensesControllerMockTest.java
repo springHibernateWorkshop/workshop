@@ -31,7 +31,7 @@ import spring.workshop.expenses.entities.Expense;
 import spring.workshop.expenses.entities.Shop;
 import spring.workshop.expenses.entities.Superior;
 import spring.workshop.expenses.entities.User;
-import spring.workshop.expenses.repos.ExpenseRepository;
+import spring.workshop.expenses.repositories.ExpenseRepository;
 
 /**
  * These tests are using the MockMvc class to test the CExpensesController

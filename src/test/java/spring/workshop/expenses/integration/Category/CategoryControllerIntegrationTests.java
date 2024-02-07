@@ -18,8 +18,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
+import spring.workshop.expenses.controllers.CategoryController;
 import spring.workshop.expenses.entities.Category;
-import spring.workshop.expenses.rest.CategoryController;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")

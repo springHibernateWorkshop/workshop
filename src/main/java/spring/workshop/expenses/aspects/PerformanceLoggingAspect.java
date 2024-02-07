@@ -1,4 +1,4 @@
-package spring.workshop.expenses.aspect;
+package spring.workshop.expenses.aspects;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

@@ -1,4 +1,4 @@
-package spring.workshop.expenses.serviceImpl;
+package spring.workshop.expenses.services.impl;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import spring.workshop.expenses.entities.Expense;
-import spring.workshop.expenses.repos.ExpenseRepository;
+import spring.workshop.expenses.repositories.ExpenseRepository;
 import spring.workshop.expenses.services.ExpenseService;
 
 @Service

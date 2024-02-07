@@ -21,9 +21,9 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import spring.workshop.expenses.controllers.ShopController;
 import spring.workshop.expenses.entities.Category;
 import spring.workshop.expenses.entities.Shop;
-import spring.workshop.expenses.rest.ShopController;
 import spring.workshop.expenses.services.ShopService;
 
 @WebMvcTest(ShopController.class)
@@ -113,8 +113,7 @@ public class ShopControllerSliceTests {
         ResponseEntity<Shop> response = shopController.deleteShop(Long.valueOf(1));
 
         // Assert
-         assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
-    
 }

@@ -14,7 +14,8 @@ import org.springframework.test.context.ActiveProfiles;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.read.ListAppender;
-import spring.workshop.expenses.serviceImpl.ShopServiceImpl;
+import spring.workshop.expenses.aspects.PerformanceLoggingAspect;
+import spring.workshop.expenses.services.impl.ShopServiceImpl;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")

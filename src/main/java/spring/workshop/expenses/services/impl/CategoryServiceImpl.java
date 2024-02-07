@@ -1,4 +1,4 @@
-package spring.workshop.expenses.serviceImpl;
+package spring.workshop.expenses.services.impl;
 
 import java.util.List;
 import java.util.Optional;
@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import spring.workshop.expenses.entities.Category;
-import spring.workshop.expenses.repos.CategoryRepository;
+import spring.workshop.expenses.repositories.CategoryRepository;
 import spring.workshop.expenses.services.CategoryService;
 
 @Service

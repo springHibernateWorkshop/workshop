@@ -20,13 +20,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
+import spring.workshop.expenses.controllers.ExpenseController;
 import spring.workshop.expenses.entities.Category;
 import spring.workshop.expenses.entities.Employee;
 import spring.workshop.expenses.entities.Expense;
 import spring.workshop.expenses.entities.Shop;
 import spring.workshop.expenses.entities.Superior;
 import spring.workshop.expenses.entities.User;
-import spring.workshop.expenses.rest.ExpenseController;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")

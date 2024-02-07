@@ -1,4 +1,4 @@
-package spring.workshop.expenses.rest;
+package spring.workshop.expenses.controllers;
 
 import java.util.List;
 

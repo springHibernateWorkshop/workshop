@@ -17,8 +17,8 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import spring.workshop.expenses.controllers.UserController;
 import spring.workshop.expenses.entities.User;
-import spring.workshop.expenses.rest.UserController;
 import spring.workshop.expenses.services.UserService;
 
 // This class contains unit tests for the UserController

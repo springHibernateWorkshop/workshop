@@ -1,4 +1,4 @@
-package spring.workshop.expenses.serviceImpl;
+package spring.workshop.expenses.services.impl;
 
 import java.util.List;
 
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import spring.workshop.expenses.entities.Shop;
-import spring.workshop.expenses.repos.ShopRepository;
+import spring.workshop.expenses.repositories.ShopRepository;
 import spring.workshop.expenses.services.ShopService;
 
 @Service

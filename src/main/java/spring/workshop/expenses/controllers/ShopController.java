@@ -1,4 +1,4 @@
-package spring.workshop.expenses.rest;
+package spring.workshop.expenses.controllers;
 
 import java.util.List;
 
@@ -25,7 +25,7 @@ public class ShopController {
     private ShopService shopService;
 
     @PostMapping
-    public ResponseEntity<Shop> addNewShop(@RequestBody Shop shop){
+    public ResponseEntity<Shop> addNewShop(@RequestBody Shop shop) {
 
         return new ResponseEntity<>(shopService.addNewShop(shop), HttpStatus.CREATED);
     }
@@ -42,12 +42,12 @@ public class ShopController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Shop> updateShop(@RequestBody Shop room, @PathVariable Long id) {
-        return new ResponseEntity<>(shopService.updateShop(room,id), HttpStatus.OK);
+        return new ResponseEntity<>(shopService.updateShop(room, id), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Shop> deleteShop(@PathVariable Long id) {
         return new ResponseEntity<>(shopService.deleteShop(id), HttpStatus.OK);
     }
-    
+
 }
