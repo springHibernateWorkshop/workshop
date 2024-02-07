@@ -1,4 +1,4 @@
-package spring.workshop.expenses.serviceImpl;
+package spring.workshop.expenses.services.impl;
 
 import java.util.List;
 import java.util.Optional;
@@ -7,27 +7,37 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import spring.workshop.expenses.entities.Employee;
-import spring.workshop.expenses.exception.ResourceNotFoundException;
-import spring.workshop.expenses.repos.EmployeeRepository;
+import spring.workshop.expenses.exceptions.ResourceNotFoundException;
+import spring.workshop.expenses.repositories.EmployeeRepository;
 import spring.workshop.expenses.services.EmployeeService;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
 
-    private EmployeeRepository employeeRepository;
     private static final Logger LOG = LoggerFactory.getLogger(EmployeeServiceImpl.class);
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    private EmployeeRepository employeeRepository;
+
     @Autowired
-    public EmployeeServiceImpl(EmployeeRepository employeeRepository) {
+    public EmployeeServiceImpl(EntityManager entityManager, EmployeeRepository employeeRepository) {
+        this.entityManager = entityManager;
         this.employeeRepository = employeeRepository;
     }
 
     @Override
+    @Transactional
     public Employee addEmployee(Employee employee) {
-        Employee savedEmployee = employeeRepository.save(employee);
+        Employee savedEmployee = employeeRepository.saveAndFlush(employee);
         LOG.info("Employee with id = " + employee.getId() + " created successfully.");
+        entityManager.refresh(savedEmployee);
         return savedEmployee;
     }
 
@@ -43,6 +53,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
+    @Transactional
     public Employee updateEmployee(Employee employee) {
         Optional<Employee> oldEmployee = employeeRepository.findById(employee.getId());
         if (oldEmployee.isPresent()) {
@@ -50,8 +61,9 @@ public class EmployeeServiceImpl implements EmployeeService {
             updatedEmployee.setName(employee.getName());
             updatedEmployee.setUser(employee.getUser());
             updatedEmployee.setSuperior(employee.getSuperior());
-            Employee savedEmployee = employeeRepository.save(updatedEmployee);
+            Employee savedEmployee = employeeRepository.saveAndFlush(updatedEmployee);
             LOG.info("Employee with id = " + updatedEmployee.getId() + " updated succesfully.");
+            entityManager.refresh(savedEmployee);
             return savedEmployee;
 
         } else {
