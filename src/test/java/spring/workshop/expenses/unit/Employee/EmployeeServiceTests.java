@@ -12,6 +12,7 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -30,18 +31,14 @@ import spring.workshop.expenses.services.impl.EmployeeServiceImpl;
 @ActiveProfiles("test")
 public class EmployeeServiceTests {
 
-    private EmployeeService sut;
-
     @Mock
     EmployeeRepository employeeRepositoryMock;
 
     @Mock
     EntityManager entityManagerMock;
 
-    @BeforeEach
-    public void setup() {
-        sut = new EmployeeServiceImpl(entityManagerMock, employeeRepositoryMock);
-    }
+    @InjectMocks
+    private EmployeeService sut = new EmployeeServiceImpl(entityManagerMock, employeeRepositoryMock);
 
     @Test
     public void testAddEmployee() {

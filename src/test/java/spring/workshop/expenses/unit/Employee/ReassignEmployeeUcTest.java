@@ -2,46 +2,37 @@ package spring.workshop.expenses.unit.Employee;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-
-import spring.workshop.expenses.controllers.EmployeeController;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import spring.workshop.expenses.entities.Employee;
 import spring.workshop.expenses.entities.Superior;
 import spring.workshop.expenses.entities.User;
 import spring.workshop.expenses.services.EmployeeService;
 import spring.workshop.expenses.services.SuperiorService;
+import spring.workshop.expenses.useCases.ReassignEmployeeUc;
+import spring.workshop.expenses.useCases.impl.ReassignEmployeeUcImpl;
 
 // This class contains unit tests for the EmployeeController
 
-@WebMvcTest(EmployeeController.class)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-public class EmployeeControllerSliceTests {
+@ExtendWith(SpringExtension.class)
+@ActiveProfiles("test")
+public class ReassignEmployeeUcTest {
 
-    private EmployeeController sut;
+    @InjectMocks
+    private ReassignEmployeeUc sut = new ReassignEmployeeUcImpl();
 
-    @MockBean
+    @Mock
     private EmployeeService employeeServiceMock;
 
-    @MockBean
+    @Mock
     private SuperiorService superiorServiceMock;
-
-    @BeforeEach
-    public void setUp() throws Exception {
-        sut = new EmployeeController(employeeServiceMock, superiorServiceMock);
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
-    }
 
     @Test
     public void testReassignEmployee() {
@@ -56,10 +47,12 @@ public class EmployeeControllerSliceTests {
         when(employeeServiceMock.updateEmployee(any(Employee.class)))
                 .thenReturn(updatedEmployee);
         // When
-        ResponseEntity<Employee> response = sut.reassignEmployee(1L, 2L);
+        Employee response = sut.reassignEmployee(1L, 2L);
         // Then
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(2L, response.getBody().getSuperior().getId());
+        verify(employeeServiceMock).getEmployeeById(1L);
+        verify(superiorServiceMock).getSuperiorById(2L);
+        verify(employeeServiceMock).updateEmployee(employee);
+        assertEquals(superior, response.getSuperior());
     }
 
 }

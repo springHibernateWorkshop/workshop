@@ -21,6 +21,8 @@ import spring.workshop.expenses.entities.Employee;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public class EmployeeControllerIntegrationTests {
 
+    private static final String BASE_URL = "/employees/";
+
     @Autowired
     private TestRestTemplate restTemplate;
 
@@ -38,7 +40,7 @@ public class EmployeeControllerIntegrationTests {
         HttpEntity<String> requestEntity = new HttpEntity<>(requestBody, requestHeader);
 
         // URL for reassigning the employee
-        String url = "/employees/" + employeeId;
+        String url = BASE_URL + employeeId;
 
         // Send a PUT request to reassign the employee
         ResponseEntity<Employee> response = restTemplate.exchange(url, HttpMethod.PUT, requestEntity, Employee.class);
