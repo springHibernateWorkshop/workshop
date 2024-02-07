@@ -2,6 +2,7 @@ package spring.workshop.expenses.unit.Employee;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -15,12 +16,13 @@ import org.mockito.Mock;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import jakarta.persistence.EntityManager;
 import spring.workshop.expenses.entities.Employee;
 import spring.workshop.expenses.entities.Superior;
 import spring.workshop.expenses.entities.User;
-import spring.workshop.expenses.repos.EmployeeRepository;
-import spring.workshop.expenses.serviceImpl.EmployeeServiceImpl;
+import spring.workshop.expenses.repositories.EmployeeRepository;
 import spring.workshop.expenses.services.EmployeeService;
+import spring.workshop.expenses.services.impl.EmployeeServiceImpl;
 
 // This class contains unit tests for the UserController class
 
@@ -33,17 +35,21 @@ public class EmployeeServiceTests {
     @Mock
     EmployeeRepository employeeRepositoryMock;
 
+    @Mock
+    EntityManager entityManagerMock;
+
     @BeforeEach
     public void setup() {
-        sut = new EmployeeServiceImpl(employeeRepositoryMock);
+        sut = new EmployeeServiceImpl(entityManagerMock, employeeRepositoryMock);
     }
 
     @Test
     public void testAddEmployee() {
-        // Arrange
-        Employee employee = new Employee("Employee", new User("User"), new Superior("Superior"));
         // Given
-        when(employeeRepositoryMock.save(any(Employee.class))).thenReturn(employee);
+        Employee employee = new Employee("Employee", new User("User"), new Superior("Superior"));
+
+        when(employeeRepositoryMock.saveAndFlush(any(Employee.class))).thenReturn(employee);
+        doNothing().when(entityManagerMock).refresh(any(Employee.class));
         // When
         Employee response = sut.addEmployee(employee);
         // Then
@@ -54,9 +60,9 @@ public class EmployeeServiceTests {
 
     @Test
     public void testDeleteEmployee() {
-        // Arrange
-        Employee employee = new Employee(1L, "Employee", new User(), new Superior());
         // Given
+        Employee employee = new Employee(1L, "Employee", new User(), new Superior());
+
         when(employeeRepositoryMock.findById(any(Long.class)))
                 .thenReturn(Optional.of(employee));
         // When
@@ -67,14 +73,15 @@ public class EmployeeServiceTests {
 
     @Test
     public void testUpdateEmployee() {
-        // Arrange
+        // Given
         Employee employee = new Employee(1L, "Employee", new User(1L, "User"), new Superior(1L, "Superior"));
         Employee updatedEmployee = new Employee(1L, "updatedEmployee", new User(2L, "User"),
                 new Superior(2L, "Superior"));
-        // Given
+
         when(employeeRepositoryMock.findById(any(Long.class)))
                 .thenReturn(Optional.of(employee));
-        when(employeeRepositoryMock.save(any(Employee.class))).thenReturn(updatedEmployee);
+        when(employeeRepositoryMock.saveAndFlush(any(Employee.class))).thenReturn(updatedEmployee);
+        doNothing().when(entityManagerMock).refresh(any(Employee.class));
         // When
         Employee response = sut.updateEmployee(updatedEmployee);
         // Then
@@ -96,9 +103,9 @@ public class EmployeeServiceTests {
 
     @Test
     public void testGetEmployeeById() {
-        // Arrange
-        Employee employee = new Employee(1L, "Employee", new User(), new Superior());
         // Given
+        Employee employee = new Employee(1L, "Employee", new User(), new Superior());
+
         when(employeeRepositoryMock.findById(any(Long.class)))
                 .thenReturn(Optional.of(employee));
         // When
@@ -106,4 +113,5 @@ public class EmployeeServiceTests {
         // Then
         assertEquals(1L, response.getId());
     }
+
 }

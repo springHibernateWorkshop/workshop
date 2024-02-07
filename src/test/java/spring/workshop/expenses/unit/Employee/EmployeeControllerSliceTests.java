@@ -15,11 +15,12 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import spring.workshop.expenses.controllers.EmployeeController;
 import spring.workshop.expenses.entities.Employee;
 import spring.workshop.expenses.entities.Superior;
 import spring.workshop.expenses.entities.User;
-import spring.workshop.expenses.rest.EmployeeController;
 import spring.workshop.expenses.services.EmployeeService;
+import spring.workshop.expenses.services.SuperiorService;
 
 // This class contains unit tests for the EmployeeController
 
@@ -32,23 +33,26 @@ public class EmployeeControllerSliceTests {
     @MockBean
     private EmployeeService employeeServiceMock;
 
+    @MockBean
+    private SuperiorService superiorServiceMock;
+
     @BeforeEach
     public void setUp() throws Exception {
-        sut = new EmployeeController(employeeServiceMock);
+        sut = new EmployeeController(employeeServiceMock, superiorServiceMock);
         MockHttpServletRequest request = new MockHttpServletRequest();
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
     }
 
     @Test
-    public void testReassingEmployee() {
-        // Arrange
-        Employee employee = new Employee(1L, "Employee", new User(), new Superior(1L, "Superior"));
-        Superior superior = new Superior(2L, "Superior");
-        Employee updatedEmployee = new Employee(1L, "Employee", new User(), superior);
+    public void testReassignEmployee() {
         // Given
+        Employee employee = new Employee(1L, "Employee", new User(), new Superior(1L, "Superior"));
+        Superior superior = new Superior(2L, "Superior", new User(2L, "User"));
+        Employee updatedEmployee = new Employee(1L, "Employee", new User(), superior);
+
         when(employeeServiceMock.getEmployeeById(any(Long.class)))
                 .thenReturn(employee);
-        // when(superiorServiceMock.getSuperiorById(any(Long.class))).thenReturn(superior);
+        when(superiorServiceMock.getSuperiorById(any(Long.class))).thenReturn(superior);
         when(employeeServiceMock.updateEmployee(any(Employee.class)))
                 .thenReturn(updatedEmployee);
         // When
