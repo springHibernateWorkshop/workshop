@@ -1,4 +1,4 @@
-package spring.workshop.expenses.unit.Employee;
+package spring.workshop.expenses.unit.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -29,7 +29,7 @@ import spring.workshop.expenses.services.impl.EmployeeServiceImpl;
 
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
-public class EmployeeServiceTests {
+public class EmployeeServiceTest {
 
     @Mock
     EmployeeRepository employeeRepositoryMock;

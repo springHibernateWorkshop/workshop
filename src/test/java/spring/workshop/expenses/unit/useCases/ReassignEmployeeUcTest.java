@@ -1,4 +1,4 @@
-package spring.workshop.expenses.unit.Employee;
+package spring.workshop.expenses.unit.useCases;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;

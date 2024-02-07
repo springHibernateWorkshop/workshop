@@ -1,4 +1,4 @@
-package spring.workshop.expenses.unit.Category;
+package spring.workshop.expenses.unit.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -24,7 +24,7 @@ import spring.workshop.expenses.services.impl.CategoryServiceImpl;
  */
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
-public class CategoryServiceTests {
+public class CategoryServiceTest {
 
     private CategoryService sut;
 

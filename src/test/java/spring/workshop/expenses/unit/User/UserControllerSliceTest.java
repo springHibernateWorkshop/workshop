@@ -25,7 +25,7 @@ import spring.workshop.expenses.services.UserService;
 
 @WebMvcTest(UserController.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-public class UserControllerSliceTests {
+public class UserControllerSliceTest {
 
     private UserController sut;
 

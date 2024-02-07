@@ -28,7 +28,7 @@ import spring.workshop.expenses.services.CategoryService;
  */
 @WebMvcTest(CategoryController.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-public class CategoryControllerSliceTests {
+public class CategoryControllerSliceTest {
 
     private CategoryController sut;
 

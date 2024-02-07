@@ -1,4 +1,4 @@
-package spring.workshop.expenses.unit.User;
+package spring.workshop.expenses.unit.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -23,7 +23,7 @@ import spring.workshop.expenses.services.impl.UserServiceImpl;
 
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
-public class UserServiceTests {
+public class UserServiceTest {
 
     private UserService sut;
 
