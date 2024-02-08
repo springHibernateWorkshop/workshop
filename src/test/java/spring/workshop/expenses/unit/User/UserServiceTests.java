@@ -64,7 +64,7 @@ public class UserServiceTests {
         when(userRepositoryMock.findByUsername(username))
                 .thenReturn(Optional.of(new User(1L, username, pass, roleID)));
         // When
-        Boolean response = sut.deleteUser(username);
+        Boolean response = sut.deleteUserByUsername(username);
         // Then
         assertEquals(Boolean.TRUE, response);
     }
@@ -76,7 +76,7 @@ public class UserServiceTests {
         // Given
         when(userRepositoryMock.findByUsername(username)).thenReturn(Optional.empty());
         // When
-        Boolean response = sut.deleteUser(username);
+        Boolean response = sut.deleteUserByUsername(username);
         // Then
         assertEquals(Boolean.FALSE, response);
     }

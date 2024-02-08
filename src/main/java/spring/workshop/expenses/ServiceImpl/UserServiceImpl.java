@@ -39,6 +39,10 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("User with username = " + username + " already exists.");
 
         User newUser = new User(username, pass, roleId);
+        // create a employee
+
+        // or create a superior
+
         userRepository.save(newUser);
         LOG.info("User with name = " + username + " created successfully.");
         return newUser;
@@ -54,20 +58,40 @@ public class UserServiceImpl implements UserService {
             updatedUser.setRole(user.getRole());
             LOG.info("User with id = " + user.getId() + " updated succesfully.");
             return userRepository.save(updatedUser);
+
+            // TODO Role update check
         } else {
             throw new IllegalArgumentException("User with id = " + user.getId() + " not found.");
         }
     }
 
     @Override
-    public Boolean deleteUser(String username) {
+    public Boolean deleteUserByUsername(String username) {
         Optional<User> user = userRepository.findByUsername(username);
         if (user.isPresent()) {
             userRepository.deleteByUsername(username);
+            // TODO userId auf null setzen für Emplyoee / Superior
             LOG.info("User with username = " + username + " deleted successfully.");
             return true;
         } else {
             LOG.info("User with username = " + username + " not found.");
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean deleteUserById(Long userId) {
+        System.out.println("User Id: " + userId);
+        Optional<User> user = userRepository.findById(userId);
+        System.out.println("User: " + user);
+        if (user.isPresent()) {
+            userRepository.deleteById(userId);
+            System.out.println("Deleted User: ");
+            // TODO userId auf null setzen für Emplyoee / Superior
+            LOG.info("User with user ID = " + userId + " deleted successfully.");
+            return true;
+        } else {
+            LOG.info("User with user ID = " + userId + " not found.");
             return false;
         }
     }

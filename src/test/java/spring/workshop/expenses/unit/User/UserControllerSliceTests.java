@@ -56,9 +56,9 @@ public class UserControllerSliceTests {
         // Arrange
         String name = "Test";
         // Given
-        when(userServiceMock.deleteUser(name)).thenReturn(Boolean.TRUE);
+        when(userServiceMock.deleteUserByUsername(name)).thenReturn(Boolean.TRUE);
         // When
-        ResponseEntity<Boolean> response = sut.deleteUser(name);
+        ResponseEntity<Boolean> response = sut.deleteUserByUsername(name);
         // Then
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(true, response.getBody());
@@ -69,9 +69,9 @@ public class UserControllerSliceTests {
         // Arrange
         String name = "Test";
         // Given
-        when(userServiceMock.deleteUser(name)).thenReturn(Boolean.FALSE);
+        when(userServiceMock.deleteUserByUsername(name)).thenReturn(Boolean.FALSE);
         // When
-        ResponseEntity<Boolean> response = sut.deleteUser(name);
+        ResponseEntity<Boolean> response = sut.deleteUserByUsername(name);
         // Then
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(false, response.getBody());

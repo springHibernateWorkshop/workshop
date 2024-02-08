@@ -8,7 +8,9 @@ public interface UserService {
 
     User addUser(String username, String pass, Long roleId);
 
-    Boolean deleteUser(String username);
+    Boolean deleteUserByUsername(String username);
+
+    Boolean deleteUserById(Long userId);
 
     User updateUser(User user);
 

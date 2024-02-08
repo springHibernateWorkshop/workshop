@@ -44,10 +44,24 @@ public class UserController {
         .body(newUser);
   }
 
-  @DeleteMapping(path = "/delete")
-  public ResponseEntity<Boolean> deleteUser(@RequestParam String username) {
+  @PostMapping(path = "/add_user")
+  public ResponseEntity<User> addUser(@RequestBody User user) {
+    User newUser = userService.addUser(user.getUsername(), user.getPassword(), user.getRole());
+
+    return ResponseEntity.status(HttpStatus.CREATED)
+        .body(newUser);
+  }
+
+  @DeleteMapping(path = "/delete_by_username")
+  public ResponseEntity<Boolean> deleteUserByUsername(@RequestParam String username) {
     return ResponseEntity.status(HttpStatus.OK)
-        .body(userService.deleteUser(username));
+        .body(userService.deleteUserByUsername(username));
+  }
+
+  @DeleteMapping(path = "/delete_by_id")
+  public ResponseEntity<Boolean> deleteUserById(@RequestParam Long userId) {
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(userService.deleteUserById(userId));
   }
 
   @PutMapping(path = "/update")

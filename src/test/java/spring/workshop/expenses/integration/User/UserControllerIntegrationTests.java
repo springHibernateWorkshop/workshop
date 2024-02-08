@@ -63,7 +63,7 @@ public class UserControllerIntegrationTests {
         HttpEntity<String> requestEntity = new HttpEntity<>(requestBody, requestHeader);
 
         // URL for deleting an user
-        String url = "/users/delete";
+        String url = "/users/delete_by_username";
 
         // Send a DELETE request to delete the user
         ResponseEntity<Boolean> response = restTemplate.exchange(url, HttpMethod.DELETE, requestEntity, Boolean.class);
