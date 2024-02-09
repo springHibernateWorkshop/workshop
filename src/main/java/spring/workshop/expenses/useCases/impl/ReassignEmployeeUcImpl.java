@@ -25,9 +25,9 @@ public class ReassignEmployeeUcImpl implements ReassignEmployeeUc {
         Superior superior = superiorService.getSuperiorById(superiorId);
 
         // Check if Superior.user_id != Null
-        if (superior.getUser() == null)
-            throw new ForbiddenResourceException("User for Superior with id = " +
-                    superiorId + "does not exist.");
+        // if (superior.getUser() == null)
+        //     throw new ForbiddenResourceException("User for Superior with id = " +
+        //             superiorId + "does not exist.");
 
         // Get Employee by id
         Employee updatedEmployee = employeeService.getEmployeeById(employeeId);
