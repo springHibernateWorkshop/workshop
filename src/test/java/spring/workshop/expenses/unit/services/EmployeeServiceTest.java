@@ -9,7 +9,6 @@ import static org.mockito.Mockito.when;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -43,7 +42,7 @@ public class EmployeeServiceTest {
     @Test
     public void testAddEmployee() {
         // Given
-        Employee employee = new Employee("Employee", new User("User"), new Superior("Superior"));
+        Employee employee = new Employee("Employee", new User("username", "passw", 2L), new Superior("Superior"));
 
         when(employeeRepositoryMock.saveAndFlush(any(Employee.class))).thenReturn(employee);
         doNothing().when(entityManagerMock).refresh(any(Employee.class));
@@ -51,7 +50,7 @@ public class EmployeeServiceTest {
         Employee response = sut.addEmployee(employee);
         // Then
         assertEquals("Employee", response.getName());
-        assertEquals("User", response.getUser().getName());
+        assertEquals("username", response.getUser().getUsername());
         assertEquals("Superior", response.getSuperior().getName());
     }
 
@@ -71,8 +70,9 @@ public class EmployeeServiceTest {
     @Test
     public void testUpdateEmployee() {
         // Given
-        Employee employee = new Employee(1L, "Employee", new User(1L, "User"), new Superior(1L, "Superior"));
-        Employee updatedEmployee = new Employee(1L, "updatedEmployee", new User(2L, "User"),
+        Employee employee = new Employee(1L, "Employee", new User(1L, "username", "passw", 2L),
+                new Superior(1L, "Superior"));
+        Employee updatedEmployee = new Employee(1L, "updatedEmployee", new User(2L, "username", "passw", 2L),
                 new Superior(2L, "Superior"));
 
         when(employeeRepositoryMock.findById(any(Long.class)))
