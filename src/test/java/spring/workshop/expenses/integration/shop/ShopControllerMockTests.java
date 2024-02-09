@@ -22,7 +22,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.transaction.Transactional;
 import spring.workshop.expenses.entities.Shop;
-import spring.workshop.expenses.repos.ShopRepository;
+import spring.workshop.expenses.repositories.ShopRepository;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc

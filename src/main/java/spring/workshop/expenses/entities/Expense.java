@@ -39,19 +39,19 @@ public class Expense {
     private Shop shop;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
-    private User user;
+    @JoinColumn(name = "employee_id", referencedColumnName = "employee_id")
+    private Employee employee;
 
     public Expense() {
     }
 
-    public Expense(Long id, Float total, LocalDate date, Category category, Shop shop, User user, String note) {
+    public Expense(Long id, Float total, LocalDate date, Category category, Shop shop, Employee employee, String note) {
         this.id = id;
         this.total = total;
         this.date = date;
         this.category = category;
         this.shop = shop;
-        this.user = user;
+        this.employee = employee;
         this.note = note;
     }
 
@@ -95,12 +95,12 @@ public class Expense {
         this.shop = shop;
     }
 
-    public User getUser() {
-        return user;
+    public Employee getEmployee() {
+        return employee;
     }
 
-    public void setUser(@NonNull User user) {
-        this.user = user;
+    public void setEmployee(@NonNull Employee employee) {
+        this.employee = employee;
     }
 
     public String getNote() {
