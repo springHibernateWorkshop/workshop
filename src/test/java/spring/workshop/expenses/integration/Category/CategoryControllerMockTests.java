@@ -23,7 +23,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.transaction.Transactional;
 import spring.workshop.expenses.entities.Category;
-import spring.workshop.expenses.repos.CategoryRepository;
+import spring.workshop.expenses.repositories.CategoryRepository;
 
 /**
  * These tests are using the MockMvc class to test the CategoryController class.
