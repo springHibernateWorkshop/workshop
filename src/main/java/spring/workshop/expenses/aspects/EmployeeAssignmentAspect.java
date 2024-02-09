@@ -6,6 +6,8 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
+
+import spring.workshop.expenses.entities.Employee;
 import spring.workshop.expenses.entities.Superior;
 import spring.workshop.expenses.exceptions.ForbiddenResourceException;
 
@@ -13,25 +15,23 @@ import spring.workshop.expenses.exceptions.ForbiddenResourceException;
 @Component
 public class EmployeeAssignmentAspect {
 
-    private static final Logger LOGGER = LogManager.getLogger(EmployeeAssignmentAspect.class);
+    private static final Logger LOG = LogManager.getLogger(EmployeeAssignmentAspect.class);
 
-    @Pointcut("execution(* spring.workshop.expenses.entities.Employee.setSuperior(..)) && args(superior)")
-    public void assignEmployeePointcut(Superior superior) {
+    @Pointcut("execution(* spring.workshop.expenses.services.impl.EmployeeServiceImpl.updateEmployee(..)) && args(employee)")
+    public void updateEmployeePointcut(Employee employee) {
     }
 
-    @Before("assignEmployeePointcut(superior)")
-    public void checkSuperiorActive(Superior superior) {
+    @Before("updateEmployeePointcut(employee)")
+    public void checkSuperiorActive(Employee employee) {
 
-        LOGGER.info(
+        LOG.info(
                 "Aspect EmployeeAssignmentAspect is called.");
 
+        Superior superior = employee.getSuperior();
         if (superior.getUser() == null) {
-            throw new ForbiddenResourceException("User for Superior with id = " +
-                    superior.getId() + " does not exist.");
+            throw new ForbiddenResourceException(
+                    "Superior with id = " + superior.getId() + " is inactive (Superior has no User).");
         }
-
-        LOGGER.info(
-                "Aspect EmployeeAssignmentAspect is finished.");
 
     }
 }

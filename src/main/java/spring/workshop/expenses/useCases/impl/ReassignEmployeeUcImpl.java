@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import spring.workshop.expenses.entities.Employee;
 import spring.workshop.expenses.entities.Superior;
-import spring.workshop.expenses.exceptions.ForbiddenResourceException;
+// import spring.workshop.expenses.exceptions.ForbiddenResourceException;
 import spring.workshop.expenses.services.EmployeeService;
 import spring.workshop.expenses.services.SuperiorService;
 import spring.workshop.expenses.useCases.ReassignEmployeeUc;
@@ -26,8 +26,8 @@ public class ReassignEmployeeUcImpl implements ReassignEmployeeUc {
 
         // Check if Superior.user_id != Null
         // if (superior.getUser() == null)
-        //     throw new ForbiddenResourceException("User for Superior with id = " +
-        //             superiorId + "does not exist.");
+        // throw new ForbiddenResourceException("User for Superior with id = " +
+        // superiorId + "does not exist.");
 
         // Get Employee by id
         Employee updatedEmployee = employeeService.getEmployeeById(employeeId);
