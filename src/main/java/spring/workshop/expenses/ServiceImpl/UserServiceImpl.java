@@ -81,12 +81,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Boolean deleteUserById(Long userId) {
-        System.out.println("User Id: " + userId);
         Optional<User> user = userRepository.findById(userId);
-        System.out.println("User: " + user);
         if (user.isPresent()) {
             userRepository.deleteById(userId);
-            System.out.println("Deleted User: ");
             // TODO userId auf null setzen für Emplyoee / Superior
             LOG.info("User with user ID = " + userId + " deleted successfully.");
             return true;
