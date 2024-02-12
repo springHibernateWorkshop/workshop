@@ -55,7 +55,7 @@ public class UserController {
         .body(userService.deleteUserByUsername(username));
   }
 
-  @DeleteMapping(path = "/delete_by_id")
+  @DeleteMapping()
   public ResponseEntity<Boolean> deleteUserById(@RequestParam Long userId) {
     return ResponseEntity.status(HttpStatus.OK)
         .body(userService.deleteUserById(userId));
