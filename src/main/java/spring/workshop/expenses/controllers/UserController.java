@@ -41,7 +41,7 @@ public class UserController {
         .body(newUser);
   }
 
-  @PostMapping(path = "/add_user")
+  @PostMapping()
   public ResponseEntity<User> addUser(@RequestBody User user) {
     User newUser = userService.addUser(user.getUsername(), user.getPassword(), user.getRole());
 
