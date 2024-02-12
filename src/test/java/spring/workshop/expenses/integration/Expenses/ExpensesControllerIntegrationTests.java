@@ -1,7 +1,6 @@
 package spring.workshop.expenses.integration.Expenses;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.net.URI;
 import java.text.ParseException;
@@ -36,6 +35,7 @@ public class ExpensesControllerIntegrationTests {
 
     @Autowired
     ExpenseController controller;
+
     private static final String BASE_URL = "/expenses";
 
     /**
@@ -44,9 +44,20 @@ public class ExpensesControllerIntegrationTests {
 
     @Test
     public void testGetAllExpenses() {
-        ResponseEntity<List> response = restTemplate.getForEntity(BASE_URL, List.class);
+        ResponseEntity<List> response = restTemplate.withBasicAuth("bartosz.kowalski", "superior").getForEntity(
+                BASE_URL,
+                List.class);
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertNotNull(response.getBody());
+        assertEquals(response.getBody().size(), 3);
+    }
+
+    @Test
+    public void testGetAllExpensesForAnEmployee() {
+        ResponseEntity<List> response = restTemplate.withBasicAuth("victoria.marano", "employee").getForEntity(
+                BASE_URL,
+                List.class);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(response.getBody().size(), 1);
     }
 
     /**
@@ -54,7 +65,8 @@ public class ExpensesControllerIntegrationTests {
      */
     @Test
     public void testGetExpensesByIdPositive() {
-        ResponseEntity<Expense> response = restTemplate.getForEntity(BASE_URL + "/{id}", Expense.class, 200);
+        ResponseEntity<Expense> response = restTemplate.withBasicAuth("victoria.marano", "employee")
+                .getForEntity(BASE_URL + "/{id}", Expense.class, 200);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         Expense expenses = response.getBody();
         Assertions.assertNotNull(expenses);
@@ -67,7 +79,8 @@ public class ExpensesControllerIntegrationTests {
      */
     @Test
     public void testGetExpensesByIdNegative() {
-        ResponseEntity<Expense> response = restTemplate.getForEntity(BASE_URL + "/{id}", Expense.class, 10);
+        ResponseEntity<Expense> response = restTemplate
+                .getForEntity(BASE_URL + "/{id}", Expense.class, 10);
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 

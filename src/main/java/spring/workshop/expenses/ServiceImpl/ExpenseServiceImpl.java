@@ -13,12 +13,16 @@ import org.springframework.web.server.ResponseStatusException;
 import spring.workshop.expenses.entities.Expense;
 import spring.workshop.expenses.repos.ExpenseRepository;
 import spring.workshop.expenses.services.ExpenseService;
+import spring.workshop.expenses.services.UserService;
 
 @Service
 public class ExpenseServiceImpl implements ExpenseService {
     private static final Logger LOG = LoggerFactory.getLogger(ExpenseServiceImpl.class);
     @Autowired
     private ExpenseRepository expensesRepository;
+
+    @Autowired
+    private UserService userService;
 
     @Override
     public List<Expense> getAllExpenses() {
@@ -29,6 +33,14 @@ public class ExpenseServiceImpl implements ExpenseService {
     @Override
     public Expense getExpenseById(Long id) {
         Expense expenses = expensesRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        return expenses;
+    }
+
+    @Override
+    public Expense getExpenseByIdAndUsername(Long id, String username) {
+        Expense expenses = expensesRepository
+                .findByIdAndUsername(id, userService.getUserByUsername(username).getUsername())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         return expenses;
     }
@@ -62,8 +74,8 @@ public class ExpenseServiceImpl implements ExpenseService {
     }
 
     @Override
-    public Expense addNewExpense(Expense expenses) {
-        return expensesRepository.save(expenses);
+    public Expense addNewExpense(Expense expense) {
+        return expensesRepository.save(expense);
     }
 
     @Override
@@ -84,6 +96,11 @@ public class ExpenseServiceImpl implements ExpenseService {
     @Override
     public List<Expense> findByUserId(Long userId) {
         return expensesRepository.findByUserId(userId);
+    }
+
+    @Override
+    public List<Expense> getExpensesByUsername(String namename) {
+        return expensesRepository.findByUser(userService.getUserByUsername(namename));
     }
 
 }

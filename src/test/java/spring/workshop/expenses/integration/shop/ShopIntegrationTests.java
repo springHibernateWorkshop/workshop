@@ -33,7 +33,8 @@ public class ShopIntegrationTests {
 
     @Test
     public void testGetAllShops() {
-        ResponseEntity<List> response = restTemplate.getForEntity(BASE_URL, List.class);
+        ResponseEntity<List> response = restTemplate.withBasicAuth("user", "password").getForEntity(BASE_URL,
+                List.class);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
     }
@@ -43,7 +44,8 @@ public class ShopIntegrationTests {
      */
     @Test
     public void testGetSHopByIdPositive() {
-        ResponseEntity<Shop> response = restTemplate.getForEntity(BASE_URL + "/{id}", Shop.class, 200);
+        ResponseEntity<Shop> response = restTemplate.withBasicAuth("user", "password").getForEntity(BASE_URL + "/{id}",
+                Shop.class, 200);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         Shop shop = response.getBody();
         assertEquals("shop_2", shop.getName());

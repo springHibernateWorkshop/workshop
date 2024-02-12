@@ -10,6 +10,8 @@ public interface ExpenseService {
 
     public Expense getExpenseById(Long id);
 
+    public Expense getExpenseByIdAndUsername(Long id, String username);
+
     public Expense updateExpense(Expense expense);
 
     public Boolean deleteExpense(Long id);
@@ -23,4 +25,6 @@ public interface ExpenseService {
     public List<Expense> findByShopId(Long shopId);
 
     public List<Expense> findByUserId(Long userId);
+
+    public List<Expense> getExpensesByUsername(String namename);
 }
