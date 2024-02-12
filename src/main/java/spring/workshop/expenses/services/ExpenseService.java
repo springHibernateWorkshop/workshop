@@ -24,7 +24,10 @@ public interface ExpenseService {
 
     public List<Expense> findByShopId(Long shopId);
 
+    public List<Expense> findByEmployeeId(Long employeeId);
+
     public List<Expense> findByUserId(Long userId);
 
     public List<Expense> getExpensesByUsername(String namename);
+
 }

@@ -59,7 +59,7 @@ public class UserControllerIntegrationTests {
         // Constructing the request body with the user's name to be deleted
         HttpHeaders requestHeader = new HttpHeaders();
         requestHeader.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        String requestBody = "name=Bartosz";
+        String requestBody = "name=Raffael";
         HttpEntity<String> requestEntity = new HttpEntity<>(requestBody, requestHeader);
 
         // URL for deleting an user
