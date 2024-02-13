@@ -131,7 +131,7 @@ public class ExpensesControllerMockTest {
                                 new Shop(100L),
                                 new Employee(100L, "Test", new User("Test"), new Superior("Test")),
                                 "Expense 1");
-                assertEquals("Note 1", repo.findById(100L).get().getNote());
+                assertEquals("Note 1", repo.findById(100L).get().getName());
 
                 // Act
                 mockMvc.perform(put(BASE_URL)
@@ -141,7 +141,7 @@ public class ExpensesControllerMockTest {
                                 .andExpect(jsonPath("$.note").value("Expense 1"));
 
                 // Assert
-                assertEquals(expense.getNote(), repo.findById(100L).get().getNote());
+                assertEquals(expense.getName(), repo.findById(100L).get().getName());
         }
 
         /**

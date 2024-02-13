@@ -60,7 +60,7 @@ public class ExpensesControllerIntegrationTests {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         Expense expenses = response.getBody();
         Assertions.assertNotNull(expenses);
-        assertEquals("Note 2", expenses.getNote());
+        assertEquals("Note 2", expenses.getName());
     }
 
     /**
@@ -85,7 +85,7 @@ public class ExpensesControllerIntegrationTests {
         ResponseEntity<Expense> response = restTemplate.getForEntity(newExpensesLocation, Expense.class);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         Expense expense = response.getBody();
-        assertEquals("Expense 4", expense.getNote());
+        assertEquals("Expense 4", expense.getName());
     }
 
     /**
@@ -116,10 +116,10 @@ public class ExpensesControllerIntegrationTests {
                 new Employee(100L, "Test", new User("Test"), new Superior("Test")),
                 "Expenses3");
         Expense response = restTemplate.getForObject(BASE_URL + "/{id}", Expense.class, 300);
-        assertEquals("Note 3", response.getNote());
+        assertEquals("Note 3", response.getName());
         restTemplate.put(BASE_URL, expense);
         Expense responseAfterUpdate = restTemplate.getForObject(BASE_URL + "/{id}", Expense.class, 300);
-        assertEquals("Expenses3", responseAfterUpdate.getNote());
+        assertEquals("Expenses3", responseAfterUpdate.getName());
     }
 
     @Test

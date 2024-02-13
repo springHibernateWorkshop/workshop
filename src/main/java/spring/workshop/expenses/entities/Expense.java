@@ -5,12 +5,15 @@ import java.time.LocalDate;
 import io.micrometer.common.lang.NonNull;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import spring.workshop.expenses.enums.ExpenseStatus;
 
 @Entity
 @Table(name = "expense_tab")
@@ -28,6 +31,13 @@ public class Expense {
     private LocalDate date;
 
     @Column
+    private String name;
+
+    @Column
+    @Enumerated(EnumType.STRING)
+    private ExpenseStatus status;
+
+    @Column
     private String note;
 
     @ManyToOne(optional = false)
@@ -42,17 +52,19 @@ public class Expense {
     @JoinColumn(name = "employee_id", referencedColumnName = "employee_id")
     private Employee employee;
 
+
     public Expense() {
     }
 
-    public Expense(Long id, Float total, LocalDate date, Category category, Shop shop, Employee employee, String note) {
+    public Expense(Long id, Float total, LocalDate date, Category category, Shop shop, Employee employee, String name) {
         this.id = id;
         this.total = total;
         this.date = date;
         this.category = category;
         this.shop = shop;
         this.employee = employee;
-        this.note = note;
+        this.name = name;
+        this.status=ExpenseStatus.INITIAL;
     }
 
     public Long getId() {
@@ -101,6 +113,23 @@ public class Expense {
 
     public void setEmployee(@NonNull Employee employee) {
         this.employee = employee;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    
+    public ExpenseStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ExpenseStatus status) {
+        this.status = status;
     }
 
     public String getNote() {

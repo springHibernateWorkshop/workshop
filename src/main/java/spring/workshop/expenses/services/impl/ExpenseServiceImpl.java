@@ -28,9 +28,9 @@ public class ExpenseServiceImpl implements ExpenseService {
 
     @Override
     public Expense getExpenseById(Long id) {
-        Expense expenses = expensesRepository.findById(id)
+        Expense expense = expensesRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        return expenses;
+        return expense;
     }
 
     @Override
@@ -41,7 +41,7 @@ public class ExpenseServiceImpl implements ExpenseService {
             upExpenses.setCategory(expense.getCategory());
             upExpenses.setShop(expense.getShop());
             upExpenses.setEmployee(expense.getEmployee());
-            upExpenses.setNote(expense.getNote());
+            upExpenses.setName(expense.getName());
             return expensesRepository.save(upExpenses);
         })
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));

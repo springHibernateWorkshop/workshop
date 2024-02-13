@@ -13,16 +13,21 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import spring.workshop.expenses.entities.Expense;
+import spring.workshop.expenses.enums.ExpenseStatus;
 import spring.workshop.expenses.services.ExpenseService;
+import spring.workshop.expenses.useCases.ApproveOrRejectExpenseUc;
 
 @RestController
 @RequestMapping(path = "/expenses")
 public class ExpenseController {
 
+    @Autowired
+    private ApproveOrRejectExpenseUc approveOrRejectExpenseUc;
     @Autowired
     private ExpenseService expenseService;
 
@@ -75,6 +80,13 @@ public class ExpenseController {
     @GetMapping(path = "/user/{employeeId}")
     public ResponseEntity<List<Expense>> getExpensesByEmployeeId(@PathVariable Long employeeId) {
         return new ResponseEntity<>(expenseService.findByEmployeeId(employeeId), HttpStatus.OK);
+    }
+
+    @PutMapping(path="/{id}")
+    public ResponseEntity<Void> approveOrReject(@PathVariable Long id, @RequestParam ExpenseStatus status, @RequestParam String note){
+        //TODO implement superiorID retrieval
+        approveOrRejectExpenseUc.approveOrRejectExpense(id, 2L, status, note);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }
