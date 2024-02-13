@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("User with username = " + username + " already exists.");
 
         User newUser = new User(username, pass, roleId);
-        // create a employee
+        // create an employee
 
         // or create a superior
 
@@ -66,31 +66,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Boolean deleteUserByUsername(String username) {
-        Optional<User> user = userRepository.findByUsername(username);
-        if (user.isPresent()) {
-            userRepository.deleteByUsername(username);
+    public Boolean deleteUser(Long id) {
+        return userRepository.findById(id).map(u -> {
+            userRepository.delete(u);
+            LOG.info("User with user ID = {} deleted successfully.", u.getId());
             // TODO userId auf null setzen für Emplyoee / Superior
-            LOG.info("User with username = " + username + " deleted successfully.");
             return true;
-        } else {
-            LOG.info("User with username = " + username + " not found.");
+        }).orElseGet(() -> {
+            LOG.warn("User with user ID = {} not found.", id);
             return false;
-        }
-    }
-
-    @Override
-    public Boolean deleteUserById(Long userId) {
-        Optional<User> user = userRepository.findById(userId);
-        if (user.isPresent()) {
-            userRepository.deleteById(userId);
-            // TODO userId auf null setzen für Emplyoee / Superior
-            LOG.info("User with user ID = " + userId + " deleted successfully.");
-            return true;
-        } else {
-            LOG.info("User with user ID = " + userId + " not found.");
-            return false;
-        }
+        });
     }
 
     @Override
@@ -106,14 +91,4 @@ public class UserServiceImpl implements UserService {
 
         return user.get();
     }
-
-    @Override
-    public User getUserByUsername(String username) {
-        Optional<User> user = userRepository.findByUsername(username);
-        if (!user.isPresent())
-            throw new IllegalArgumentException("User with username = " + username + " not found.");
-
-        return user.get();
-    }
-
 }

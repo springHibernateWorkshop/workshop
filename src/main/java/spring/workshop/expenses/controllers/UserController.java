@@ -9,11 +9,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import spring.workshop.expenses.entities.User;
@@ -31,16 +31,6 @@ public class UserController {
     this.userService = userService;
   }
 
-  @PostMapping(path = "/add")
-  public ResponseEntity<User> addUser(@RequestParam String username,
-      @RequestParam String password,
-      @RequestParam Long roleId) {
-    User newUser = userService.addUser(username, password, roleId);
-
-    return ResponseEntity.status(HttpStatus.CREATED)
-        .body(newUser);
-  }
-
   @PostMapping()
   public ResponseEntity<User> addUser(@RequestBody User user) {
     User newUser = userService.addUser(user.getUsername(), user.getPassword(), user.getRole());
@@ -49,19 +39,12 @@ public class UserController {
         .body(newUser);
   }
 
-  @DeleteMapping(path = "/delete_by_username")
-  public ResponseEntity<Boolean> deleteUserByUsername(@RequestParam String username) {
-    return ResponseEntity.status(HttpStatus.OK)
-        .body(userService.deleteUserByUsername(username));
+  @DeleteMapping
+  public ResponseEntity<Boolean> deleteUser(@PathVariable Long id) {
+    return new ResponseEntity<>(userService.deleteUser(id), HttpStatus.OK);
   }
 
-  @DeleteMapping(path = "/delete_by_id")
-  public ResponseEntity<Boolean> deleteUserById(@RequestParam Long userId) {
-    return ResponseEntity.status(HttpStatus.OK)
-        .body(userService.deleteUserById(userId));
-  }
-
-  @PutMapping(path = "/update")
+  @PutMapping
   public ResponseEntity<User> updateUser(@RequestBody User user) {
     User updatedUser = userService.updateUser(user);
 
@@ -69,22 +52,15 @@ public class UserController {
         .body(updatedUser);
   }
 
-  @GetMapping(path = "/get_all")
+  @GetMapping
   public ResponseEntity<List<User>> getAllUsers() {
     return ResponseEntity.status(HttpStatus.OK)
         .body(userService.getAllUsers());
   }
 
-  @GetMapping(path = "/get_by_id")
-  public ResponseEntity<User> getUserById(@RequestParam Long id) {
+  @GetMapping(path = "/{id}")
+  public ResponseEntity<User> getUserById(@PathVariable Long id) {
     return ResponseEntity.status(HttpStatus.OK)
         .body(userService.getUserById(id));
   }
-
-  @GetMapping(path = "/get_by_username")
-  public ResponseEntity<User> getUserByUsername(@RequestParam String username) {
-    return ResponseEntity.status(HttpStatus.OK)
-        .body(userService.getUserByUsername(username));
-  }
-
 }

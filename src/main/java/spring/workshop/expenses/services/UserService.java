@@ -8,16 +8,11 @@ public interface UserService {
 
     User addUser(String username, String pass, Long roleId);
 
-    Boolean deleteUserByUsername(String username);
-
-    Boolean deleteUserById(Long userId);
+    Boolean deleteUser(Long id);
 
     User updateUser(User user);
 
     List<User> getAllUsers();
 
     User getUserById(Long id);
-
-    User getUserByUsername(String username);
-
 }

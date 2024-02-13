@@ -57,26 +57,27 @@ public class UserServiceTest {
     @Test
     public void testDeleteUserPositive() {
         // Arrange
+        Long userId = 1L;
         String username = "usrname";
         String pass = "pass";
         Long roleID = 2L;
         // Given
-        when(userRepositoryMock.findByUsername(username))
-                .thenReturn(Optional.of(new User(1L, username, pass, roleID)));
+        when(userRepositoryMock.findById(userId))
+                .thenReturn(Optional.of(new User(userId, username, pass, roleID)));
         // When
-        Boolean response = sut.deleteUserByUsername(username);
+        Boolean response = sut.deleteUser(userId);
         // Then
         assertEquals(Boolean.TRUE, response);
     }
 
     @Test
-    public void testDeleteCategoryNegative() {
+    public void testDeleteUserNegative() {
         // Arrange
-        String username = "Test";
+        Long userId = 1L;
         // Given
-        when(userRepositoryMock.findByUsername(username)).thenReturn(Optional.empty());
+        when(userRepositoryMock.findById(userId)).thenReturn(Optional.empty());
         // When
-        Boolean response = sut.deleteUserByUsername(username);
+        Boolean response = sut.deleteUser(userId);
         // Then
         assertEquals(Boolean.FALSE, response);
     }
@@ -119,17 +120,4 @@ public class UserServiceTest {
         // Then
         assertEquals(id, response.getId());
     }
-
-    @Test
-    public void testGetUserByUsername() {
-        // Arrange
-        String username = "Test";
-        // Given
-        when(userRepositoryMock.findByUsername(username)).thenReturn(Optional.of(new User(1L, "Test", "pass", 2L)));
-        // When
-        User response = sut.getUserByUsername(username);
-        // Then
-        assertEquals(username, response.getUsername());
-    }
-
 }
