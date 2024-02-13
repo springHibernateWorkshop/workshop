@@ -53,7 +53,7 @@ public class UserControllerSliceTest {
 
     @Test
     public void testDeleteUserPositive() {
-        // Arrange
+        // Given
         Long userId = 1L;
         // When
         ResponseEntity<Void> response = sut.deleteUser(userId);
@@ -63,9 +63,8 @@ public class UserControllerSliceTest {
 
     @Test
     public void testDeleteCategoryNegative() {
-        // Arrange
+        // Given
         Long userId = 1L;
-
         // When
         ResponseEntity<Void> response = sut.deleteUser(userId);
         // Then
@@ -74,10 +73,10 @@ public class UserControllerSliceTest {
 
     @Test
     public void testUpdateUser() {
-        // Arrange
+        // Given
         Long id = 1L;
         User updatedUser = new User(id, "usr", "pass", 2L);
-        // Given
+
         when(userServiceMock.getUserById(id)).thenReturn(new User(id, "user", "passXYZ", 2L));
         when(userServiceMock.updateUser(updatedUser)).thenReturn(updatedUser);
         // When
@@ -103,9 +102,9 @@ public class UserControllerSliceTest {
 
     @Test
     public void testGetUserById() {
-        // Arrange
-        Long id = 1L;
         // Given
+        Long id = 1L;
+
         when(userServiceMock.getUserById(id)).thenReturn(new User(1L, "username", "pass", 3L));
         // When
         ResponseEntity<User> response = sut.getUserById(id);

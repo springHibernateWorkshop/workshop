@@ -68,19 +68,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(Long id) {
-        User userToDelete= userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User with user ID = " + id + " not found."));
+        User userToDelete = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User with user ID = " + id + " not found."));
         userRepository.delete(userToDelete);
         LOG.info("User with user ID = {} deleted successfully.", userToDelete.getId());
-            // TODO userId auf null setzen für Emplyoee / Superior
-        }
-        
-        /**
-         *  ).orElseGet(() -> {
-            LOG.warn("User with user ID = {} not found.", id);
-            throw new IllegalArgumentException();
-        });
-        */
- 
+    }
 
     @Override
     public List<User> getAllUsers() {

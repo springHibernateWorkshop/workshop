@@ -41,14 +41,15 @@ public class UserControllerIntegrationTests {
 
     @Test
     public void testDeleteUser() {
-        ResponseEntity<User> response = restTemplate.getForEntity(BASE_URL + "/{id}", User.class, 100L);
+        ResponseEntity<User> response = restTemplate.getForEntity(BASE_URL + "/{id}", User.class, 500L);
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        ResponseEntity <Void> deleteResponse = restTemplate.exchange(BASE_URL + "/{id}", HttpMethod.DELETE, null, Void.class, 100L);
+        ResponseEntity<Void> deleteResponse = restTemplate.exchange(BASE_URL + "/{id}", HttpMethod.DELETE, null,
+                Void.class, 500L);
         assertEquals(HttpStatus.OK, deleteResponse.getStatusCode());
-        //restTemplate.delete(BASE_URL + "/{id}", 100L);
 
-        ResponseEntity<User> responseAfterDelete = restTemplate.getForEntity(BASE_URL + "/{id}", User.class, 100L);
-        assertEquals(HttpStatus.BAD_REQUEST, responseAfterDelete.getStatusCode());
+        ResponseEntity<User> responseAfterDelete = restTemplate.getForEntity(BASE_URL
+                + "/{id}", User.class, 500L);
+        assertEquals(HttpStatus.NOT_FOUND, responseAfterDelete.getStatusCode());
     }
 
     @Test
@@ -98,6 +99,6 @@ public class UserControllerIntegrationTests {
         ResponseEntity<User> response = restTemplate.getForEntity(BASE_URL + "/{id}", User.class, 1000);
 
         // Assert HTTP status code is OK
-        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 }
