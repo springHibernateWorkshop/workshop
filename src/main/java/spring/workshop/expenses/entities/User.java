@@ -22,11 +22,11 @@ public class User {
     @NonNull
     private String username;
 
-    @Column(name = "password")
+    @Column(nullable = false, name = "password")
     @NonNull
     private String passwd;
 
-    @Column(name = "role_id")
+    @Column(nullable = false, name = "role_id")
     @NonNull
     private Long role;
 

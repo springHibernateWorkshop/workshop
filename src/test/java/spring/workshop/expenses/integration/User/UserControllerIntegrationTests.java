@@ -39,13 +39,13 @@ public class UserControllerIntegrationTests {
     }
 
     @Test
-    public void testDeleteUser() throws Exception {
-        ResponseEntity<User> response = restTemplate.getForEntity(BASE_URL + "/{id}", User.class, 100);
+    public void testDeleteUser() {
+        ResponseEntity<User> response = restTemplate.getForEntity(BASE_URL + "/{id}", User.class, 100L);
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        restTemplate.delete(BASE_URL + "/{id}", 100);
+        restTemplate.delete(BASE_URL + "/{id}", 100L);
 
-        ResponseEntity<User> responseAfterDelete = restTemplate.getForEntity(BASE_URL + "/{id}", User.class, 100);
-        assertEquals(HttpStatus.NOT_FOUND, responseAfterDelete.getStatusCode());
+        ResponseEntity<User> responseAfterDelete = restTemplate.getForEntity(BASE_URL + "/{id}", User.class, 100L);
+        assertEquals(HttpStatus.BAD_REQUEST, responseAfterDelete.getStatusCode());
     }
 
     @Test

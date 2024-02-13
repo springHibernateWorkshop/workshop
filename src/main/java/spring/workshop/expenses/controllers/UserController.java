@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import spring.workshop.expenses.entities.User;
 import spring.workshop.expenses.services.UserService;
@@ -35,11 +36,14 @@ public class UserController {
   public ResponseEntity<User> addUser(@RequestBody User user) {
     User newUser = userService.addUser(user.getUsername(), user.getPassword(), user.getRole());
 
-    return ResponseEntity.status(HttpStatus.CREATED)
+    return ResponseEntity
+        .created(
+            ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").buildAndExpand(newUser.getId())
+                .toUri())
         .body(newUser);
   }
 
-  @DeleteMapping
+  @DeleteMapping(path = "/{id}")
   public ResponseEntity<Boolean> deleteUser(@PathVariable Long id) {
     return new ResponseEntity<>(userService.deleteUser(id), HttpStatus.OK);
   }
