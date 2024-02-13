@@ -68,7 +68,7 @@ public class UserController {
   @GetMapping(path = "/get_by_name")
   public ResponseEntity<User> getUserByName(@RequestParam String name) {
     return ResponseEntity.status(HttpStatus.OK)
-        .body(userService.getUserByName(name));
+        .body(userService.getUserByUsername(name));
   }
 
 }

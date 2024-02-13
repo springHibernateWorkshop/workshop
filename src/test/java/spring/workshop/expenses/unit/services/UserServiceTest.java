@@ -118,9 +118,9 @@ public class UserServiceTest {
         // Given
         when(userRepositoryMock.findByName(name)).thenReturn(Optional.of(new User(1L, "Test")));
         // When
-        User response = sut.getUserByName(name);
+        User response = sut.getUserByUsername(name);
         // Then
-        assertEquals(name, response.getName());
+        assertEquals(name, response.getUsername());
     }
 
 }

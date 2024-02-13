@@ -1,4 +1,4 @@
-package spring.workshop.expenses.security;
+package spring.workshop.expenses.enums;
 
 import java.util.Set;
 

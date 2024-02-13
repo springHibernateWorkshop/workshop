@@ -40,7 +40,7 @@ public class ExpenseServiceImpl implements ExpenseService {
     @Override
     public Expense getExpenseByIdAndUsername(Long id, String username) {
         Expense expenses = expensesRepository
-                .findByIdAndUsername(id, userService.getUserByUsername(username).getUsername())
+                .findByIdAndUsernameWithEmployee(id, userService.getUserByUsername(username).getUsername())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         return expenses;
     }
@@ -99,8 +99,13 @@ public class ExpenseServiceImpl implements ExpenseService {
     }
 
     @Override
-    public List<Expense> getExpensesByUsername(String namename) {
-        return expensesRepository.findByUser(userService.getUserByUsername(namename));
+    public List<Expense> getExpensesByUsername(String username) {
+        return expensesRepository.findByUserId(userService.getUserByUsername(username).getId());
+    }
+
+    @Override
+    public List<Expense> findByUserId(Long userId) {
+        return expensesRepository.findByUserId(userService.getUserById(userId).getId());
     }
 
 }

@@ -1,7 +1,5 @@
 package spring.workshop.expenses.security;
 
-import javax.sql.DataSource;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -13,8 +11,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+
+import spring.workshop.expenses.enums.Role;
 
 @Configuration
 @EnableWebSecurity
@@ -26,7 +25,7 @@ public class WebSecurityConfig {
 				.requestMatchers("/categories/**").permitAll()
 				.requestMatchers("/shops/**").permitAll()
 				.requestMatchers("/users/**").hasRole("ADMINISTRATOR")
-				.requestMatchers("/expenses/**").hasRole("EMPLOYEE")
+				.requestMatchers("/expenses/**").hasAnyRole("EMPLOYEE", "SUPERIOR")
 				.requestMatchers("/reports/**").hasAnyRole("SUPERIOR", "ACCOUNTANT")
 				.requestMatchers("/employees/**").hasAnyRole("EMPLOYEE", "SUPERIOR", "ACCOUNTANT")
 				.requestMatchers("/superiors/**").hasAnyRole("SUPERIOR", "ACCOUNTANT")
@@ -45,29 +44,33 @@ public class WebSecurityConfig {
 	@Bean
 	public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
 
-		UserDetails superior = User
+		UserDetails bartosz = User
 				.withUsername("bartosz.kowalski")
 				.password(passwordEncoder.encode("superior"))
-				.roles("SUPERIOR")
+				.roles(Role.SUPERIOR.name())
 				.build();
-		UserDetails employee = User
+		UserDetails victoria = User
 				.withUsername("victoria.marano")
 				.password(passwordEncoder.encode("employee"))
-				.roles("EMPLOYEE")
+				.roles(Role.EMPLOYEE.name())
 				.build();
-		return new InMemoryUserDetailsManager(employee, superior);
+		return new InMemoryUserDetailsManager(victoria, bartosz);
 
 	}
 
-	@Bean
-	public UserDetailsService userDetailsServiceFromDB(PasswordEncoder passwordEncoder, DataSource dataSource) {
+	// @Bean
+	// public UserDetailsService userDetailsServiceFromDB(PasswordEncoder
+	// passwordEncoder, DataSource dataSource) {
 
-		JdbcUserDetailsManager userDetailsManager = new JdbcUserDetailsManager(dataSource);
-		userDetailsManager.setUsersByUsernameQuery("SELECT username, password, enabled FROM user WHERE username = ?");
-		userDetailsManager.setAuthoritiesByUsernameQuery("SELECT username, authority FROM role WHERE username = ?");
-		userDetailsManager.setRolePrefix("ROLE_");
+	// JdbcUserDetailsManager userDetailsManager = new
+	// JdbcUserDetailsManager(dataSource);
+	// userDetailsManager.setUsersByUsernameQuery("SELECT username, password FROM
+	// user WHERE username = ?");
+	// userDetailsManager.setAuthoritiesByUsernameQuery("SELECT username, authority
+	// FROM role WHERE username = ?");
+	// userDetailsManager.setRolePrefix("ROLE_");
 
-		return userDetailsManager;
+	// return userDetailsManager;
 
-	}
+	// }
 }

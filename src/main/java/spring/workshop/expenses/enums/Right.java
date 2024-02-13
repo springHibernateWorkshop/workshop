@@ -1,9 +1,11 @@
 /**
  * The Rights enum represents the different rights or permissions that can be assigned to users.
  */
-package spring.workshop.expenses.security;
+package spring.workshop.expenses.enums;
 
-public enum Right {
+import org.springframework.security.core.GrantedAuthority;
+
+public enum Right implements GrantedAuthority {
     VIEW_EXPENSES(1),
     CREATE_EXPENSES(2),
     DELETE_EXPENSES(3),
@@ -23,6 +25,7 @@ public enum Right {
     DELETE_CATEGORIES(17),
     EDIT_CATEGORIES(18);
 
+    private String authority;
     private int id;
 
     private Right(int id) {
@@ -36,6 +39,11 @@ public enum Right {
      */
     public int getId() {
         return this.id;
+    }
+
+    @Override
+    public String getAuthority() {
+        return authority;
     }
 
     /**
@@ -52,4 +60,5 @@ public enum Right {
         }
         return null;
     }
+
 }

@@ -12,6 +12,8 @@ import spring.workshop.expenses.entities.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
+    Optional<User> findByUsername(String username);
+
     Optional<User> findByName(String name);
 
     Optional<User> findById(Integer id);

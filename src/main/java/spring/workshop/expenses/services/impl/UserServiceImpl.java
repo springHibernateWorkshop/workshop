@@ -87,4 +87,13 @@ public class UserServiceImpl implements UserService {
         return user.get();
     }
 
+    @Override
+    public User getUserByUsername(String username) {
+        Optional<User> user = userRepository.findByUsername(username);
+        if (!user.isPresent())
+            throw new IllegalArgumentException("User with username = " + username + " not found.");
+
+        return user.get();
+    }
+
 }

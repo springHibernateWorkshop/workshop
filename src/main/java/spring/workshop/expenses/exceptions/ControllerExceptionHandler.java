@@ -61,17 +61,18 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
         return message;
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
-    public ErrorMessage unAuthorizedExceptionHandler(Exception ex, WebRequest request) {
-        ErrorMessage message = new ErrorMessage(
-                HttpStatus.UNAUTHORIZED.value(),
-                LocalDate.now(),
-                ex.getMessage(),
-                request.getDescription(false));
+    // @ExceptionHandler(RuntimeException.class)
+    // @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
+    // public ErrorMessage unAuthorizedExceptionHandler(Exception ex, WebRequest
+    // request) {
+    // ErrorMessage message = new ErrorMessage(
+    // HttpStatus.UNAUTHORIZED.value(),
+    // LocalDate.now(),
+    // ex.getMessage(),
+    // request.getDescription(false));
 
-        return message;
-    }
+    // return message;
+    // }
 
     @ExceptionHandler(ForbiddenResourceException.class)
     @ResponseStatus(value = HttpStatus.FORBIDDEN)

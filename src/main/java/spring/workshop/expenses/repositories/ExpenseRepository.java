@@ -7,8 +7,8 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import spring.workshop.expenses.entities.Employee;
 import spring.workshop.expenses.entities.Expense;
-import spring.workshop.expenses.entities.User;
 
 public interface ExpenseRepository extends JpaRepository<Expense, Long> {
 
@@ -20,9 +20,12 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long> {
 
     List<Expense> findByEmployeeId(Long employeeId);
 
-    @Query("SELECT e FROM Expense e WHERE e.user.username = ?2 AND e.id = ?1")
-    Optional<Expense> findByIdAndUsername(Long expenseId, String username);
+    @Query("SELECT e FROM Expense e JOIN e.employee emp JOIN emp.user u WHERE e.id = :expenseId AND u.username = :username")
+    Optional<Expense> findByIdAndUsernameWithEmployee(Long expenseId, String username);
 
-    List<Expense> findByUser(User user);
+    @Query("SELECT e FROM Expense e JOIN e.employee emp JOIN emp.user u WHERE  u.id = :userId")
+    List<Expense> findByUserId(Long userId);
+
+    List<Expense> findByEmployee(Employee employee);
 
 }

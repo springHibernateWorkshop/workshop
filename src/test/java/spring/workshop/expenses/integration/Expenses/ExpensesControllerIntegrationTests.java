@@ -50,7 +50,7 @@ public class ExpensesControllerIntegrationTests {
                 BASE_URL,
                 List.class);
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(response.getBody().size(), 3);
+        assertEquals(3, response.getBody().size());
     }
 
     @Test
@@ -59,7 +59,7 @@ public class ExpensesControllerIntegrationTests {
                 BASE_URL,
                 List.class);
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(response.getBody().size(), 1);
+        assertEquals(2, response.getBody().size());
     }
 
     /**

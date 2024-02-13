@@ -121,7 +121,7 @@ public class UserControllerSliceTest {
         // Arrange
         String name = "Test";
         // Given
-        when(userServiceMock.getUserByName(name)).thenReturn(new User(1L, "Test"));
+        when(userServiceMock.getUserByUsername(name)).thenReturn(new User(1L, "Test"));
         // When
         ResponseEntity<User> response = sut.getUserByName(name);
         // Then
