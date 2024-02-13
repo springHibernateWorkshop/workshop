@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
@@ -42,7 +43,9 @@ public class UserControllerIntegrationTests {
     public void testDeleteUser() {
         ResponseEntity<User> response = restTemplate.getForEntity(BASE_URL + "/{id}", User.class, 100L);
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        restTemplate.delete(BASE_URL + "/{id}", 100L);
+        ResponseEntity <Void> deleteResponse = restTemplate.exchange(BASE_URL + "/{id}", HttpMethod.DELETE, null, Void.class, 100L);
+        assertEquals(HttpStatus.OK, deleteResponse.getStatusCode());
+        //restTemplate.delete(BASE_URL + "/{id}", 100L);
 
         ResponseEntity<User> responseAfterDelete = restTemplate.getForEntity(BASE_URL + "/{id}", User.class, 100L);
         assertEquals(HttpStatus.BAD_REQUEST, responseAfterDelete.getStatusCode());

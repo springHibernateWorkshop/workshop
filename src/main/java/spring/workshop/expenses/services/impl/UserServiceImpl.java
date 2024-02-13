@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import spring.workshop.expenses.entities.User;
+import spring.workshop.expenses.exceptions.ResourceNotFoundException;
 import spring.workshop.expenses.repositories.UserRepository;
 import spring.workshop.expenses.services.UserService;
 
@@ -66,17 +67,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Boolean deleteUser(Long id) {
-        return userRepository.findById(id).map(u -> {
-            userRepository.delete(u);
-            LOG.info("User with user ID = {} deleted successfully.", u.getId());
+    public void deleteUser(Long id) {
+        User userToDelete= userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User with user ID = " + id + " not found."));
+        userRepository.delete(userToDelete);
+        LOG.info("User with user ID = {} deleted successfully.", userToDelete.getId());
             // TODO userId auf null setzen für Emplyoee / Superior
-            return true;
-        }).orElseGet(() -> {
+        }
+        
+        /**
+         *  ).orElseGet(() -> {
             LOG.warn("User with user ID = {} not found.", id);
-            return false;
+            throw new IllegalArgumentException();
         });
-    }
+        */
+ 
 
     @Override
     public List<User> getAllUsers() {
@@ -87,7 +91,7 @@ public class UserServiceImpl implements UserService {
     public User getUserById(Long id) {
         Optional<User> user = userRepository.findById(id);
         if (!user.isPresent())
-            throw new IllegalArgumentException("User with id = " + id + " not found.");
+            throw new ResourceNotFoundException("User with id = " + id + " not found.");
 
         return user.get();
     }

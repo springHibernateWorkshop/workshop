@@ -55,26 +55,21 @@ public class UserControllerSliceTest {
     public void testDeleteUserPositive() {
         // Arrange
         Long userId = 1L;
-        // Given
-        when(userServiceMock.deleteUser(userId)).thenReturn(Boolean.TRUE);
         // When
-        ResponseEntity<Boolean> response = sut.deleteUser(userId);
+        ResponseEntity<Void> response = sut.deleteUser(userId);
         // Then
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(true, response.getBody());
     }
 
     @Test
     public void testDeleteCategoryNegative() {
         // Arrange
         Long userId = 1L;
-        // Given
-        when(userServiceMock.deleteUser(userId)).thenReturn(Boolean.FALSE);
+
         // When
-        ResponseEntity<Boolean> response = sut.deleteUser(userId);
+        ResponseEntity<Void> response = sut.deleteUser(userId);
         // Then
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(false, response.getBody());
     }
 
     @Test

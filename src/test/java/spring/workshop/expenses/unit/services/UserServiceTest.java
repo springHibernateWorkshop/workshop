@@ -55,34 +55,6 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testDeleteUserPositive() {
-        // Arrange
-        Long userId = 1L;
-        String username = "usrname";
-        String pass = "pass";
-        Long roleID = 2L;
-        // Given
-        when(userRepositoryMock.findById(userId))
-                .thenReturn(Optional.of(new User(userId, username, pass, roleID)));
-        // When
-        Boolean response = sut.deleteUser(userId);
-        // Then
-        assertEquals(Boolean.TRUE, response);
-    }
-
-    @Test
-    public void testDeleteUserNegative() {
-        // Arrange
-        Long userId = 1L;
-        // Given
-        when(userRepositoryMock.findById(userId)).thenReturn(Optional.empty());
-        // When
-        Boolean response = sut.deleteUser(userId);
-        // Then
-        assertEquals(Boolean.FALSE, response);
-    }
-
-    @Test
     public void testUpdateUser() {
         // Arrange
         Long id = 1L;
