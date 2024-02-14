@@ -79,7 +79,7 @@ public class ExpensesControllerIntegrationTests {
     @Test
     public void testAddExpensesPositive() {
         Expense expensetoAdd = new Expense(500L, 1.99f, LocalDate.of(1994, 10, 1), new Category(100L), new Shop(100L),
-                new Employee(100L, "Test", new User("username", "passw", 2L), new Superior("Test")),
+                new Employee(100L, "Test", new User("username", "passw", "EMPLOYEE"), new Superior("Test")),
                 "Expense 4");
         URI newExpensesLocation = restTemplate.postForLocation(BASE_URL, expensetoAdd);
         ResponseEntity<Expense> response = restTemplate.getForEntity(newExpensesLocation, Expense.class);
@@ -113,7 +113,7 @@ public class ExpensesControllerIntegrationTests {
     @Test
     public void testUpdateExpensesPositive() throws ParseException {
         Expense expense = new Expense(300L, 1.99f, LocalDate.of(1994, 10, 1), new Category(100L), new Shop(100L),
-                new Employee(100L, "Test", new User("username", "passw", 2L), new Superior("Test")),
+                new Employee(100L, "Test", new User("username", "passw", "EMPLOYEE"), new Superior("Test")),
                 "Expenses3");
         Expense response = restTemplate.getForObject(BASE_URL + "/{id}", Expense.class, 300);
         assertEquals("Note 3", response.getNote());
@@ -126,7 +126,7 @@ public class ExpensesControllerIntegrationTests {
     public void testUpdateExpensesNegative() throws ParseException {
         // WHEN: Sending a PUT request to update expenses with invalid ID
         Expense expense = new Expense(9999L, 1.99f, LocalDate.of(1994, 10, 1), new Category(300L), new Shop(300L),
-                new Employee(300L, "Test", new User("username", "passw", 2L), new Superior("Test")),
+                new Employee(300L, "Test", new User("username", "passw", "EMPLOYEE"), new Superior("Test")),
                 "Expenses3");
         ResponseEntity<Expense> response = restTemplate.exchange(BASE_URL, HttpMethod.PUT,
                 new HttpEntity<>(expense), Expense.class);

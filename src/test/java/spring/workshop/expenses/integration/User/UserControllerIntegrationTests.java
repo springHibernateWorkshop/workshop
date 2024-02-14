@@ -30,7 +30,7 @@ public class UserControllerIntegrationTests {
     @Test
     public void testAddNewUser() throws Exception {
 
-        User createdUser = new User("newUsername", "passw", 2L);
+        User createdUser = new User("newUsername", "passw", "EMPLOYEE");
         URI newUserLocation = restTemplate.postForLocation(BASE_URL, createdUser);
         ResponseEntity<User> response = restTemplate.getForEntity(newUserLocation, User.class);
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -54,17 +54,17 @@ public class UserControllerIntegrationTests {
 
     @Test
     public void testUpdateUser() throws Exception {
-        User user = new User(100L, "username", "pass", 3L);
+        User user = new User(100L, "username", "pass", "EMPLOYEE");
         User response = restTemplate.getForObject(BASE_URL + "/{id}", User.class, 100L);
         assertEquals("usr1", response.getUsername());
         assertEquals("pass1", response.getPassword());
-        assertEquals(2, response.getRole());
+        assertEquals("EMPLOYEE", response.getRole());
 
         restTemplate.put("/users", user);
         User responseAfterUpdate = restTemplate.getForObject(BASE_URL + "/{id}", User.class, 100L);
         assertEquals("username", responseAfterUpdate.getUsername());
         assertEquals("pass", responseAfterUpdate.getPassword());
-        assertEquals(3, responseAfterUpdate.getRole());
+        assertEquals("EMPLOYEE", responseAfterUpdate.getRole());
     }
 
     @Test

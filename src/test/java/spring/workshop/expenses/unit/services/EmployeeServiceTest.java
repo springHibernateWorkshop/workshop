@@ -42,7 +42,8 @@ public class EmployeeServiceTest {
     @Test
     public void testAddEmployee() {
         // Given
-        Employee employee = new Employee("Employee", new User("username", "passw", 2L), new Superior("Superior"));
+        Employee employee = new Employee("Employee", new User("username", "passw", "EMPLOYEE"),
+                new Superior("Superior"));
 
         when(employeeRepositoryMock.saveAndFlush(any(Employee.class))).thenReturn(employee);
         doNothing().when(entityManagerMock).refresh(any(Employee.class));
@@ -70,9 +71,9 @@ public class EmployeeServiceTest {
     @Test
     public void testUpdateEmployee() {
         // Given
-        Employee employee = new Employee(1L, "Employee", new User(1L, "username", "passw", 2L),
+        Employee employee = new Employee(1L, "Employee", new User(1L, "username", "passw", "EMPLOYEE"),
                 new Superior(1L, "Superior"));
-        Employee updatedEmployee = new Employee(1L, "updatedEmployee", new User(2L, "username", "passw", 2L),
+        Employee updatedEmployee = new Employee(1L, "updatedEmployee", new User(2L, "username", "passw", "EMPLOYEE"),
                 new Superior(2L, "Superior"));
 
         when(employeeRepositoryMock.findById(any(Long.class)))

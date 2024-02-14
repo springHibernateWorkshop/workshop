@@ -14,11 +14,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import spring.workshop.expenses.entities.User;
 import spring.workshop.expenses.services.UserService;
+import spring.workshop.expenses.useCases.CreateUserUc;
 
 @RestController
 @RequestMapping(path = "/users")
@@ -28,13 +30,17 @@ public class UserController {
   private static final Logger LOG = LoggerFactory.getLogger(CategoryController.class);
 
   @Autowired
+  CreateUserUc createUserUc;
+
+  @Autowired
   public UserController(UserService userService) {
     this.userService = userService;
   }
 
   @PostMapping()
-  public ResponseEntity<User> addUser(@RequestBody User user) {
-    User newUser = userService.addUser(user.getUsername(), user.getPassword(), user.getRole());
+  public ResponseEntity<User> addUser(@RequestBody User user, @RequestParam String name,
+      @RequestParam(name = "superior_id", required = false) Long superiorId) {
+    User newUser = createUserUc.createUser(user, name, superiorId);
 
     return ResponseEntity
         .created(

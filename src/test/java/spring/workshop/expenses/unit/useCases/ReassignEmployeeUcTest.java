@@ -39,7 +39,7 @@ public class ReassignEmployeeUcTest {
     public void testReassignEmployee() {
         // Given
         Employee employee = new Employee(1L, "Employee", new User(), new Superior(1L, "Superior"));
-        Superior superior = new Superior(2L, "Superior", new User(2L, "username", "pass", 2L));
+        Superior superior = new Superior(2L, "Superior", new User(2L, "username", "pass", "SUPERIOR"));
         Employee updatedEmployee = new Employee(1L, "Employee", new User(), superior);
 
         when(employeeServiceMock.getEmployeeById(any(Long.class)))

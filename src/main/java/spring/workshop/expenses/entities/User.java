@@ -21,25 +21,27 @@ public class User {
     @Column(nullable = false, unique = true)
     @NonNull
     private String username;
+    // unique should be set at the datenbank level
+    // https://stackoverflow.com/questions/3496028/columnunique-true-does-not-seem-to-work
 
     @Column(nullable = false, name = "password")
     @NonNull
     private String passwd;
 
-    @Column(nullable = false, name = "role_id")
+    @Column(nullable = false, name = "role")
     @NonNull
-    private Long role;
+    private String role;
 
     public User() {
     }
 
-    public User(@NonNull String username, @NonNull String password, @NonNull Long role) {
+    public User(@NonNull String username, @NonNull String password, @NonNull String role) {
         this.username = username;
         this.passwd = password;
         this.role = role;
     }
 
-    public User(Long id, @NonNull String username, @NonNull String password, @NonNull Long role) {
+    public User(Long id, @NonNull String username, @NonNull String password, @NonNull String role) {
         this.id = id;
         this.username = username;
         this.passwd = password;
@@ -70,11 +72,11 @@ public class User {
         this.passwd = password;
     }
 
-    public Long getRole() {
+    public String getRole() {
         return role;
     }
 
-    public void setRole(@NonNull Long roleId) {
+    public void setRole(@NonNull String roleId) {
         this.role = roleId;
     }
 

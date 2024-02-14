@@ -41,6 +41,11 @@ public class Superior {
         this.name = name;
     }
 
+    public Superior(@NonNull String name, @NonNull User user) {
+        this.name = name;
+        this.user = user;
+    }
+
     public Superior(@NonNull String name) {
         this.name = name;
     }

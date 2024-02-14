@@ -42,9 +42,9 @@ public class UserControllerSliceTest {
     @Test
     public void testAddUser() {
         // Given
-        when(userServiceMock.addUser(any(), any(), any())).thenReturn(new User(1L, "usr", "pass", 2L));
+        when(userServiceMock.addUser(any())).thenReturn(new User(1L, "usr", "pass", "SUPERIOR"));
         // When
-        ResponseEntity<User> response = sut.addUser(new User("usr", "pass", 2L));
+        ResponseEntity<User> response = sut.addUser(new User("usr", "pass", "SUPERIOR"), "Alicja", 300L);
         // Then
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertEquals("usr", response.getBody().getUsername());
@@ -75,9 +75,9 @@ public class UserControllerSliceTest {
     public void testUpdateUser() {
         // Given
         Long id = 1L;
-        User updatedUser = new User(id, "usr", "pass", 2L);
+        User updatedUser = new User(id, "usr", "pass", "EMPLOYEE");
 
-        when(userServiceMock.getUserById(id)).thenReturn(new User(id, "user", "passXYZ", 2L));
+        when(userServiceMock.getUserById(id)).thenReturn(new User(id, "user", "passXYZ", "EMPLOYEE"));
         when(userServiceMock.updateUser(updatedUser)).thenReturn(updatedUser);
         // When
         ResponseEntity<User> response = sut.updateUser(updatedUser);
@@ -86,7 +86,7 @@ public class UserControllerSliceTest {
         assertEquals(id, response.getBody().getId());
         assertEquals("usr", response.getBody().getUsername());
         assertEquals("pass", response.getBody().getPassword());
-        assertEquals(2L, response.getBody().getRole());
+        assertEquals("EMPLOYEE", response.getBody().getRole());
     }
 
     @Test
@@ -105,7 +105,7 @@ public class UserControllerSliceTest {
         // Given
         Long id = 1L;
 
-        when(userServiceMock.getUserById(id)).thenReturn(new User(1L, "username", "pass", 3L));
+        when(userServiceMock.getUserById(id)).thenReturn(new User(1L, "username", "pass", "SUPERIOR"));
         // When
         ResponseEntity<User> response = sut.getUserById(id);
         // Then
@@ -113,7 +113,7 @@ public class UserControllerSliceTest {
         assertEquals(id, response.getBody().getId());
         assertEquals("username", response.getBody().getUsername());
         assertEquals("pass", response.getBody().getPassword());
-        assertEquals(3L, response.getBody().getRole());
+        assertEquals("SUPERIOR", response.getBody().getRole());
     }
 
 }

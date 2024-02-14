@@ -103,7 +103,8 @@ public class ExpensesControllerMockTest {
                 // Arrange
                 Expense expenses = new Expense(999L, 999.99f, LocalDate.of(1994, 10, 1), new Category(100L),
                                 new Shop(100L),
-                                new Employee(100L, "Test", new User("username", "passw", 2L), new Superior("Test")),
+                                new Employee(100L, "Test", new User("username", "passw", "EMPLOYEE"),
+                                                new Superior("Test")),
                                 "example_note_1");
 
                 assertEquals(3, repo.findAll().size());
@@ -118,6 +119,8 @@ public class ExpensesControllerMockTest {
                 assertEquals(4, repo.findAll().size());
         }
 
+        // TODO negative create Expense for User in role Superior
+
         /**
          * Test Case - updating an expense.
          *
@@ -129,7 +132,8 @@ public class ExpensesControllerMockTest {
 
                 Expense expense = new Expense(100L, 999.99f, LocalDate.of(1994, 10, 1), new Category(100L),
                                 new Shop(100L),
-                                new Employee(100L, "Test", new User("username", "passw", 2L), new Superior("Test")),
+                                new Employee(100L, "Test", new User("username", "passw", "EMPLOYEE"),
+                                                new Superior("Test")),
                                 "Expense 1");
                 assertEquals("Note 1", repo.findById(100L).get().getNote());
 

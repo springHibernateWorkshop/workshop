@@ -38,16 +38,16 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testAddUser() {
+    public void testAddEmployee() {
         // Arrange
-        String username = "usrname";
+        String username = "username";
         String pass = "pass";
-        Long roleID = 2L;
+        String role = "EMPLOYEE";
         // Given
-        User user = new User(username, pass, roleID);
-        when(userRepositoryMock.save(user)).thenReturn(new User(username, pass, roleID));
+        User user = new User(username, pass, role);
+        when(userRepositoryMock.save(user)).thenReturn(new User(username, pass, role));
         // When
-        User response = sut.addUser(username, pass, roleID);
+        User response = sut.addUser(user);
         // Then
         assertEquals(user.getUsername(), response.getUsername());
         assertEquals(user.getPassword(), response.getPassword());
@@ -55,12 +55,31 @@ public class UserServiceTest {
     }
 
     @Test
+    public void testAddSuperior() {
+        // Arrange
+        String username = "usrname";
+        String pass = "pass";
+        String role = "SUPERIOR";
+        // Given
+        User user = new User(username, pass, role);
+        when(userRepositoryMock.save(user)).thenReturn(new User(username, pass, role));
+        // When
+        User response = sut.addUser(user);
+        // Then
+        assertEquals(user.getUsername(), response.getUsername());
+        assertEquals(user.getPassword(), response.getPassword());
+        assertEquals(user.getRole(), response.getRole());
+    }
+
+    // TODO negative Role != EMPLOYEE or SUPERIOR
+
+    @Test
     public void testUpdateUser() {
         // Arrange
         Long id = 1L;
-        User updatedUser = new User(id, "usrname", "passX", 4L);
+        User updatedUser = new User(id, "usrname", "passX", "EMPLOYEE");
         // Given
-        when(userRepositoryMock.findById(1L)).thenReturn(Optional.of(new User(1L, "usern", "passZ", 4L)));
+        when(userRepositoryMock.findById(1L)).thenReturn(Optional.of(new User(1L, "usern", "passZ", "EMPLOYEE")));
         when(userRepositoryMock.save(any())).thenReturn(updatedUser);
         // When
         User response = sut.updateUser(updatedUser);
@@ -68,7 +87,7 @@ public class UserServiceTest {
         assertEquals(id, response.getId());
         assertEquals("usrname", response.getUsername());
         assertEquals("passX", response.getPassword());
-        assertEquals(4L, response.getRole());
+        assertEquals("EMPLOYEE", response.getRole());
     }
 
     @Test
@@ -86,7 +105,7 @@ public class UserServiceTest {
         // Arrange
         Long id = 1L;
         // Given
-        when(userRepositoryMock.findById(id)).thenReturn(Optional.of(new User(1L, "user", "password", 1L)));
+        when(userRepositoryMock.findById(id)).thenReturn(Optional.of(new User(1L, "user", "password", "EMPLOYEE")));
         // When
         User response = sut.getUserById(id);
         // Then

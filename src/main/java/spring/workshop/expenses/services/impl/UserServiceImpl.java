@@ -25,28 +25,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User addUser(String username, String pass, Long roleId) {
-        if (username == null || username.trim().isEmpty())
-            throw new IllegalArgumentException("User with empty username cannot be created.");
+    public User addUser(User user) {
 
-        if (pass == null || pass.trim().isEmpty())
-            throw new IllegalArgumentException("User with empty password cannot be created.");
+        User createdUser = userRepository.save(user);
 
-        if (roleId == null)
-            throw new IllegalArgumentException("User with empty roleID cannot be created.");
-
-        Optional<User> user = userRepository.findByUsername(username);
-        if (user.isPresent())
-            throw new IllegalArgumentException("User with username = " + username + " already exists.");
-
-        User newUser = new User(username, pass, roleId);
-        // create an employee
-
-        // or create a superior
-
-        userRepository.save(newUser);
-        LOG.info("User with name = " + username + " created successfully.");
-        return newUser;
+        LOG.info("User with name = " + user.getUsername() + " created successfully.");
+        return createdUser;
     }
 
     @Override
@@ -60,7 +44,7 @@ public class UserServiceImpl implements UserService {
             LOG.info("User with id = " + user.getId() + " updated succesfully.");
             return userRepository.save(updatedUser);
 
-            // TODO Role update check
+            // TODO Role update check, can role be updated?
         } else {
             throw new IllegalArgumentException("User with id = " + user.getId() + " not found.");
         }
