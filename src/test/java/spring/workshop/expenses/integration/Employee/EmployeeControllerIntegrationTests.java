@@ -16,6 +16,8 @@ import org.springframework.test.context.ActiveProfiles;
 
 import spring.workshop.expenses.entities.Employee;
 
+// This class contains integration tests for the EmployeeController
+
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
@@ -54,7 +56,7 @@ public class EmployeeControllerIntegrationTests {
     }
 
     @Test
-    public void testReassignEmployeeNegative1() throws Exception {
+    public void testReassignEmployeeNegativeNonExistingSuperior() throws Exception {
 
         // Setting up request header and body for the PUT request
         // Constructing the request body with the employee_id (existing) and
@@ -78,7 +80,7 @@ public class EmployeeControllerIntegrationTests {
     }
 
     @Test
-    public void testReassignEmployeeNegative2() throws Exception {
+    public void testReassignEmployeeNegativeInactiveSuperior() throws Exception {
 
         // Setting up request header and body for the PUT request
         // Constructing the request body with the employee_id (existing) and
@@ -102,7 +104,7 @@ public class EmployeeControllerIntegrationTests {
     }
 
     @Test
-    public void testReassignEmployeeNegative3() throws Exception {
+    public void testReassignEmployeeNegativeNonExistingEmployee() throws Exception {
 
         // Setting up request header and body for the PUT request
         // Constructing the request body with the employee_id (non-existing) and
