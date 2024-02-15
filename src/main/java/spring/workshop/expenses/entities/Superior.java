@@ -12,7 +12,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "superior_tab")
-public class Superior {
+public class Superior implements Person {
 
     @Id
     @Column(name = "superior_id")

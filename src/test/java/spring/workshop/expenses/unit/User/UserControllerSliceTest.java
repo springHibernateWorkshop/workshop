@@ -18,6 +18,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import spring.workshop.expenses.controllers.UserController;
+import spring.workshop.expenses.entities.Person;
 import spring.workshop.expenses.entities.User;
 import spring.workshop.expenses.services.UserService;
 
@@ -44,11 +45,11 @@ public class UserControllerSliceTest {
         // Given
         when(userServiceMock.addUser(any())).thenReturn(new User(1L, "usr", "pass", "SUPERIOR"));
         // When
-        ResponseEntity<User> response = sut.addUser(new User("usr", "pass", "SUPERIOR"), "Alicja", 300L);
+        ResponseEntity<Person> response = sut.addUser(new User("usr", "pass", "SUPERIOR"), "Alicja", 300L);
         // Then
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        assertEquals("usr", response.getBody().getUsername());
-        assertEquals("pass", response.getBody().getPassword());
+        assertEquals("usr", response.getBody().getUser().getUsername());
+        assertEquals("pass", response.getBody().getUser().getPassword());
     }
 
     @Test

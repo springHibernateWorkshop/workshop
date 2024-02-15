@@ -14,7 +14,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "employee_tab")
-public class Employee {
+public class Employee implements Person {
 
     @Id
     @Column(name = "employee_id")

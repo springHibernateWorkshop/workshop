@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import spring.workshop.expenses.entities.Person;
 import spring.workshop.expenses.entities.User;
 import spring.workshop.expenses.services.UserService;
 import spring.workshop.expenses.useCases.CreateUserUc;
@@ -38,9 +39,9 @@ public class UserController {
   }
 
   @PostMapping()
-  public ResponseEntity<User> addUser(@RequestBody User user, @RequestParam String name,
+  public ResponseEntity<Person> addUser(@RequestBody User user, @RequestParam String name,
       @RequestParam(name = "superior_id", required = false) Long superiorId) {
-    User newUser = createUserUc.createUser(user, name, superiorId);
+    Person newUser = createUserUc.createUser(user, name, superiorId);
 
     return ResponseEntity
         .created(
