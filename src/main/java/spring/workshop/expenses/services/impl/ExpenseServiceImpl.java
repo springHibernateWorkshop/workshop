@@ -8,8 +8,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import spring.workshop.expenses.entities.Expense;
 import spring.workshop.expenses.repositories.ExpenseRepository;
 import spring.workshop.expenses.services.ExpenseService;
@@ -17,6 +20,10 @@ import spring.workshop.expenses.services.ExpenseService;
 @Service
 public class ExpenseServiceImpl implements ExpenseService {
     private static final Logger LOG = LoggerFactory.getLogger(ExpenseServiceImpl.class);
+
+    @PersistenceContext
+    private EntityManager entityManager;
+
     @Autowired
     private ExpenseRepository expensesRepository;
 
@@ -62,8 +69,12 @@ public class ExpenseServiceImpl implements ExpenseService {
     }
 
     @Override
-    public Expense addNewExpense(Expense expenses) {
-        return expensesRepository.save(expenses);
+    @Transactional
+    public Expense addNewExpense(Expense expense) {
+        Expense savedExpense = expensesRepository.saveAndFlush(expense);
+        LOG.info("Expense with id = " + expense.getId() + " created successfully.");
+        entityManager.refresh(savedExpense);
+        return savedExpense;
     }
 
     @Override
