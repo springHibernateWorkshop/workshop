@@ -35,8 +35,8 @@ public class CategoryController {
   }
 
   @PostMapping()
-  public ResponseEntity<Category> addNewCategory(@RequestBody @NonNull String name) {
-    Category newCategory = categoryService.addCategory(new Category(name));
+  public ResponseEntity<Category> addNewCategory(@RequestBody Category category) {
+    Category newCategory = categoryService.addCategory(category);
 
     return ResponseEntity
         .created(
