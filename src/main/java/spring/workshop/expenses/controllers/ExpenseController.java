@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import spring.workshop.expenses.entities.Expense;
 import spring.workshop.expenses.services.ExpenseService;
 import spring.workshop.expenses.useCases.CreateExpenseUc;
+import spring.workshop.expenses.useCases.DeleteExpenseUc;
 
 @RestController
 @RequestMapping(path = "/expenses")
@@ -30,6 +31,9 @@ public class ExpenseController {
     @Autowired
     private CreateExpenseUc createExpenseUc;
 
+    @Autowired
+    private DeleteExpenseUc deleteExpenseUc;
+
     // Method for creating an Expense
     @PostMapping(path = "/")
     @ResponseStatus(HttpStatus.OK)
@@ -37,7 +41,14 @@ public class ExpenseController {
             @RequestBody Expense expense) {
 
         return createExpenseUc.createExpense(employeeId, expense);
+    }
 
+    // Method for deleting an Expense
+    @DeleteMapping(path = "/")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteExpense(@RequestParam("employee_id") Long employeeId,
+            @RequestParam("expense_id") Long expenseId) {
+        deleteExpenseUc.deleteExpense(employeeId, expenseId);
     }
 
     @GetMapping
@@ -53,11 +64,6 @@ public class ExpenseController {
     @PutMapping()
     public ResponseEntity<Expense> updateExpense(@RequestBody Expense expense) {
         return new ResponseEntity<>(expenseService.updateExpense(expense), HttpStatus.OK);
-    }
-
-    @DeleteMapping(path = "/{id}")
-    public ResponseEntity<Boolean> deleteExpense(@PathVariable Long id) {
-        return new ResponseEntity<>(expenseService.deleteExpense(id), HttpStatus.OK);
     }
 
     @GetMapping(path = "/date/{date}")
