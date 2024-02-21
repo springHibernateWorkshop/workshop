@@ -1,7 +1,5 @@
 package spring.workshop.expenses.entities;
 
-import org.springframework.lang.NonNull;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -38,13 +36,13 @@ public class User {
     public User() {
     }
 
-    public User(@NonNull String username, @NonNull String password, @NonNull Role role) {
+    public User(String username, String password, Role role) {
         this.username = username;
         this.password = password;
         this.role = role;
     }
 
-    public User(Long id, @NonNull String username, @NonNull String password, @NonNull String role) {
+    public User(Long id, String username, String password, Role role) {
         this.id = id;
         this.username = username;
         this.password = password;

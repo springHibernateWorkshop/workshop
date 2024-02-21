@@ -1,7 +1,5 @@
 package spring.workshop.expenses.entities;
 
-import org.springframework.lang.NonNull;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -22,7 +20,6 @@ public class Employee implements Person {
     private Long id;
 
     @Column
-    @NonNull
     private String name;
 
     @OneToOne(optional = true)
@@ -36,13 +33,13 @@ public class Employee implements Person {
     public Employee() {
     }
 
-    public Employee(@NonNull String name, User user, Superior superior) {
+    public Employee(String name, User user, Superior superior) {
         this.name = name;
         this.user = user;
         this.superior = superior;
     }
 
-    public Employee(Long id, @NonNull String name, User user, Superior superior) {
+    public Employee(Long id, String name, User user, Superior superior) {
         this.id = id;
         this.name = name;
         this.user = user;
@@ -61,7 +58,7 @@ public class Employee implements Person {
         return name;
     }
 
-    public void setName(@NonNull String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
