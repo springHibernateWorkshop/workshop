@@ -9,7 +9,6 @@ import static org.mockito.Mockito.when;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -25,7 +24,7 @@ import spring.workshop.expenses.repositories.EmployeeRepository;
 import spring.workshop.expenses.services.EmployeeService;
 import spring.workshop.expenses.services.impl.EmployeeServiceImpl;
 
-// This class contains unit tests for the UserController class
+// This class contains unit tests for the EmployeeService
 
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
@@ -38,7 +37,7 @@ public class EmployeeServiceTest {
     EntityManager entityManagerMock;
 
     @InjectMocks
-    private EmployeeService sut = new EmployeeServiceImpl(entityManagerMock, employeeRepositoryMock);
+    private EmployeeService sut = new EmployeeServiceImpl();
 
     @Test
     public void testAddEmployee() {
@@ -72,7 +71,7 @@ public class EmployeeServiceTest {
     public void testUpdateEmployee() {
         // Given
         Employee employee = new Employee(1L, "Employee", new User(1L, "User"), new Superior(1L, "Superior"));
-        Employee updatedEmployee = new Employee(1L, "updatedEmployee", new User(2L, "User"),
+        Employee updatedEmployee = new Employee(employee.getId(), "updatedEmployee", new User(2L, "User"),
                 new Superior(2L, "Superior"));
 
         when(employeeRepositoryMock.findById(any(Long.class)))

@@ -24,13 +24,11 @@ public class EmployeeServiceImpl implements EmployeeService {
     @PersistenceContext
     private EntityManager entityManager;
 
+    @Autowired
     private EmployeeRepository employeeRepository;
 
-    @Autowired
-    public EmployeeServiceImpl(EntityManager entityManager, EmployeeRepository employeeRepository) {
-        this.entityManager = entityManager;
-        this.employeeRepository = employeeRepository;
-    }
+    public EmployeeServiceImpl() {
+    };
 
     @Override
     @Transactional

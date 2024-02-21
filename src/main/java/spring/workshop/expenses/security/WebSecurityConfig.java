@@ -23,10 +23,11 @@ public class WebSecurityConfig {
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.authorizeHttpRequests((requests) -> requests
-				.requestMatchers("/categories/**").permitAll()
-				.requestMatchers("/shops/**").permitAll()
+				// .requestMatchers("/categories/**").permitAll()
+				// .requestMatchers("/shops/**").permitAll()
 				// .requestMatchers("/users/**").hasRole("ADMINISTRATOR")
-				.requestMatchers("/expenses/**").hasAuthority("VIEW_EXPENSES")// hasAnyRole("EMPLOYEE", "SUPERIOR")
+				// .requestMatchers("/expenses/**").hasAuthority("VIEW_EXPENSES")//
+				// hasAnyRole("EMPLOYEE", "SUPERIOR")
 				// .requestMatchers("/reports/**").hasAnyRole("SUPERIOR", "ACCOUNTANT")
 				// .requestMatchers("/employees/**").hasAnyRole("EMPLOYEE", "SUPERIOR",
 				// "ACCOUNTANT")
