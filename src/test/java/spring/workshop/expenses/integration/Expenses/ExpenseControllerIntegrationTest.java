@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -34,7 +34,7 @@ import spring.workshop.expenses.enums.ExpenseStatus;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-public class ExpensesControllerIntegrationTest {
+public class ExpenseControllerIntegrationTest {
 
     private static final String BASE_URL = "/expenses";
 
@@ -44,10 +44,10 @@ public class ExpensesControllerIntegrationTest {
     @Autowired
     ExpenseController controller;
 
-    private ObjectMapper objectMapper;
+    private static ObjectMapper objectMapper;
 
-    @BeforeEach
-    public void setUp() {
+    @BeforeAll
+    public static void setUp() {
         objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
     }
