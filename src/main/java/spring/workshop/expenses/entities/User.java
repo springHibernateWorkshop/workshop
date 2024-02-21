@@ -18,20 +18,34 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column
+    @Column(nullable = false, unique = true)
     @NonNull
-    private String name;
+    private String username;
+    // unique should be set at the datenbank level
+    // https://stackoverflow.com/questions/3496028/columnunique-true-does-not-seem-to-work
+
+    @Column(nullable = false, name = "password")
+    @NonNull
+    private String passwd;
+
+    @Column(nullable = false, name = "role")
+    @NonNull
+    private String role;
 
     public User() {
     }
 
-    public User(@NonNull String name) {
-        this.name = name;
+    public User(@NonNull String username, @NonNull String password, @NonNull String role) {
+        this.username = username;
+        this.passwd = password;
+        this.role = role;
     }
 
-    public User(Long id, @NonNull String name) {
+    public User(Long id, @NonNull String username, @NonNull String password, @NonNull String role) {
         this.id = id;
-        this.name = name;
+        this.username = username;
+        this.passwd = password;
+        this.role = role;
     }
 
     public Long getId() {
@@ -42,12 +56,28 @@ public class User {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
-    public void setName(@NonNull String name) {
-        this.name = name;
+    public void setUsername(@NonNull String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return passwd;
+    }
+
+    public void setPassword(@NonNull String password) {
+        this.passwd = password;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(@NonNull String roleId) {
+        this.role = roleId;
     }
 
 }

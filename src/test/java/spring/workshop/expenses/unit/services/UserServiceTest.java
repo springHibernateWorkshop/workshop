@@ -38,55 +38,56 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testAddUser() {
+    public void testAddEmployee() {
         // Arrange
-        String name = "Test";
+        String username = "username";
+        String pass = "pass";
+        String role = "EMPLOYEE";
         // Given
-        User user = new User(name);
-        when(userRepositoryMock.save(user)).thenReturn(new User(1L, "Test"));
+        User user = new User(username, pass, role);
+        when(userRepositoryMock.save(user)).thenReturn(new User(username, pass, role));
         // When
-        User response = sut.addUser("Test");
+        User response = sut.addUser(user);
         // Then
-        assertEquals(user.getName(), response.getName());
+        assertEquals(user.getUsername(), response.getUsername());
+        assertEquals(user.getPassword(), response.getPassword());
+        assertEquals(user.getRole(), response.getRole());
     }
 
     @Test
-    public void testDeleteUserPositive() {
+    public void testAddSuperior() {
         // Arrange
-        String name = "Test";
+        String username = "usrname";
+        String pass = "pass";
+        String role = "SUPERIOR";
         // Given
-        when(userRepositoryMock.findByName(name)).thenReturn(Optional.of(new User(1L, "Test")));
+        User user = new User(username, pass, role);
+        when(userRepositoryMock.save(user)).thenReturn(new User(username, pass, role));
         // When
-        Boolean response = sut.deleteUser(name);
+        User response = sut.addUser(user);
         // Then
-        assertEquals(Boolean.TRUE, response);
+        assertEquals(user.getUsername(), response.getUsername());
+        assertEquals(user.getPassword(), response.getPassword());
+        assertEquals(user.getRole(), response.getRole());
     }
 
-    @Test
-    public void testDeleteCategoryNegative() {
-        // Arrange
-        String name = "Test";
-        // Given
-        when(userRepositoryMock.findByName(name)).thenReturn(Optional.empty());
-        // When
-        Boolean response = sut.deleteUser(name);
-        // Then
-        assertEquals(Boolean.FALSE, response);
-    }
+    // TODO negative Role != EMPLOYEE or SUPERIOR
 
     @Test
     public void testUpdateUser() {
         // Arrange
         Long id = 1L;
-        User updatedUser = new User(id, "Test2");
+        User updatedUser = new User(id, "usrname", "passX", "EMPLOYEE");
         // Given
-        when(userRepositoryMock.findById(1L)).thenReturn(Optional.of(new User(1L, "Test1")));
+        when(userRepositoryMock.findById(1L)).thenReturn(Optional.of(new User(1L, "usern", "passZ", "EMPLOYEE")));
         when(userRepositoryMock.save(any())).thenReturn(updatedUser);
         // When
         User response = sut.updateUser(updatedUser);
         // Then
         assertEquals(id, response.getId());
-        assertEquals("Test2", response.getName());
+        assertEquals("usrname", response.getUsername());
+        assertEquals("passX", response.getPassword());
+        assertEquals("EMPLOYEE", response.getRole());
     }
 
     @Test
@@ -104,23 +105,10 @@ public class UserServiceTest {
         // Arrange
         Long id = 1L;
         // Given
-        when(userRepositoryMock.findById(id)).thenReturn(Optional.of(new User(1L, "Test")));
+        when(userRepositoryMock.findById(id)).thenReturn(Optional.of(new User(1L, "user", "password", "EMPLOYEE")));
         // When
         User response = sut.getUserById(id);
         // Then
         assertEquals(id, response.getId());
     }
-
-    @Test
-    public void testGetUserByName() {
-        // Arrange
-        String name = "Test";
-        // Given
-        when(userRepositoryMock.findByName(name)).thenReturn(Optional.of(new User(1L, "Test")));
-        // When
-        User response = sut.getUserByName(name);
-        // Then
-        assertEquals(name, response.getName());
-    }
-
 }

@@ -12,6 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
 import spring.workshop.expenses.entities.Employee;
 import spring.workshop.expenses.entities.Superior;
 import spring.workshop.expenses.entities.User;
@@ -40,7 +41,7 @@ public class ReassignEmployeeUcTest {
     @Test
     public void testReassignEmployeePositive() {
         // Given
-        Superior superior = new Superior(2L, "Superior", new User(2L, "User"));
+        Superior superior = new Superior(2L, "Superior", new User(2L, "username", "pass", "SUPERIOR"));
         Employee employee = new Employee(1L, "Employee", new User(), new Superior(1L, "Superior"));
         Employee reassignedEmployee = new Employee(employee.getId(), employee.getName(), employee.getUser(), superior);
 
@@ -92,7 +93,7 @@ public class ReassignEmployeeUcTest {
     @Test
     public void testReassignEmployeeNegativeNonExistingEmployee() {
         // Given
-        Superior superior = new Superior(2L, "Superior", new User(2L, "User"));
+        Superior superior = new Superior(2L, "Superior", new User(2L, "unsename", "password", "SUPERIOR"));
         Long employeeId = 1L;
 
         when(superiorServiceMock.getSuperiorById(any(Long.class))).thenReturn(superior);
