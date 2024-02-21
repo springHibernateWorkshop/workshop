@@ -8,6 +8,9 @@ import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
@@ -19,23 +22,38 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import spring.workshop.expenses.controllers.UserController;
 import spring.workshop.expenses.entities.Person;
+import spring.workshop.expenses.entities.Superior;
 import spring.workshop.expenses.entities.User;
+import spring.workshop.expenses.services.EmployeeService;
+import spring.workshop.expenses.services.SuperiorService;
 import spring.workshop.expenses.services.UserService;
+import spring.workshop.expenses.useCases.impl.CreateUserUcImpl;
 
 // This class contains unit tests for the UserController
 
 @WebMvcTest(UserController.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
+@ExtendWith(MockitoExtension.class)
 public class UserControllerSliceTest {
 
+    @Autowired
     private UserController sut;
 
     @MockBean
     private UserService userServiceMock;
 
+    @MockBean
+    private CreateUserUcImpl createUserUcMock;
+
+    @MockBean
+    EmployeeService employeeServiceMock;
+
+    @MockBean
+    SuperiorService superiorServiceMock;
+
     @BeforeEach
     public void setUp() throws Exception {
-        sut = new UserController(userServiceMock);
+        sut = new UserController(userServiceMock, createUserUcMock);
         MockHttpServletRequest request = new MockHttpServletRequest();
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
     }
@@ -43,7 +61,9 @@ public class UserControllerSliceTest {
     @Test
     public void testAddUser() {
         // Given
-        when(userServiceMock.addUser(any())).thenReturn(new User(1L, "usr", "pass", "SUPERIOR"));
+        User user = new User(1L, "usr", "pass", "SUPERIOR");
+        // when(userServiceMock.addUser(any())).thenReturn(user);
+        when(createUserUcMock.createUser(any(), any(), any())).thenReturn(new Superior(1L, "Alicja", user));
         // When
         ResponseEntity<Person> response = sut.addUser(new User("usr", "pass", "SUPERIOR"), "Alicja", 300L);
         // Then

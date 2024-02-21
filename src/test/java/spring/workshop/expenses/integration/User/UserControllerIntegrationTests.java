@@ -3,8 +3,6 @@ package spring.workshop.expenses.integration.User;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import java.net.URI;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
+import spring.workshop.expenses.entities.Person;
 import spring.workshop.expenses.entities.User;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -30,13 +29,14 @@ public class UserControllerIntegrationTests {
     @Test
     public void testAddNewUser() throws Exception {
 
-        User createdUser = new User("newUsername", "passw", "EMPLOYEE");
-        URI newUserLocation = restTemplate.postForLocation(BASE_URL, createdUser);
-        ResponseEntity<User> response = restTemplate.getForEntity(newUserLocation, User.class);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
+        User user = new User("newUsername", "passw", "SUPERIOR");
+        ResponseEntity<Person> response = restTemplate.postForEntity(BASE_URL + "?name={name}", user, Person.class,
+                "Kowalski",
+                null);
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
 
-        User user = response.getBody();
-        assertEquals("newUsername", user.getUsername());
+        Person createdPerson = response.getBody();
+        assertEquals("newUsername", createdPerson.getUser().getUsername());
     }
 
     @Test
