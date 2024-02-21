@@ -6,17 +6,15 @@ import spring.workshop.expenses.entities.User;
 
 public interface UserService {
 
-    User addUser(String name);
+    User addUser(User user);
 
-    Boolean deleteUser(String name);
+    void deleteUser(Long id);
 
     User updateUser(User user);
 
     List<User> getAllUsers();
 
     User getUserById(Long id);
-
-    User getUserByName(String name);
 
     User getUserByUsername(String username);
 

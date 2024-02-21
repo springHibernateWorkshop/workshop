@@ -21,16 +21,14 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column
-    @NonNull
-    private String name;
-
-    @Column
-    @NonNull
+    @Column(nullable = false, unique = true)
     private String username;
+    // unique should be set at the datenbank level
+    // https://stackoverflow.com/questions/3496028/columnunique-true-does-not-seem-to-work
+    // try @Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames
+    // = "username"))
 
-    @Column
-    @NonNull
+    @Column(nullable = false)
     private String password;
 
     @ManyToOne
@@ -40,13 +38,18 @@ public class User {
     public User() {
     }
 
-    public User(@NonNull String username) {
+    public User(@NonNull String username, @NonNull String password, @NonNull Role role) {
         this.username = username;
+        this.password = password;
+        this.role = role;
     }
 
-    public User(Long id, @NonNull String username) {
+    public User(Long id, @NonNull String username, @NonNull String password, @NonNull String role) {
         this.id = id;
         this.username = username;
+        this.password = password;
+        this.role = role;
+
     }
 
     public Long getId() {
@@ -55,14 +58,6 @@ public class User {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(@NonNull String name) {
-        this.name = name;
     }
 
     public String getUsername() {

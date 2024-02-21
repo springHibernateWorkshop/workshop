@@ -17,15 +17,18 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import spring.workshop.expenses.entities.Expense;
 import spring.workshop.expenses.security.Role;
 import spring.workshop.expenses.services.ExpenseService;
+import spring.workshop.expenses.useCases.CreateExpenseUc;
 
 @RestController
 @RequestMapping(path = "/expenses")
@@ -35,6 +38,19 @@ public class ExpenseController {
 
     @Autowired
     private ExpenseService expenseService;
+
+    @Autowired
+    private CreateExpenseUc createExpenseUc;
+
+    // Method for creating an Expense
+    @PostMapping(path = "/")
+    @ResponseStatus(HttpStatus.OK)
+    public Expense createExpense(@RequestParam("employee_id") Long employeeId,
+            @RequestBody Expense expense) {
+
+        return createExpenseUc.createExpense(employeeId, expense);
+
+    }
 
     @GetMapping
     @PreAuthorize("hasAuthority('VIEW_EXPENSES')")

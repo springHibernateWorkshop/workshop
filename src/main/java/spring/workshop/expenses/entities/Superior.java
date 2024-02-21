@@ -12,7 +12,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "superior_tab")
-public class Superior {
+public class Superior implements Person {
 
     @Id
     @Column(name = "superior_id")
@@ -39,6 +39,11 @@ public class Superior {
     public Superior(Long id, @NonNull String name) {
         this.id = id;
         this.name = name;
+    }
+
+    public Superior(@NonNull String name, @NonNull User user) {
+        this.name = name;
+        this.user = user;
     }
 
     public Superior(@NonNull String name) {
