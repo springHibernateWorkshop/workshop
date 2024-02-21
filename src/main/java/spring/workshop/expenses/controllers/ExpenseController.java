@@ -13,11 +13,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
 import spring.workshop.expenses.entities.Expense;
 import spring.workshop.expenses.services.ExpenseService;
+import spring.workshop.expenses.useCases.CreateExpenseUc;
 
 @RestController
 @RequestMapping(path = "/expenses")
@@ -26,15 +27,17 @@ public class ExpenseController {
     @Autowired
     private ExpenseService expenseService;
 
-    @PostMapping
-    public ResponseEntity<Expense> addNewExpense(@RequestBody Expense expense) {
-        Expense newExpense = expenseService.addNewExpense(expense);
-        return ResponseEntity
-                .created(
-                        ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}")
-                                .buildAndExpand(expense.getId())
-                                .toUri())
-                .body(newExpense);
+    @Autowired
+    private CreateExpenseUc createExpenseUc;
+
+    // Method for creating an Expense
+    @PostMapping(path = "/")
+    @ResponseStatus(HttpStatus.OK)
+    public Expense createExpense(@RequestParam("employee_id") Long employeeId,
+            @RequestBody Expense expense) {
+
+        return createExpenseUc.createExpense(employeeId, expense);
+
     }
 
     @GetMapping
