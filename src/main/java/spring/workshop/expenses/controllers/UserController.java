@@ -30,12 +30,13 @@ public class UserController {
   private UserService userService;
   private static final Logger LOG = LoggerFactory.getLogger(CategoryController.class);
 
-  @Autowired
+  // @Autowired
   CreateUserUc createUserUc;
 
   @Autowired
-  public UserController(UserService userService) {
+  public UserController(UserService userService, CreateUserUc createUserUc) {
     this.userService = userService;
+    this.createUserUc = createUserUc;
   }
 
   @PostMapping()
