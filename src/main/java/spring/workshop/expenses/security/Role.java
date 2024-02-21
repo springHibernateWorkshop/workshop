@@ -32,12 +32,25 @@ public class Role implements GrantedAuthority {
 
     @Column
     private String name;
+
     @OneToMany(mappedBy = "role")
     private Set<User> users;
 
     @ManyToMany
     @JoinTable(name = "permission_tab", joinColumns = @JoinColumn(name = "role_id"), inverseJoinColumns = @JoinColumn(name = "right_id"))
     private Set<Right> rights;
+
+    public Role() {
+    }
+
+    public Role(String name) {
+        this.name = name;
+    }
+
+    public Role(String name, Set<Right> rights) {
+        this.name = name;
+        this.rights = rights;
+    }
 
     @Override
     public String getAuthority() {
