@@ -11,25 +11,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import spring.workshop.expenses.entities.User;
-import spring.workshop.expenses.enums.Right;
-import spring.workshop.expenses.enums.Role;
 import spring.workshop.expenses.services.UserService;
 
-// @Service
-// public class ExpenseUserDetailsService implements UserDetailsService {
-
-//     @Autowired
-//     private UserService userService;
-
-//     @Override
-//     public UserDetails loadUserByUsername(String username) {
-//         User user = userService.getUserByUsername(username);
-//         if (user == null) {
-//             throw new UsernameNotFoundException(username);
-//         }
-//         return new ExpenseUserPrincipal(user);
-//     }
-// }
+//@Service
 public class ExpenseUserDetailsService implements UserDetailsService {
 
     @Autowired
@@ -43,11 +27,10 @@ public class ExpenseUserDetailsService implements UserDetailsService {
         }
 
         List<GrantedAuthority> authorities = new ArrayList<>();
-        for (Role role : user.getRoles()) {
-            authorities.add(new SimpleGrantedAuthority(role.getName()));
-            for (Right right : role.getRights()) {
-                authorities.add(new SimpleGrantedAuthority(right.getName()));
-            }
+
+        // authorities.add(new SimpleGrantedAuthority(user.getRole().name()));
+        for (Right right : user.getRole().getRights()) {
+            authorities.add(new SimpleGrantedAuthority(right.getAuthority()));
         }
 
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),

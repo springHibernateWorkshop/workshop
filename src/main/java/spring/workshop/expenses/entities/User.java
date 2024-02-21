@@ -4,13 +4,13 @@ import org.springframework.lang.NonNull;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import spring.workshop.expenses.enums.Role;
+import spring.workshop.expenses.security.Role;
 
 @Entity
 @Table(name = "user_tab")
@@ -33,20 +33,20 @@ public class User {
     @NonNull
     private String password;
 
-    @Column
-    @Enumerated(EnumType.STRING)
-    Role role;
+    @ManyToOne
+    @JoinColumn(name = "role_id", referencedColumnName = "role_id")
+    private Role role;
 
     public User() {
     }
 
-    public User(@NonNull String name) {
-        this.name = name;
+    public User(@NonNull String username) {
+        this.username = username;
     }
 
-    public User(Long id, @NonNull String name) {
+    public User(Long id, @NonNull String username) {
         this.id = id;
-        this.name = name;
+        this.username = username;
     }
 
     public Long getId() {
@@ -88,4 +88,5 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
+
 }

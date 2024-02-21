@@ -2,12 +2,18 @@ package spring.workshop.expenses.controllers;
 
 import java.security.Principal;
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,44 +24,28 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import spring.workshop.expenses.entities.Expense;
-import spring.workshop.expenses.enums.Right;
-import spring.workshop.expenses.enums.Role;
-import spring.workshop.expenses.security.SecureMethod;
+import spring.workshop.expenses.security.Role;
 import spring.workshop.expenses.services.ExpenseService;
-import spring.workshop.expenses.services.UserService;
 
 @RestController
 @RequestMapping(path = "/expenses")
 public class ExpenseController {
 
+    private static final Logger LOG = LoggerFactory.getLogger(ExpenseController.class);
+
     @Autowired
     private ExpenseService expenseService;
 
-    @Autowired
-    private UserService userService;
-
     @GetMapping
-    @SecureMethod(Rights = Right.VIEW_EXPENSES)
+    @PreAuthorize("hasAuthority('VIEW_EXPENSES')")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<Expense>> getAllExpenses(Principal principal) {
-        // Collection<? extends GrantedAuthority> authorities =
-        // SecurityContextHolder.getContext().getAuthentication()
-        // .getAuthorities();
-        // if (authorities.contains(new SimpleGrantedAuthority("ROLE_SUPERIOR"))) {
-        // return new ResponseEntity<>(expenseService.getAllExpenses(), HttpStatus.OK);
-        // } else if (authorities.contains(new SimpleGrantedAuthority("ROLE_EMPLOYEE")))
-        // {
-        // return new
-        // ResponseEntity<>(expenseService.getExpensesByUsername(principal.getName()),
-        // HttpStatus.OK);
-        // } else {
-        // return new ResponseEntity<>(Collections.emptyList(), HttpStatus.OK);
-        // }
+    public ResponseEntity<List<Expense>> getAllExpenses(Principal principal) {// TODO move to UC
 
-        Role role = userService.getUserByUsername(principal.getName()).getRole();
-        if (Role.SUPERIOR.equals(role)) {
+        Collection<? extends GrantedAuthority> authorities = SecurityContextHolder.getContext().getAuthentication()
+                .getAuthorities();
+        if (authorities.contains(Role.ROLE_SUPERIOR)) {
             return new ResponseEntity<>(expenseService.getAllExpenses(), HttpStatus.OK);
-        } else if (Role.EMPLOYEE.equals(role)) {
+        } else if (authorities.contains(Role.ROLE_EMPLOYEE)) {
             return new ResponseEntity<>(expenseService.getExpensesByUsername(principal.getName()), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(Collections.emptyList(), HttpStatus.OK);
@@ -67,12 +57,6 @@ public class ExpenseController {
     public Expense getExpenseById(@PathVariable Long id, Principal principal) {
         return expenseService.getExpenseByIdAndUsername(id, principal.getName());
     }
-
-    // @GetMapping(path = "/{id}")
-    // @ResponseStatus(HttpStatus.OK)
-    // public Expense getExpenseById(@PathVariable Long id) {
-    // return expenseService.getExpenseById(id);
-    // }
 
     @PutMapping()
     @ResponseStatus(HttpStatus.OK)

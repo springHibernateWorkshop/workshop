@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
@@ -65,6 +66,8 @@ public class ExpensesControllerMockTest {
          * @throws Exception if an error occurs during the test
          */
         @Test
+        @WithMockUser(username = "bartosz", authorities = { "VIEW_EXPENSES", "ROLE_SUPERIOR" })
+
         public void TestGetAllExpenses() throws Exception {
                 // Arrange
                 assertEquals(3, repo.findAll().size());
@@ -83,6 +86,7 @@ public class ExpensesControllerMockTest {
          * @throws Exception if an error occurs during the test
          */
         @Test
+        @WithMockUser(username = "victoria", authorities = { "VIEW_EXPENSES" })
         public void testGetExpenseById() throws Exception {
                 // Arrange
 

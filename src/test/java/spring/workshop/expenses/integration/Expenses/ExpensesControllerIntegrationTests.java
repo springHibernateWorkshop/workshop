@@ -16,6 +16,8 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -46,7 +48,8 @@ public class ExpensesControllerIntegrationTests {
 
     @Test
     public void testGetAllExpenses() {
-        ResponseEntity<List> response = restTemplate.withBasicAuth("bartosz.kowalski", "superior").getForEntity(
+        SecurityContext context = SecurityContextHolder.getContext();
+        ResponseEntity<List> response = restTemplate.withBasicAuth("bartosz", "password").getForEntity(
                 BASE_URL,
                 List.class);
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -55,7 +58,7 @@ public class ExpensesControllerIntegrationTests {
 
     @Test
     public void testGetAllExpensesForAnEmployee() {
-        ResponseEntity<List> response = restTemplate.withBasicAuth("victoria.marano", "employee").getForEntity(
+        ResponseEntity<List> response = restTemplate.withBasicAuth("victoria", "password").getForEntity(
                 BASE_URL,
                 List.class);
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -67,7 +70,7 @@ public class ExpensesControllerIntegrationTests {
      */
     @Test
     public void testGetExpensesByIdPositive() {
-        ResponseEntity<Expense> response = restTemplate.withBasicAuth("victoria.marano", "employee")
+        ResponseEntity<Expense> response = restTemplate.withBasicAuth("victoria", "password")
                 .getForEntity(BASE_URL + "/{id}", Expense.class, 200);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         Expense expenses = response.getBody();
@@ -81,7 +84,7 @@ public class ExpensesControllerIntegrationTests {
      */
     @Test
     public void testGetExpensesByIdNegative() {
-        ResponseEntity<Expense> response = restTemplate
+        ResponseEntity<Expense> response = restTemplate.withBasicAuth("bartosz", "password")
                 .getForEntity(BASE_URL + "/{id}", Expense.class, 10);
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
@@ -95,7 +98,8 @@ public class ExpensesControllerIntegrationTests {
                 new Employee(100L, "Test", new User("Test"), new Superior("Test")),
                 "Expense 4");
         URI newExpensesLocation = restTemplate.postForLocation(BASE_URL, expensetoAdd);
-        ResponseEntity<Expense> response = restTemplate.getForEntity(newExpensesLocation, Expense.class);
+        ResponseEntity<Expense> response = restTemplate.withBasicAuth("victoria", "password")
+                .getForEntity(newExpensesLocation, Expense.class);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         Expense expense = response.getBody();
         assertEquals("Expense 4", expense.getNote());

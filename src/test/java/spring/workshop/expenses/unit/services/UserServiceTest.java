@@ -112,15 +112,15 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testGetUserByName() {
+    public void testGetUserByUsername() {
         // Arrange
-        String name = "Test";
+        String username = "Test";
         // Given
-        when(userRepositoryMock.findByName(name)).thenReturn(Optional.of(new User(1L, "Test")));
+        when(userRepositoryMock.findByUsername(username)).thenReturn(Optional.of(new User(1L, "Test")));
         // When
-        User response = sut.getUserByUsername(name);
+        User response = sut.getUserByUsername(username);
         // Then
-        assertEquals(name, response.getUsername());
+        assertEquals(username, response.getUsername());
     }
 
 }

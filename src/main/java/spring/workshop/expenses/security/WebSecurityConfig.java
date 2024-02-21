@@ -1,5 +1,7 @@
 package spring.workshop.expenses.security;
 
+import javax.sql.DataSource;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -11,9 +13,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-
-import spring.workshop.expenses.enums.Role;
 
 @Configuration
 @EnableWebSecurity
@@ -24,12 +25,13 @@ public class WebSecurityConfig {
 		http.authorizeHttpRequests((requests) -> requests
 				.requestMatchers("/categories/**").permitAll()
 				.requestMatchers("/shops/**").permitAll()
-				.requestMatchers("/users/**").hasRole("ADMINISTRATOR")
-				.requestMatchers("/expenses/**").hasAnyRole("EMPLOYEE", "SUPERIOR")
-				.requestMatchers("/reports/**").hasAnyRole("SUPERIOR", "ACCOUNTANT")
-				.requestMatchers("/employees/**").hasAnyRole("EMPLOYEE", "SUPERIOR", "ACCOUNTANT")
-				.requestMatchers("/superiors/**").hasAnyRole("SUPERIOR", "ACCOUNTANT")
-				.anyRequest().hasAnyRole("EMPLOYEE", "SUPERIOR", "ACCOUNTANT", "ADMINISTRATOR"))
+				// .requestMatchers("/users/**").hasRole("ADMINISTRATOR")
+				.requestMatchers("/expenses/**").hasAuthority("VIEW_EXPENSES")// hasAnyRole("EMPLOYEE", "SUPERIOR")
+				// .requestMatchers("/reports/**").hasAnyRole("SUPERIOR", "ACCOUNTANT")
+				// .requestMatchers("/employees/**").hasAnyRole("EMPLOYEE", "SUPERIOR",
+				// "ACCOUNTANT")
+				// .requestMatchers("/superiors/**").hasAnyRole("SUPERIOR", "ACCOUNTANT")
+				.anyRequest().permitAll())
 				.csrf(csrf -> csrf.disable())
 				.httpBasic(Customizer.withDefaults());
 
@@ -41,36 +43,40 @@ public class WebSecurityConfig {
 		return new BCryptPasswordEncoder();
 	}
 
-	@Bean
+	// @Bean
+	// This is an example of how to create users in memory
 	public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
 
 		UserDetails bartosz = User
-				.withUsername("bartosz.kowalski")
+				.withUsername("bartosz")
 				.password(passwordEncoder.encode("superior"))
-				.roles(Role.SUPERIOR.name())
+				.authorities("ROLE_SUPERIOR", "VIEW_EXPENSES")
 				.build();
 		UserDetails victoria = User
-				.withUsername("victoria.marano")
+				.withUsername("victoria")
 				.password(passwordEncoder.encode("employee"))
-				.roles(Role.EMPLOYEE.name())
+				.authorities("ROLE_EMPLOYEE", "VIEW_EXPENSES")
 				.build();
-		return new InMemoryUserDetailsManager(victoria, bartosz);
+
+		UserDetails admin = User
+				.withUsername("admin")
+				.password(passwordEncoder.encode("admin"))
+				// .roles(Role.EMPLOYEE.name())
+				.authorities("CREATE_USER")
+				.build();
+		return new InMemoryUserDetailsManager(victoria, bartosz, admin);
 
 	}
 
-	// @Bean
-	// public UserDetailsService userDetailsServiceFromDB(PasswordEncoder
-	// passwordEncoder, DataSource dataSource) {
+	@Bean
+	public UserDetailsService userDetailsServiceFromDB(PasswordEncoder passwordEncoder, DataSource dataSource) {
+		String password = passwordEncoder.encode("password");
+		JdbcUserDetailsManager userDetailsManager = new JdbcUserDetailsManager(dataSource);
+		userDetailsManager.setUsersByUsernameQuery("SELECT username, password, true FROM user_tab WHERE username = ?");
+		userDetailsManager.setAuthoritiesByUsernameQuery(
+				"SELECT u.username, upper(r.name) FROM user_tab u join permission_tab p on u.role_id = p.role_id join right_tab r on r.right_id = p.right_id WHERE username = ?");
 
-	// JdbcUserDetailsManager userDetailsManager = new
-	// JdbcUserDetailsManager(dataSource);
-	// userDetailsManager.setUsersByUsernameQuery("SELECT username, password FROM
-	// user WHERE username = ?");
-	// userDetailsManager.setAuthoritiesByUsernameQuery("SELECT username, authority
-	// FROM role WHERE username = ?");
-	// userDetailsManager.setRolePrefix("ROLE_");
-
-	// return userDetailsManager;
-
-	// }
+		UserDetails bar = userDetailsManager.loadUserByUsername("bartosz");
+		return userDetailsManager;
+	}
 }
