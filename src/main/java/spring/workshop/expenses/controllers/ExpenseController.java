@@ -35,7 +35,7 @@ public class ExpenseController {
     private DeleteExpenseUc deleteExpenseUc;
 
     // Method for creating an Expense
-    @PostMapping(path = "/")
+    @PostMapping
     @ResponseStatus(HttpStatus.OK)
     public Expense createExpense(@RequestParam("employee_id") Long employeeId,
             @RequestBody Expense expense) {
@@ -44,7 +44,7 @@ public class ExpenseController {
     }
 
     // Method for deleting an Expense
-    @DeleteMapping(path = "/")
+    @DeleteMapping
     @ResponseStatus(HttpStatus.OK)
     public void deleteExpense(@RequestParam("employee_id") Long employeeId,
             @RequestParam("expense_id") Long expenseId) {

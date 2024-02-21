@@ -68,7 +68,7 @@ public class ExpenseControllerIntegrationTest {
         // URL for creating an Expense for Employee with
         // employee_id = employeeId (existing)
         Long employeeId = 100L;
-        String url = BASE_URL + "/?employee_id=" + employeeId;
+        String url = BASE_URL + "?employee_id=" + employeeId;
 
         // Send a POST request to create the expense
         ResponseEntity<Expense> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity,
@@ -100,7 +100,7 @@ public class ExpenseControllerIntegrationTest {
         // URL for creating an Expense for Employee with
         // employee_id = employeeId (non-existing)
         Long employeeId = 900L;
-        String url = BASE_URL + "/?employee_id=" + employeeId;
+        String url = BASE_URL + "?employee_id=" + employeeId;
 
         // Send a POST request to create the expense
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity,
@@ -126,7 +126,7 @@ public class ExpenseControllerIntegrationTest {
         // URL for creating an Expense for Employee with
         // employee_id = employeeId (non-existing)
         Long employeeId = 100L;
-        String url = BASE_URL + "/?employee_id=" + employeeId;
+        String url = BASE_URL + "?employee_id=" + employeeId;
 
         // Send a POST request to create the expense
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity,
@@ -152,7 +152,7 @@ public class ExpenseControllerIntegrationTest {
         // URL for creating an Expense for Employee with
         // employee_id = employeeId (non-existing)
         Long employeeId = 100L;
-        String url = BASE_URL + "/?employee_id=" + employeeId;
+        String url = BASE_URL + "?employee_id=" + employeeId;
 
         // Send a POST request to create the expense
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity,
@@ -171,7 +171,7 @@ public class ExpenseControllerIntegrationTest {
 
         // URL for deleting an Expense with expense_id = expenseId (existing) for
         // Employee with employee_id = employeeId (existing)
-        String url = BASE_URL + "/?employee_id={employeeId}&expense_id={expenseId}";
+        String url = BASE_URL + "?employee_id={employeeId}&expense_id={expenseId}";
 
         // Send a DELETE request to create the expense
         ResponseEntity<Void> response = restTemplate.exchange(url, HttpMethod.DELETE, HttpEntity.EMPTY, void.class,
@@ -190,7 +190,7 @@ public class ExpenseControllerIntegrationTest {
 
         // URL for deleting an Expense with expense_id = expenseId (existing) for
         // Employee with employee_id = employeeId (non-existing)
-        String url = BASE_URL + "/?employee_id={employeeId}&expense_id={expenseId}";
+        String url = BASE_URL + "?employee_id={employeeId}&expense_id={expenseId}";
 
         // Send a DELETE request to create the expense
         ResponseEntity<Void> response = restTemplate.exchange(url, HttpMethod.DELETE, HttpEntity.EMPTY, void.class,
@@ -209,7 +209,7 @@ public class ExpenseControllerIntegrationTest {
 
         // URL for deleting an Expense with expense_id = expenseId (non-existing) for
         // Employee with employee_id = employeeId (existing)
-        String url = BASE_URL + "/?employee_id={employeeId}&expense_id={expenseId}";
+        String url = BASE_URL + "?employee_id={employeeId}&expense_id={expenseId}";
 
         // Send a DELETE request to create the expense
         ResponseEntity<Void> response = restTemplate.exchange(url, HttpMethod.DELETE, HttpEntity.EMPTY, void.class,
@@ -228,7 +228,7 @@ public class ExpenseControllerIntegrationTest {
 
         // URL for deleting an Expense with expense_id = expenseId (non-existing) for
         // Employee with employee_id = employeeId (existing)
-        String url = BASE_URL + "/?employee_id={employeeId}&expense_id={expenseId}";
+        String url = BASE_URL + "?employee_id={employeeId}&expense_id={expenseId}";
 
         // Send a DELETE request to create the expense
         ResponseEntity<Void> response = restTemplate.exchange(url, HttpMethod.DELETE, HttpEntity.EMPTY, void.class,
@@ -247,7 +247,7 @@ public class ExpenseControllerIntegrationTest {
 
         // URL for deleting an Expense with expense_id = expenseId (non-existing) for
         // Employee with employee_id = employeeId (existing)
-        String url = BASE_URL + "/?employee_id={employeeId}&expense_id={expenseId}";
+        String url = BASE_URL + "?employee_id={employeeId}&expense_id={expenseId}";
 
         // Send a DELETE request to create the expense
         ResponseEntity<Void> response = restTemplate.exchange(url, HttpMethod.DELETE, HttpEntity.EMPTY, void.class,
