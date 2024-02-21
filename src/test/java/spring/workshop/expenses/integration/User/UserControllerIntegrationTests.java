@@ -13,7 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
-import spring.workshop.expenses.entities.Person;
+import spring.workshop.expenses.entities.Superior;
 import spring.workshop.expenses.entities.User;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -27,16 +27,16 @@ public class UserControllerIntegrationTests {
     private static final String BASE_URL = "/users";
 
     @Test
-    public void testAddNewUser() throws Exception {
+    public void testAddNewSuperior() throws Exception {
 
-        User user = new User("newUsername", "passw", "SUPERIOR");
-        ResponseEntity<Person> response = restTemplate.postForEntity(BASE_URL + "?name={name}", user, Person.class,
+        User user = new User("superior", "pass", "SUPERIOR");
+        ResponseEntity<Superior> response = restTemplate.postForEntity(BASE_URL + "?name={name}", user, Superior.class,
                 "Kowalski",
                 null);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
 
-        Person createdPerson = response.getBody();
-        assertEquals("newUsername", createdPerson.getUser().getUsername());
+        Superior createdSuperior = response.getBody();
+        assertEquals("superior", createdSuperior.getUser().getUsername());
     }
 
     @Test
