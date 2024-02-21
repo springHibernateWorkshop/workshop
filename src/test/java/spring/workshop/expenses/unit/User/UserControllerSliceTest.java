@@ -9,6 +9,7 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.web.exchanges.HttpExchange.Principal;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
@@ -51,18 +52,19 @@ public class UserControllerSliceTest {
 
     @BeforeEach
     public void setUp() throws Exception {
-        // sut = new UserController(userServiceMock, createUserUcMock);
         MockHttpServletRequest request = new MockHttpServletRequest();
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
+
     }
 
     @Test
     public void testAddUser() {
         // Given
-        User user = new User(1L, "usr", "pass", new Role());
+        User user = new User(1L, "usr", "pass", new Role("ROLE_EMPLOYEE"));
         when(createUserUcMock.createUser(any(), any(), any())).thenReturn(new Superior(1L, "Alicja", user));
         // When
-        ResponseEntity<Person> response = sut.addUser(new User("usr", "pass", new Role()), "Alicja", 300L);
+        ResponseEntity<Person> response = sut.addUser(new User("usr", "pass", new Role("ROLE_EMPLOYEE")), "Alicja",
+                300L, new Principal("username"));
         // Then
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertEquals("usr", response.getBody().getUser().getUsername());
@@ -93,7 +95,7 @@ public class UserControllerSliceTest {
     public void testUpdateUser() {
         // Given
         Long id = 1L;
-        User updatedUser = new User(id, "usr", "pass", new Role());
+        User updatedUser = new User(id, "usr", "pass", new Role("ROLE_EMPLOYEE"));
 
         when(userServiceMock.getUserById(id)).thenReturn(new User(id, "user", "passXYZ", new Role()));
         when(userServiceMock.updateUser(updatedUser)).thenReturn(updatedUser);
@@ -104,7 +106,7 @@ public class UserControllerSliceTest {
         assertEquals(id, response.getBody().getId());
         assertEquals("usr", response.getBody().getUsername());
         assertEquals("pass", response.getBody().getPassword());
-        assertEquals("EMPLOYEE", response.getBody().getRole());
+        assertEquals("ROLE_EMPLOYEE", response.getBody().getRole().getAuthority());
     }
 
     @Test
@@ -123,7 +125,7 @@ public class UserControllerSliceTest {
         // Given
         Long id = 1L;
 
-        when(userServiceMock.getUserById(id)).thenReturn(new User(1L, "username", "pass", new Role()));
+        when(userServiceMock.getUserById(id)).thenReturn(new User(1L, "username", "pass", new Role("ROLE_SUPERIOR")));
         // When
         ResponseEntity<User> response = sut.getUserById(id);
         // Then
@@ -131,7 +133,7 @@ public class UserControllerSliceTest {
         assertEquals(id, response.getBody().getId());
         assertEquals("username", response.getBody().getUsername());
         assertEquals("pass", response.getBody().getPassword());
-        assertEquals("SUPERIOR", response.getBody().getRole());
+        assertEquals("ROLE_SUPERIOR", response.getBody().getRole().getAuthority());
 
     }
 

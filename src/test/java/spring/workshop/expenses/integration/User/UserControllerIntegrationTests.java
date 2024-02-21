@@ -15,6 +15,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import spring.workshop.expenses.entities.Superior;
 import spring.workshop.expenses.entities.User;
+import spring.workshop.expenses.security.Role;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
@@ -28,8 +29,7 @@ public class UserControllerIntegrationTests {
 
     @Test
     public void testAddNewSuperior() throws Exception {
-
-        User user = new User("superior", "pass", "SUPERIOR");
+        User user = new User("superior", "pass", new Role("ROLE_SUPERIOR"));
         ResponseEntity<Superior> response = restTemplate.postForEntity(BASE_URL + "?name={name}", user, Superior.class,
                 "Kowalski",
                 null);
@@ -54,17 +54,16 @@ public class UserControllerIntegrationTests {
 
     @Test
     public void testUpdateUser() throws Exception {
-        User user = new User(100L, "username", "pass", "EMPLOYEE");
+        User user = new User(100L, "username", "pass", new Role("ROLE_EMPLOYEE"));
         User response = restTemplate.getForObject(BASE_URL + "/{id}", User.class, 100L);
-        assertEquals("usr1", response.getUsername());
-        assertEquals("pass1", response.getPassword());
-        assertEquals("EMPLOYEE", response.getRole());
+        assertEquals("victoria", response.getUsername());
+        assertEquals("ROLE_EMPLOYEE", response.getRole().getAuthority());
 
         restTemplate.put("/users", user);
         User responseAfterUpdate = restTemplate.getForObject(BASE_URL + "/{id}", User.class, 100L);
         assertEquals("username", responseAfterUpdate.getUsername());
         assertEquals("pass", responseAfterUpdate.getPassword());
-        assertEquals("EMPLOYEE", responseAfterUpdate.getRole());
+        assertEquals("ROLE_EMPLOYEE", responseAfterUpdate.getRole());
     }
 
     @Test

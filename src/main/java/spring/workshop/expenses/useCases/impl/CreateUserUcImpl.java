@@ -30,10 +30,10 @@ public class CreateUserUcImpl implements CreateUserUc {
     public Person createUser(User user, String name, Long superiorId) {
         User newUser = userService.addUser(user);
 
-        if (newUser.getRole().equals("EMPLOYEE")) {
+        if (newUser.getRole().getAuthority().equals("ROLE_EMPLOYEE")) {
             return employeeService
                     .addEmployee(new Employee(name, newUser, superiorService.getSuperiorById(superiorId)));
-        } else if (newUser.getRole().equals("SUPERIOR")) {
+        } else if (newUser.getRole().getAuthority().equals("ROLE_SUPERIOR")) {
             return superiorService.createSuperior(new Superior(name, user));
         } else {
             throw new IllegalArgumentException(

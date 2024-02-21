@@ -167,7 +167,8 @@ public class ExpenseControllerIntegrationTest {
      */
     @Test
     public void testGetExpensesByIdPositive() {
-        ResponseEntity<Expense> response = restTemplate.getForEntity(BASE_URL + "/{id}", Expense.class, 200);
+        ResponseEntity<Expense> response = restTemplate.withBasicAuth("victoria", "password")
+                .getForEntity(BASE_URL + "/{id}", Expense.class, 200);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         Expense expense = response.getBody();
         Assertions.assertNotNull(expense);
@@ -180,7 +181,8 @@ public class ExpenseControllerIntegrationTest {
      */
     @Test
     public void testGetExpensesByIdNegative() {
-        ResponseEntity<String> response = restTemplate.exchange(BASE_URL + "/{id}", HttpMethod.GET, HttpEntity.EMPTY,
+        ResponseEntity<String> response = restTemplate.withBasicAuth("victoria", "password").exchange(
+                BASE_URL + "/{id}", HttpMethod.GET, HttpEntity.EMPTY,
                 String.class, 10);
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
@@ -190,9 +192,12 @@ public class ExpenseControllerIntegrationTest {
      */
     @Test
     public void testGetAllExpensesPositive() {
-        ResponseEntity<List> response = restTemplate.getForEntity(BASE_URL, List.class);
+        ResponseEntity<List> response = restTemplate
+                .withBasicAuth("bartosz", "password").getForEntity(BASE_URL,
+                        List.class);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
+        assertEquals(3, response.getBody().size());
     }
 
     /**

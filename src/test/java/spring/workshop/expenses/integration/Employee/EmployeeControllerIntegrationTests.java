@@ -1,6 +1,7 @@
 package spring.workshop.expenses.integration.Employee;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -45,7 +46,8 @@ public class EmployeeControllerIntegrationTests {
         String url = BASE_URL + employeeId;
 
         // Send a PUT request to reassign the employee
-        ResponseEntity<Employee> response = restTemplate.exchange(url, HttpMethod.PUT, requestEntity, Employee.class);
+        ResponseEntity<Employee> response = restTemplate.withBasicAuth("manton", "password").exchange(url,
+                HttpMethod.PUT, requestEntity, Employee.class);
 
         // Assert HTTP status code is OK
         assertEquals(HttpStatus.OK, response.getStatusCode());

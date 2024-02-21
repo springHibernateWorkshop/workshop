@@ -21,6 +21,7 @@ public class EmployeeController {
 
   // Method for reassigning an employee
   @PutMapping(path = "/{id}")
+  // @PreAuthorize("hasAuthority('REASSIGN_EMPLOYEE')")
   @ResponseStatus(HttpStatus.OK)
   public Employee reassignEmployee(@PathVariable("id") Long employeeId,
       @RequestParam("superior_id") Long superiorId) {

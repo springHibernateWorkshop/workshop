@@ -21,6 +21,7 @@ import spring.workshop.expenses.entities.Employee;
 import spring.workshop.expenses.entities.Superior;
 import spring.workshop.expenses.entities.User;
 import spring.workshop.expenses.repositories.EmployeeRepository;
+import spring.workshop.expenses.security.Role;
 import spring.workshop.expenses.services.EmployeeService;
 import spring.workshop.expenses.services.impl.EmployeeServiceImpl;
 
@@ -42,7 +43,7 @@ public class EmployeeServiceTest {
         @Test
         public void testAddEmployee() {
                 // Given
-                Employee employee = new Employee("Employee", new User("username", "passw", "EMPLOYEE"),
+                Employee employee = new Employee("Employee", new User("username", "passw", new Role()),
                                 new Superior("Superior"));
 
                 when(employeeRepositoryMock.saveAndFlush(any(Employee.class))).thenReturn(employee);
@@ -71,10 +72,10 @@ public class EmployeeServiceTest {
         @Test
         public void testUpdateEmployee() {
                 // Given
-                Employee employee = new Employee(1L, "Employee", new User(1L, "username", "passw", "EMPLOYEE"),
+                Employee employee = new Employee(1L, "Employee", new User(1L, "username", "passw", new Role()),
                                 new Superior(1L, "Superior"));
                 Employee updatedEmployee = new Employee(1L, "updatedEmployee",
-                                new User(2L, "username", "passw", "EMPLOYEE"),
+                                new User(2L, "username", "passw", new Role()),
                                 new Superior(2L, "Superior"));
 
                 when(employeeRepositoryMock.findById(any(Long.class)))

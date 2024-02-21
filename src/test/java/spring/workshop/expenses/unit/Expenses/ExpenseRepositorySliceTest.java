@@ -17,7 +17,7 @@ public class ExpenseRepositorySliceTest {
 
     @Test
     public void testExpenseRepository() {
-        Expense expense = expenseRepository.findByIdAndUsernameWithEmployee(100l, "victoria.marano").orElseThrow();
+        Expense expense = expenseRepository.findByIdAndUsernameWithEmployee(100l, "victoria").orElseThrow();
 
         assertEquals(0.99f, expense.getTotal());
     }
