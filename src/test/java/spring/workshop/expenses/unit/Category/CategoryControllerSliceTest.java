@@ -69,7 +69,7 @@ public class CategoryControllerSliceTest {
         // Given
         when(categoryService.addCategory(any())).thenReturn(new Category(1l, "Test Category"));
         // When
-        ResponseEntity<Category> response = sut.addNewCategory("Test Category");
+        ResponseEntity<Category> response = sut.addNewCategory(new Category("Test Category"));
         // Then
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertEquals("Test Category", response.getBody().getName());
