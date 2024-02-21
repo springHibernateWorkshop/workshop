@@ -27,17 +27,19 @@ import spring.workshop.expenses.useCases.CreateUserUc;
 @RequestMapping(path = "/users")
 public class UserController {
 
-  private UserService userService;
   private static final Logger LOG = LoggerFactory.getLogger(CategoryController.class);
 
-  // @Autowired
-  CreateUserUc createUserUc;
+  @Autowired
+  private UserService userService;
 
   @Autowired
-  public UserController(UserService userService, CreateUserUc createUserUc) {
-    this.userService = userService;
-    this.createUserUc = createUserUc;
-  }
+  private CreateUserUc createUserUc;
+
+  // @Autowired
+  // public UserController(UserService userService, CreateUserUc createUserUc) {
+  // this.userService = userService;
+  // this.createUserUc = createUserUc;
+  // }
 
   @PostMapping()
   public ResponseEntity<Person> addUser(@RequestBody User user, @RequestParam String name,

@@ -50,7 +50,7 @@ public class UserControllerSliceTest {
 
     @BeforeEach
     public void setUp() throws Exception {
-        sut = new UserController(userServiceMock, createUserUcMock);
+        // sut = new UserController(userServiceMock, createUserUcMock);
         MockHttpServletRequest request = new MockHttpServletRequest();
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
     }
