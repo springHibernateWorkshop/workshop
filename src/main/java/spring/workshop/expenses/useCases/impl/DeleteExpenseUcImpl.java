@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 
 import spring.workshop.expenses.entities.Employee;
 import spring.workshop.expenses.entities.Expense;
+import spring.workshop.expenses.entities.User;
 import spring.workshop.expenses.enums.ExpenseStatus;
 import spring.workshop.expenses.exceptions.ForbiddenResourceException;
 import spring.workshop.expenses.exceptions.ResourceNotFoundException;
@@ -22,15 +23,16 @@ public class DeleteExpenseUcImpl implements DeleteExpenseUc {
     ExpenseService expenseService;
 
     @Override
-    public void deleteExpense(Long employeeId, Long expenseId) {
-        // Get Employee by employee_id
-        Employee employee = employeeService.getEmployeeById(employeeId);
+    public void deleteExpense(User user, Long expenseId) {
+
+        // Get Employee by User
+        Employee employee = employeeService.getEmployeeByUser(user);
 
         // Get Expense by expense_id
         Expense expense = expenseService.getExpenseById(expenseId);
 
         // Check if Expense.employee_id = employee_id
-        if (!expense.getEmployee().equals(employee))
+        if (!expense.getEmployee().getId().equals(employee.getId()))
             throw new ResourceNotFoundException("No expense with given id found for this employee.");
 
         // Check if Expense.status in ('INITIAL', 'REJECTED')

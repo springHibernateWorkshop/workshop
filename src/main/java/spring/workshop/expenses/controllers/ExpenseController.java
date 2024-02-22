@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import spring.workshop.expenses.entities.Expense;
+import spring.workshop.expenses.entities.User;
 import spring.workshop.expenses.services.ExpenseService;
 import spring.workshop.expenses.useCases.CreateExpenseUc;
 import spring.workshop.expenses.useCases.DeleteExpenseUc;
@@ -36,19 +36,18 @@ public class ExpenseController {
 
     // Method for creating an Expense
     @PostMapping
-    @ResponseStatus(HttpStatus.OK)
-    public Expense createExpense(@RequestParam("employee_id") Long employeeId,
-            @RequestBody Expense expense) {
-
-        return createExpenseUc.createExpense(employeeId, expense);
+    @ResponseStatus(HttpStatus.CREATED)
+    public Expense createExpense(@RequestBody Expense expense) {
+        User user = new User(100L, "Victoria");
+        return createExpenseUc.createExpense(user, expense);
     }
 
     // Method for deleting an Expense
-    @DeleteMapping
+    @DeleteMapping(path = "/{expense_id}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteExpense(@RequestParam("employee_id") Long employeeId,
-            @RequestParam("expense_id") Long expenseId) {
-        deleteExpenseUc.deleteExpense(employeeId, expenseId);
+    public void deleteExpense(@PathVariable("expense_id") Long expenseId) {
+        User user = new User(100L, "Victoria");
+        deleteExpenseUc.deleteExpense(user, expenseId);
     }
 
     @GetMapping

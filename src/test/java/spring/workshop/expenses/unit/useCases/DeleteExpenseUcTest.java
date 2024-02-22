@@ -45,18 +45,19 @@ public class DeleteExpenseUcTest {
         @Test
         public void testDeleteExpenseUcPositive() {
                 // Given
-                Employee employee = new Employee(1L, "Employee", new User(), new Superior());
+                User user = new User();
+                Employee employee = new Employee(1L, "Employee_Mock", user, new Superior());
                 Expense expense = new Expense(1L, "Expense", 100.00F, LocalDate.of(2024, 02, 19),
                                 new Category(), new Shop(), employee, ExpenseStatus.INITIAL, null);
 
-                when(employeeServiceMock.getEmployeeById(any(Long.class)))
+                when(employeeServiceMock.getEmployeeByUser(any(User.class)))
                                 .thenReturn(employee);
                 when(expenseServiceMock.getExpenseById(any(Long.class)))
                                 .thenReturn(expense);
                 // When
-                sut.deleteExpense(employee.getId(), expense.getId());
+                sut.deleteExpense(user, expense.getId());
                 // Then
-                verify(employeeServiceMock).getEmployeeById(employee.getId());
+                verify(employeeServiceMock).getEmployeeByUser(user);
                 verify(expenseServiceMock).getExpenseById(expense.getId());
                 verify(expenseServiceMock).deleteExpense(expense.getId());
 
@@ -65,42 +66,41 @@ public class DeleteExpenseUcTest {
         @Test
         public void testDeleteExpenseUcNegativeNonExistingEmployee() {
                 // Given
-                Long employeeId = 1L;
+                User user = new User();
+                Employee employee = new Employee(2L, "Employee_Mock", new User(), new Superior());
                 Expense expense = new Expense(1L, "Expense", 100.00F, LocalDate.of(2024, 02, 16),
-                                new Category("Category"),
-                                new Shop("Shop"), new Employee(1L, "Employee", new User(), new Superior()),
-                                ExpenseStatus.INITIAL,
-                                null);
+                                new Category(), new Shop(), employee, ExpenseStatus.INITIAL, null);
 
-                when(employeeServiceMock.getEmployeeById(any(Long.class)))
+                when(employeeServiceMock.getEmployeeByUser(any(User.class)))
                                 .thenThrow(new ResourceNotFoundException(
-                                                "Employee with id = " + employeeId + " not found."));
+                                                "Employee for user with id = " + user.getId() + " not found."));
                 // When
                 Exception exception = assertThrows(ResourceNotFoundException.class,
-                                () -> sut.deleteExpense(employeeId, expense.getId()));
-                assertEquals("Employee with id = " + employeeId + " not found.", exception.getMessage());
+                                () -> sut.deleteExpense(user, expense.getId()));
+                assertEquals("Employee for user with id = " + user.getId() + " not found.", exception.getMessage());
                 // Then
-                verify(employeeServiceMock).getEmployeeById(employeeId);
+                verify(employeeServiceMock).getEmployeeByUser(user);
 
         }
 
         @Test
         public void testDeleteExpenseUcNegativeNonExistingExpense() {
                 // Given
-                Employee employee = employee = new Employee(1L, "Employee", new User(), new Superior());
+                User user = new User();
+                Employee employee = new Employee(1L, "Employee_Mock", user, new Superior());
                 Long expenseId = 1L;
 
-                when(employeeServiceMock.getEmployeeById(any(Long.class)))
+                when(employeeServiceMock.getEmployeeByUser(any(User.class)))
                                 .thenReturn(employee);
                 when(expenseServiceMock.getExpenseById(any(Long.class)))
                                 .thenThrow(new ResourceNotFoundException(
                                                 "Expense with id = " + expenseId + " not found."));
                 // When
                 Exception exception = assertThrows(ResourceNotFoundException.class,
-                                () -> sut.deleteExpense(employee.getId(), expenseId));
+                                () -> sut.deleteExpense(user, expenseId));
                 assertEquals("Expense with id = " + expenseId + " not found.", exception.getMessage());
                 // Then
-                verify(employeeServiceMock).getEmployeeById(employee.getId());
+                verify(employeeServiceMock).getEmployeeByUser(user);
                 verify(expenseServiceMock).getExpenseById(expenseId);
 
         }
@@ -108,23 +108,23 @@ public class DeleteExpenseUcTest {
         @Test
         public void testDeleteExpenseUcNegativeExpenseNotAssignedToEmployee() {
                 // Given
-                Employee employee = new Employee(1L, "Employee", new User(), new Superior());
+                User user = new User();
+                Employee employee = new Employee(1L, "Employee_Mock", user, new Superior());
                 Expense expense = new Expense(1L, "Expense", 100.00F, LocalDate.of(2024, 02, 16),
-                                new Category("Category"),
-                                new Shop("Shop"), new Employee(2L, "Employee", new User(), new Superior()),
-                                ExpenseStatus.INITIAL,
-                                null);
+                                new Category("Category"), new Shop("Shop"),
+                                new Employee(2L, "Employee", new User(), new Superior()),
+                                ExpenseStatus.INITIAL, null);
 
-                when(employeeServiceMock.getEmployeeById(any(Long.class)))
+                when(employeeServiceMock.getEmployeeByUser(any(User.class)))
                                 .thenReturn(employee);
                 when(expenseServiceMock.getExpenseById(any(Long.class)))
                                 .thenReturn(expense);
                 // When
                 Exception exception = assertThrows(ResourceNotFoundException.class,
-                                () -> sut.deleteExpense(employee.getId(), expense.getId()));
+                                () -> sut.deleteExpense(user, expense.getId()));
                 assertEquals("No expense with given id found for this employee.", exception.getMessage());
                 // Then
-                verify(employeeServiceMock).getEmployeeById(employee.getId());
+                verify(employeeServiceMock).getEmployeeByUser(user);
                 verify(expenseServiceMock).getExpenseById(expense.getId());
 
         }
@@ -132,23 +132,25 @@ public class DeleteExpenseUcTest {
         @Test
         public void testDeleteExpenseUcNegativeWrongStatus() {
                 // Given
-                Employee employee = new Employee(1L, "Employee", new User(), new Superior());
+                User user = new User();
+                Employee employee = new Employee(1L, "Employee_Mock", user, new Superior());
                 Expense expense = new Expense(1L, "Expense", 100.00F, LocalDate.of(2024, 02, 19),
-                                new Category(), new Shop(), employee, ExpenseStatus.PENDING, null);
+                                new Category(), new Shop(), employee, ExpenseStatus.PENDING,
+                                null);
 
-                when(employeeServiceMock.getEmployeeById(any(Long.class)))
+                when(employeeServiceMock.getEmployeeByUser(any(User.class)))
                                 .thenReturn(employee);
                 when(expenseServiceMock.getExpenseById(any(Long.class)))
                                 .thenReturn(expense);
                 // When
                 Exception exception = assertThrows(ForbiddenResourceException.class,
-                                () -> sut.deleteExpense(employee.getId(), expense.getId()));
+                                () -> sut.deleteExpense(user, expense.getId()));
                 assertEquals(
                                 "Expense status needs to be INITIAL or REJECTED (Current status: " + expense.getStatus()
                                                 + ").",
                                 exception.getMessage());
                 // Then
-                verify(employeeServiceMock).getEmployeeById(employee.getId());
+                verify(employeeServiceMock).getEmployeeByUser(user);
                 verify(expenseServiceMock).getExpenseById(expense.getId());
 
         }
