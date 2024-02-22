@@ -110,4 +110,19 @@ public class EmployeeServiceTest {
         assertEquals(1L, response.getId());
     }
 
+    @Test
+    public void testGetEmployeeByUser() {
+        // Given
+        User user = new User("User");
+        Employee employee = new Employee(1L, "Employee", user, new Superior());
+
+        when(employeeRepositoryMock.findByUser(any(User.class)))
+                .thenReturn(Optional.of(employee));
+        // When
+        Employee response = sut.getEmployeeByUser(user);
+        // Then
+        assertEquals(1L, response.getId());
+        assertEquals("User", response.getUser().getName());
+    }
+
 }
