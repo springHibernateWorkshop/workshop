@@ -7,6 +7,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 
 @Entity
 @Table(name = "shop_tab")
@@ -23,6 +24,9 @@ public class Shop {
 
     @Column
     private String address;
+
+    @Version
+    private java.sql.Timestamp version;
 
     public Shop() {
     }
@@ -64,6 +68,14 @@ public class Shop {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public java.sql.Timestamp getVersion() {
+        return version;
+    }
+
+    public void setVersion(java.sql.Timestamp version) {
+        this.version = version;
     }
 
 }

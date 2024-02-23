@@ -13,6 +13,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import spring.workshop.expenses.enums.ExpenseStatus;
 
 @Entity
@@ -51,6 +52,9 @@ public class Expense {
     @ManyToOne(optional = false)
     @JoinColumn(name = "employee_id", referencedColumnName = "employee_id")
     private Employee employee;
+
+    @Version
+    private java.sql.Timestamp version;
 
     public Expense() {
     }
@@ -160,6 +164,14 @@ public class Expense {
 
     public void setNote(String note) {
         this.note = note;
+    }
+
+    public java.sql.Timestamp getVersion() {
+        return version;
+    }
+
+    public void setVersion(java.sql.Timestamp version) {
+        this.version = version;
     }
 
 }

@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 
 @Entity
 @Table(name = "user_tab")
@@ -31,6 +32,9 @@ public class User {
     @Column(nullable = false, name = "role")
     @NonNull
     private String role;
+
+    @Version
+    private java.sql.Timestamp version;
 
     public User() {
     }
@@ -78,6 +82,14 @@ public class User {
 
     public void setRole(@NonNull String roleId) {
         this.role = roleId;
+    }
+
+    public java.sql.Timestamp getVersion() {
+        return version;
+    }
+
+    public void setVersion(java.sql.Timestamp version) {
+        this.version = version;
     }
 
 }

@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 
 @Entity
 @Table(name = "category_tab")
@@ -21,6 +22,9 @@ public class Category {
     @Column
     @NonNull
     private String name;
+
+    @Version
+    private java.sql.Timestamp version;
 
     public Category() {
         this.name = "";
@@ -55,4 +59,11 @@ public class Category {
         this.name = name;
     }
 
+    public java.sql.Timestamp getVersion() {
+        return version;
+    }
+
+    public void setVersion(java.sql.Timestamp version) {
+        this.version = version;
+    }
 }
