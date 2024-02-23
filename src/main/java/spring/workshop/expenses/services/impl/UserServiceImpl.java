@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import spring.workshop.expenses.entities.User;
+import spring.workshop.expenses.exceptions.ResourceNotFoundException;
 import spring.workshop.expenses.repositories.UserRepository;
 import spring.workshop.expenses.services.UserService;
 
@@ -24,18 +25,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User addUser(String name) {
-        if (name == null || name.trim().isEmpty())
-            throw new IllegalArgumentException("User with empty name cannot be created.");
+    public User addUser(User user) {
 
-        Optional<User> user = userRepository.findByName(name);
-        if (user.isPresent())
-            throw new IllegalArgumentException("User with name = " + name + " already exists.");
+        User createdUser = userRepository.save(user);
 
-        User newUser = new User(name);
-        userRepository.save(newUser);
-        LOG.info("User with name = " + name + " created successfully.");
-        return newUser;
+        LOG.info("User with name = " + user.getUsername() + " created successfully.");
+        return createdUser;
     }
 
     @Override
@@ -43,25 +38,24 @@ public class UserServiceImpl implements UserService {
         Optional<User> oldUser = userRepository.findById(user.getId());
         if (oldUser.isPresent()) {
             User updatedUser = oldUser.get();
-            updatedUser.setName(user.getName());
+            updatedUser.setUsername(user.getUsername());
+            updatedUser.setPassword(user.getPassword());
+            updatedUser.setRole(user.getRole());
             LOG.info("User with id = " + user.getId() + " updated succesfully.");
             return userRepository.save(updatedUser);
+
+            // TODO Role update check, can role be updated?
         } else {
             throw new IllegalArgumentException("User with id = " + user.getId() + " not found.");
         }
     }
 
     @Override
-    public Boolean deleteUser(String name) {
-        Optional<User> user = userRepository.findByName(name);
-        if (user.isPresent()) {
-            userRepository.deleteByName(name);
-            LOG.info("User with name = " + name + " deleted successfully.");
-            return true;
-        } else {
-            LOG.info("User with name = " + name + " not found.");
-            return false;
-        }
+    public void deleteUser(Long id) {
+        User userToDelete = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User with user ID = " + id + " not found."));
+        userRepository.delete(userToDelete);
+        LOG.info("User with user ID = {} deleted successfully.", userToDelete.getId());
     }
 
     @Override
@@ -73,18 +67,8 @@ public class UserServiceImpl implements UserService {
     public User getUserById(Long id) {
         Optional<User> user = userRepository.findById(id);
         if (!user.isPresent())
-            throw new IllegalArgumentException("User with id = " + id + " not found.");
+            throw new ResourceNotFoundException("User with id = " + id + " not found.");
 
         return user.get();
     }
-
-    @Override
-    public User getUserByName(String name) {
-        Optional<User> user = userRepository.findByName(name);
-        if (!user.isPresent())
-            throw new IllegalArgumentException("User with name = " + name + " not found.");
-
-        return user.get();
-    }
-
 }
