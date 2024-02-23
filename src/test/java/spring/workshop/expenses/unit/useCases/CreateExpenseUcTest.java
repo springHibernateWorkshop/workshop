@@ -23,7 +23,6 @@ import spring.workshop.expenses.entities.Superior;
 import spring.workshop.expenses.entities.User;
 import spring.workshop.expenses.enums.ExpenseStatus;
 import spring.workshop.expenses.exceptions.PropertyValueException;
-import spring.workshop.expenses.exceptions.ResourceNotFoundException;
 import spring.workshop.expenses.services.EmployeeService;
 import spring.workshop.expenses.services.ExpenseService;
 import spring.workshop.expenses.useCases.CreateExpenseUc;
@@ -45,17 +44,17 @@ public class CreateExpenseUcTest {
         @Test
         public void testCreateExpenseUcPositive() {
                 // Given
-                Employee employee = new Employee(1L, "Employee", new User(), new Superior());
+                User user = new User();
+                Employee employee = new Employee(1L, "Employee_Mock", user, new Superior());
                 Expense expense = new Expense("Expense", 100.00F, LocalDate.of(2024, 02, 16),
-                                new Category(1L, "Category"),
-                                new Shop(1L, "Shop"));
+                                new Category(1L, "Category"), new Shop(1L, "Shop"));
 
-                when(employeeServiceMock.getEmployeeById(any(Long.class)))
+                when(employeeServiceMock.getEmployeeByUser(any(User.class)))
                                 .thenReturn(employee);
                 when(expenseServiceMock.addNewExpense(any(Expense.class)))
                                 .thenReturn(expense);
                 // When
-                Expense response = sut.createExpense(employee.getId(), expense);
+                Expense response = sut.createExpense(user, expense);
                 // Then
                 assertEquals("Expense", response.getName());
                 assertEquals(100.00F, response.getTotal());
@@ -63,49 +62,31 @@ public class CreateExpenseUcTest {
                 assertEquals(1L, response.getCategory().getId());
                 assertEquals(1L, response.getShop().getId());
                 assertEquals(ExpenseStatus.INITIAL, response.getStatus());
-                assertEquals(1L, response.getEmployee().getId());
-
-        }
-
-        @Test
-        public void testCreateExpenseUcNegativeNonExistingEmployee() {
-                // Given
-                Long employeeId = 1L;
-                Expense expense = new Expense("Expense", 100.00F, LocalDate.of(2024, 02, 16), new Category("Category"),
-                                new Shop("Shop"));
-
-                when(employeeServiceMock.getEmployeeById(any(Long.class)))
-                                .thenThrow(new ResourceNotFoundException(
-                                                "Employee with id = " + employeeId + " not found."));
-                // When
-                Exception exception = assertThrows(ResourceNotFoundException.class,
-                                () -> sut.createExpense(employeeId, expense));
-                assertEquals("Employee with id = " + employeeId + " not found.", exception.getMessage());
-                // Then
-                verify(employeeServiceMock).getEmployeeById(employeeId);
+                assertEquals(employee.getId(), response.getEmployee().getId());
 
         }
 
         @Test
         public void testCreateExpenseUcNegativeMissingName() {
                 // Given
-                Employee employee = new Employee(1L, "Employee", new User(), new Superior());
+                User user = new User();
+                Employee employee = new Employee(1L, "Employee_Mock", user, new Superior());
                 Expense expense = new Expense(null, 100.00F, LocalDate.of(2024, 02, 16), new Category("Category"),
                                 new Shop("Shop"));
 
-                when(employeeServiceMock.getEmployeeById(any(Long.class)))
+                when(employeeServiceMock.getEmployeeByUser(any(User.class)))
                                 .thenReturn(employee);
                 when(expenseServiceMock.addNewExpense(any(Expense.class)))
                                 .thenThrow(new PropertyValueException(
-                                                "not-null property references a null or transient value : spring.workshop.expenses.entities.Expense.name"));
+                                                "not-null property references a null or transient value"));
                 // When
                 Exception exception = assertThrows(PropertyValueException.class,
-                                () -> sut.createExpense(employee.getId(), expense));
+                                () -> sut.createExpense(user, expense));
                 assertEquals(
-                                "not-null property references a null or transient value : spring.workshop.expenses.entities.Expense.name",
+                                "not-null property references a null or transient value",
                                 exception.getMessage());
                 // Then
-                verify(employeeServiceMock).getEmployeeById(employee.getId());
+                verify(employeeServiceMock).getEmployeeByUser(user);
                 verify(expenseServiceMock).addNewExpense(expense);
 
         }

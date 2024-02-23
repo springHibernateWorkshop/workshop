@@ -1,9 +1,10 @@
 package spring.workshop.expenses.useCases;
 
 import spring.workshop.expenses.entities.Expense;
+import spring.workshop.expenses.entities.User;
 
 public interface CreateExpenseUc {
 
-    Expense createExpense(Long employeeId, Expense expense);
+    Expense createExpense(User user, Expense expense);
 
 }
