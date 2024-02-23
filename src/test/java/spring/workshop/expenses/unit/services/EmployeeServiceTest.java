@@ -2,7 +2,6 @@ package spring.workshop.expenses.unit.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -16,10 +15,10 @@ import org.mockito.Mock;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import jakarta.persistence.EntityManager;
 import spring.workshop.expenses.entities.Employee;
 import spring.workshop.expenses.entities.Superior;
 import spring.workshop.expenses.entities.User;
+import spring.workshop.expenses.repositories.AbstractRepositoryHelper;
 import spring.workshop.expenses.repositories.EmployeeRepository;
 import spring.workshop.expenses.services.EmployeeService;
 import spring.workshop.expenses.services.impl.EmployeeServiceImpl;
@@ -34,7 +33,7 @@ public class EmployeeServiceTest {
         EmployeeRepository employeeRepositoryMock;
 
         @Mock
-        EntityManager entityManagerMock;
+        AbstractRepositoryHelper<Employee> abstractRepositoryMock;
 
         @InjectMocks
         private EmployeeService sut = new EmployeeServiceImpl();
@@ -45,8 +44,8 @@ public class EmployeeServiceTest {
                 Employee employee = new Employee("Employee", new User("username", "passw", "EMPLOYEE"),
                                 new Superior("Superior"));
 
-                when(employeeRepositoryMock.saveAndFlush(any(Employee.class))).thenReturn(employee);
-                doNothing().when(entityManagerMock).refresh(any(Employee.class));
+                when(abstractRepositoryMock.saveAndRefresh(any(), any(Employee.class)))
+                                .thenReturn(employee);
                 // When
                 Employee response = sut.addEmployee(employee);
                 // Then
@@ -79,8 +78,8 @@ public class EmployeeServiceTest {
 
                 when(employeeRepositoryMock.findById(any(Long.class)))
                                 .thenReturn(Optional.of(employee));
-                when(employeeRepositoryMock.saveAndFlush(any(Employee.class))).thenReturn(updatedEmployee);
-                doNothing().when(entityManagerMock).refresh(any(Employee.class));
+                when(abstractRepositoryMock.saveAndRefresh(any(), any(Employee.class)))
+                                .thenReturn(updatedEmployee);
                 // When
                 Employee response = sut.updateEmployee(updatedEmployee);
                 // Then

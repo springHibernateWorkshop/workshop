@@ -14,6 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import spring.workshop.expenses.entities.Expense;
+import spring.workshop.expenses.repositories.AbstractRepositoryHelper;
 import spring.workshop.expenses.repositories.ExpenseRepository;
 import spring.workshop.expenses.services.ExpenseService;
 
@@ -26,6 +27,9 @@ public class ExpenseServiceImpl implements ExpenseService {
 
     @Autowired
     private ExpenseRepository expensesRepository;
+
+    @Autowired
+    private AbstractRepositoryHelper<Expense> abstractRepository;
 
     @Override
     public List<Expense> getAllExpenses() {
@@ -71,9 +75,8 @@ public class ExpenseServiceImpl implements ExpenseService {
     @Override
     @Transactional
     public Expense addNewExpense(Expense expense) {
-        Expense savedExpense = expensesRepository.saveAndFlush(expense);
+        Expense savedExpense = abstractRepository.saveAndRefresh(expensesRepository, expense);
         LOG.info("Expense with id = " + expense.getId() + " created successfully.");
-        entityManager.refresh(savedExpense);
         return savedExpense;
     }
 
