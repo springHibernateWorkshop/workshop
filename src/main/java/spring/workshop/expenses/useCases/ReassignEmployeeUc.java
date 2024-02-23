@@ -6,4 +6,6 @@ public interface ReassignEmployeeUc {
 
     Employee reassignEmployee(Long employeeId, Long superiorId);
 
+    Employee reassignEmployeeOptiTest(Long employeeId, Long superiorId);
+
 }

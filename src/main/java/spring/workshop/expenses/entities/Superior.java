@@ -9,11 +9,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.Version;
 
 @Entity
 @Table(name = "superior_tab")
-public class Superior implements Person {
+public class Superior extends AbstractEntity implements Person {
 
     @Id
     @Column(name = "superior_id")
@@ -27,9 +26,6 @@ public class Superior implements Person {
     @OneToOne(optional = true)
     @JoinColumn(name = "user_id")
     private User user;
-
-    @Version
-    private java.sql.Timestamp version;
 
     public Superior() {
     }
@@ -78,11 +74,4 @@ public class Superior implements Person {
         this.user = user;
     }
 
-    public java.sql.Timestamp getVersion() {
-        return version;
-    }
-
-    public void setVersion(java.sql.Timestamp version) {
-        this.version = version;
-    }
 }

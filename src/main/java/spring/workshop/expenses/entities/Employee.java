@@ -11,11 +11,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.Version;
 
 @Entity
 @Table(name = "employee_tab")
-public class Employee implements Person {
+public class Employee extends AbstractEntity implements Person {
 
     @Id
     @Column(name = "employee_id")
@@ -33,9 +32,6 @@ public class Employee implements Person {
     @ManyToOne(optional = false)
     @JoinColumn(name = "superior_id", referencedColumnName = "superior_id")
     private Superior superior;
-
-    @Version
-    private java.sql.Timestamp version;
 
     public Employee() {
     }
@@ -83,14 +79,6 @@ public class Employee implements Person {
 
     public void setSuperior(Superior superior) {
         this.superior = superior;
-    }
-
-    public java.sql.Timestamp getVersion() {
-        return version;
-    }
-
-    public void setVersion(java.sql.Timestamp version) {
-        this.version = version;
     }
 
 }
