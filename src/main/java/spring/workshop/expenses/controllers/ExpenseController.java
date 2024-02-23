@@ -21,14 +21,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import spring.workshop.expenses.entities.Expense;
+import spring.workshop.expenses.entities.User;
 import spring.workshop.expenses.security.Role;
 import spring.workshop.expenses.services.ExpenseService;
+import spring.workshop.expenses.services.UserService;
 import spring.workshop.expenses.useCases.CreateExpenseUc;
+import spring.workshop.expenses.useCases.DeleteExpenseUc;
 
 @RestController
 @RequestMapping(path = "/expenses")
@@ -40,16 +42,28 @@ public class ExpenseController {
     private ExpenseService expenseService;
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
     private CreateExpenseUc createExpenseUc;
 
+    @Autowired
+    private DeleteExpenseUc deleteExpenseUc;
+
     // Method for creating an Expense
-    @PostMapping(path = "/")
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Expense createExpense(@RequestBody Expense expense) {
+        User user = new User(100L, "Victoria", null, "EMPLOYEE");
+        return createExpenseUc.createExpense(user, expense);
+    }
+
+    // Method for deleting an Expense
+    @DeleteMapping(path = "/{expense_id}")
     @ResponseStatus(HttpStatus.OK)
-    public Expense createExpense(@RequestParam("employee_id") Long employeeId,
-            @RequestBody Expense expense) {
-
-        return createExpenseUc.createExpense(employeeId, expense);
-
+    public void deleteExpense(@PathVariable("expense_id") Long expenseId, Principal principal) {
+        User user = userService.getUserByUsername(principal.getName());
+        deleteExpenseUc.deleteExpense(user, expenseId);
     }
 
     @GetMapping
@@ -78,12 +92,6 @@ public class ExpenseController {
     @ResponseStatus(HttpStatus.OK)
     public Expense updateExpense(@RequestBody Expense expense) {
         return expenseService.updateExpense(expense);
-    }
-
-    @DeleteMapping(path = "/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public Boolean deleteExpense(@PathVariable Long id) {
-        return expenseService.deleteExpense(id);
     }
 
     @GetMapping(path = "/date/{date}")

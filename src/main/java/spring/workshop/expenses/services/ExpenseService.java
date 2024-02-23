@@ -14,7 +14,7 @@ public interface ExpenseService {
 
     public Expense updateExpense(Expense expense);
 
-    public Boolean deleteExpense(Long id);
+    public void deleteExpense(Long id);
 
     public Expense addNewExpense(Expense expense);
 
