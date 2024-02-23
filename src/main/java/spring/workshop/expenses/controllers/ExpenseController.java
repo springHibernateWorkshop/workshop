@@ -38,7 +38,7 @@ public class ExpenseController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Expense createExpense(@RequestBody Expense expense) {
-        User user = new User(100L, "Victoria");
+        User user = new User(100L, "Victoria", null, "EMPLOYEE");
         return createExpenseUc.createExpense(user, expense);
     }
 
@@ -46,7 +46,7 @@ public class ExpenseController {
     @DeleteMapping(path = "/{expense_id}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteExpense(@PathVariable("expense_id") Long expenseId) {
-        User user = new User(100L, "Victoria");
+        User user = new User(100L, "Victoria", null, "EMPLOYEE");
         deleteExpenseUc.deleteExpense(user, expenseId);
     }
 
