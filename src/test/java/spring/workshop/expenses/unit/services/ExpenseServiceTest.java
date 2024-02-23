@@ -2,9 +2,11 @@ package spring.workshop.expenses.unit.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -55,6 +57,19 @@ public class ExpenseServiceTest {
         assertEquals("Shop", response.getShop().getName());
         assertEquals("Employee", response.getEmployee().getName());
         assertEquals(ExpenseStatus.INITIAL, response.getStatus());
+    }
+
+    @Test
+    public void testDeleteExpense() {
+        // Given
+        Expense expense = new Expense(1L, "Expense", 100.00F, LocalDate.of(2024, 2, 19), new Category(),
+                new Shop(), new Employee("Employee", new User(), new Superior()), ExpenseStatus.INITIAL, null);
+
+        when(expenseRepositoryMock.findById(any(Long.class))).thenReturn(Optional.of(expense));
+        // When
+        sut.deleteExpense(expense.getId());
+        // Then
+        verify(expenseRepositoryMock).deleteById(expense.getId());
     }
 
 }

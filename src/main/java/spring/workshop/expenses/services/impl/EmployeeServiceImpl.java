@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import spring.workshop.expenses.entities.Employee;
+import spring.workshop.expenses.entities.User;
 import spring.workshop.expenses.exceptions.ResourceNotFoundException;
 import spring.workshop.expenses.repositories.AbstractRepositoryHelper;
 import spring.workshop.expenses.repositories.EmployeeRepository;
@@ -81,6 +82,15 @@ public class EmployeeServiceImpl implements EmployeeService {
         Optional<Employee> employee = employeeRepository.findById(id);
         if (!employee.isPresent())
             throw new ResourceNotFoundException("Employee with id = " + id + " not found.");
+
+        return employee.get();
+    }
+
+    @Override
+    public Employee getEmployeeByUser(User user) {
+        Optional<Employee> employee = employeeRepository.findByUser(user);
+        if (!employee.isPresent())
+            throw new ResourceNotFoundException("Employee for user with id = " + user.getId() + " not found.");
 
         return employee.get();
     }
