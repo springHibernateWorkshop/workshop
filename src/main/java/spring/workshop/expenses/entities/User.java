@@ -1,7 +1,5 @@
 package spring.workshop.expenses.entities;
 
-import org.springframework.lang.NonNull;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -19,29 +17,26 @@ public class User {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    @NonNull
     private String username;
     // unique should be set at the datenbank level
     // https://stackoverflow.com/questions/3496028/columnunique-true-does-not-seem-to-work
 
     @Column(nullable = false, name = "password")
-    @NonNull
     private String passwd;
 
     @Column(nullable = false, name = "role")
-    @NonNull
     private String role;
 
     public User() {
     }
 
-    public User(@NonNull String username, @NonNull String password, @NonNull String role) {
+    public User(String username, String password, String role) {
         this.username = username;
         this.passwd = password;
         this.role = role;
     }
 
-    public User(Long id, @NonNull String username, @NonNull String password, @NonNull String role) {
+    public User(Long id, String username, String password, String role) {
         this.id = id;
         this.username = username;
         this.passwd = password;
@@ -60,7 +55,7 @@ public class User {
         return username;
     }
 
-    public void setUsername(@NonNull String username) {
+    public void setUsername(String username) {
         this.username = username;
     }
 
@@ -68,7 +63,7 @@ public class User {
         return passwd;
     }
 
-    public void setPassword(@NonNull String password) {
+    public void setPassword(String password) {
         this.passwd = password;
     }
 
@@ -76,7 +71,7 @@ public class User {
         return role;
     }
 
-    public void setRole(@NonNull String roleId) {
+    public void setRole(String roleId) {
         this.role = roleId;
     }
 
