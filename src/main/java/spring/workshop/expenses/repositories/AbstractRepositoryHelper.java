@@ -12,13 +12,9 @@ public class AbstractRepositoryHelper<T> {
     EntityManager entityManager;
 
     public T saveAndRefresh(AbstractRepository<T> abstractRepository, T object) {
-        if (object != null) {
-            T savedObject = abstractRepository.saveAndFlush(object);
-            entityManager.refresh(savedObject);
-            return savedObject;
-        } else
-            return object;
-
+        T savedObject = abstractRepository.saveAndFlush(object);
+        entityManager.refresh(savedObject);
+        return savedObject;
     }
 
 }
