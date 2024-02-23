@@ -30,14 +30,4 @@ public class EmployeeController {
     return reassignedEmployee;
   }
 
-  @PutMapping(path = "/opti_test/{id}")
-  @ResponseStatus(HttpStatus.OK)
-  public Employee reassignEmployeeOptiTest(@PathVariable("id") Long employeeId,
-      @RequestParam("superior_id") Long superiorId) {
-
-    Employee reassignedEmployee = reassignEmployeeUc.reassignEmployeeOptiTest(employeeId, superiorId);
-
-    return reassignedEmployee;
-  }
-
 }
