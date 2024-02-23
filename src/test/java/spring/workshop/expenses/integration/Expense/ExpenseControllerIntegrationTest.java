@@ -78,12 +78,9 @@ public class ExpenseControllerIntegrationTest {
 
                 // Asserting that the response body contains the created expense
                 // with assigned employee and status INITIAL indicating successful creating
-                Expense createdExpense = response.getBody();
-                if (createdExpense != null) {
-                        assertEquals("Expense", createdExpense.getName());
-                        assertEquals(100L, createdExpense.getEmployee().getId());
-                        assertEquals(ExpenseStatus.INITIAL, createdExpense.getStatus());
-                }
+                assertEquals("Expense", response.getBody().getName());
+                assertEquals(100L, response.getBody().getEmployee().getId());
+                assertEquals(ExpenseStatus.INITIAL, response.getBody().getStatus());
         }
 
         // Employee for mocked User does not exist
