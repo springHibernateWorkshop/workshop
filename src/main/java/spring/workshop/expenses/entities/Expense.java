@@ -2,7 +2,6 @@ package spring.workshop.expenses.entities;
 
 import java.time.LocalDate;
 
-import io.micrometer.common.lang.NonNull;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -55,8 +54,8 @@ public class Expense extends AbstractEntity {
     public Expense() {
     }
 
-    public Expense(@NonNull String name, @NonNull Float total, @NonNull LocalDate date,
-            @NonNull Category category, @NonNull Shop shop) {
+    public Expense(String name, Float total, LocalDate date,
+            Category category, Shop shop) {
         this.name = name;
         this.total = total;
         this.date = date;
@@ -64,9 +63,9 @@ public class Expense extends AbstractEntity {
         this.shop = shop;
     }
 
-    public Expense(@NonNull String name, @NonNull Float total, @NonNull LocalDate date,
-            @NonNull Category category, @NonNull Shop shop, @NonNull Employee employee,
-            @NonNull ExpenseStatus status) {
+    public Expense(String name, Float total, LocalDate date,
+            Category category, Shop shop, Employee employee,
+            ExpenseStatus status) {
         this.name = name;
         this.total = total;
         this.date = date;
@@ -76,9 +75,9 @@ public class Expense extends AbstractEntity {
         this.status = status;
     }
 
-    public Expense(Long id, @NonNull String name, @NonNull Float total, @NonNull LocalDate date,
-            @NonNull Category category, @NonNull Shop shop, @NonNull Employee employee,
-            @NonNull ExpenseStatus status, String note) {
+    public Expense(Long id, String name, Float total, LocalDate date,
+            Category category, Shop shop, Employee employee,
+            ExpenseStatus status, String note) {
         this.id = id;
         this.name = name;
         this.total = total;
@@ -102,7 +101,7 @@ public class Expense extends AbstractEntity {
         return name;
     }
 
-    public void setName(@NonNull String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -110,7 +109,7 @@ public class Expense extends AbstractEntity {
         return total;
     }
 
-    public void setTotal(@NonNull Float total) {
+    public void setTotal(Float total) {
         this.total = total;
     }
 
@@ -118,7 +117,7 @@ public class Expense extends AbstractEntity {
         return date;
     }
 
-    public void setDate(@NonNull LocalDate date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
@@ -126,7 +125,7 @@ public class Expense extends AbstractEntity {
         return category;
     }
 
-    public void setCategory(@NonNull Category categoryId) {
+    public void setCategory(Category categoryId) {
         this.category = categoryId;
     }
 
@@ -134,7 +133,7 @@ public class Expense extends AbstractEntity {
         return shop;
     }
 
-    public void setShop(@NonNull Shop shop) {
+    public void setShop(Shop shop) {
         this.shop = shop;
     }
 
@@ -142,7 +141,7 @@ public class Expense extends AbstractEntity {
         return employee;
     }
 
-    public void setEmployee(@NonNull Employee employee) {
+    public void setEmployee(Employee employee) {
         this.employee = employee;
     }
 
@@ -150,7 +149,7 @@ public class Expense extends AbstractEntity {
         return status;
     }
 
-    public void setStatus(@NonNull ExpenseStatus status) {
+    public void setStatus(ExpenseStatus status) {
         this.status = status;
     }
 

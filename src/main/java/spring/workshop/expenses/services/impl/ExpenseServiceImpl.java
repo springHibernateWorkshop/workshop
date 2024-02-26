@@ -2,18 +2,17 @@ package spring.workshop.expenses.services.impl;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
-
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import spring.workshop.expenses.entities.Expense;
+import spring.workshop.expenses.exceptions.ResourceNotFoundException;
 import spring.workshop.expenses.repositories.ExpenseRepository;
 import spring.workshop.expenses.services.ExpenseService;
 
@@ -36,7 +35,7 @@ public class ExpenseServiceImpl implements ExpenseService {
     @Override
     public Expense getExpenseById(Long id) {
         Expense expenses = expensesRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new ResourceNotFoundException("Expense with id = " + id + " not found."));
         return expenses;
     }
 
@@ -51,21 +50,15 @@ public class ExpenseServiceImpl implements ExpenseService {
             upExpenses.setNote(expense.getNote());
             return expensesRepository.save(upExpenses);
         })
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+                .orElseThrow(
+                        () -> new ResourceNotFoundException("Expense with id = " + expense.getId() + " not found."));
         return replaceExpenses;
     }
 
     @Override
-    public Boolean deleteExpense(Long id) {
-
-        return expensesRepository.findById(id).map(e -> {
-            expensesRepository.delete(e);
-            LOG.info("Expense {} deleted", e.getId());
-            return true;
-        }).orElseGet(() -> {
-            LOG.warn("Expense ID {} not found for delete", id);
-            return false;
-        });
+    public void deleteExpense(Long id) {
+        expensesRepository.deleteById(id);
+        LOG.info("Expense with id = {} deleted successfully.", id);
     }
 
     @Override
