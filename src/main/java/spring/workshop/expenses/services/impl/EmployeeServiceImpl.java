@@ -9,11 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import spring.workshop.expenses.entities.Employee;
 import spring.workshop.expenses.entities.User;
 import spring.workshop.expenses.exceptions.ResourceNotFoundException;
+import spring.workshop.expenses.repositories.AbstractRepositoryHelper;
 import spring.workshop.expenses.repositories.EmployeeRepository;
 import spring.workshop.expenses.services.EmployeeService;
 
@@ -22,11 +21,11 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     private static final Logger LOG = LoggerFactory.getLogger(EmployeeServiceImpl.class);
 
-    @PersistenceContext
-    private EntityManager entityManager;
-
     @Autowired
     private EmployeeRepository employeeRepository;
+
+    @Autowired
+    private AbstractRepositoryHelper<Employee> abstractRepository;
 
     public EmployeeServiceImpl() {
     };
@@ -34,9 +33,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     @Transactional
     public Employee addEmployee(Employee employee) {
-        Employee savedEmployee = employeeRepository.saveAndFlush(employee);
+        Employee savedEmployee = abstractRepository.saveAndRefresh(employeeRepository, employee);
         LOG.info("Employee with id = " + employee.getId() + " created successfully.");
-        entityManager.refresh(savedEmployee);
         return savedEmployee;
     }
 
@@ -60,9 +58,8 @@ public class EmployeeServiceImpl implements EmployeeService {
             updatedEmployee.setName(employee.getName());
             updatedEmployee.setUser(employee.getUser());
             updatedEmployee.setSuperior(employee.getSuperior());
-            Employee savedEmployee = employeeRepository.saveAndFlush(updatedEmployee);
+            Employee savedEmployee = abstractRepository.saveAndRefresh(employeeRepository, updatedEmployee);
             LOG.info("Employee with id = " + updatedEmployee.getId() + " updated succesfully.");
-            entityManager.refresh(savedEmployee);
             return savedEmployee;
 
         } else {

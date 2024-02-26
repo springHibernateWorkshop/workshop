@@ -9,10 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import spring.workshop.expenses.entities.Expense;
 import spring.workshop.expenses.exceptions.ResourceNotFoundException;
+import spring.workshop.expenses.repositories.AbstractRepositoryHelper;
 import spring.workshop.expenses.repositories.ExpenseRepository;
 import spring.workshop.expenses.services.ExpenseService;
 import spring.workshop.expenses.services.UserService;
@@ -21,14 +20,14 @@ import spring.workshop.expenses.services.UserService;
 public class ExpenseServiceImpl implements ExpenseService {
     private static final Logger LOG = LoggerFactory.getLogger(ExpenseServiceImpl.class);
 
-    @PersistenceContext
-    private EntityManager entityManager;
-
     @Autowired
     private ExpenseRepository expensesRepository;
 
     @Autowired
+
     private UserService userService;
+
+    private AbstractRepositoryHelper<Expense> abstractRepository;
 
     @Override
     public List<Expense> getAllExpenses() {
@@ -78,9 +77,8 @@ public class ExpenseServiceImpl implements ExpenseService {
 
     @Transactional
     public Expense addNewExpense(Expense expense) {
-        Expense savedExpense = expensesRepository.saveAndFlush(expense);
+        Expense savedExpense = abstractRepository.saveAndRefresh(expensesRepository, expense);
         LOG.info("Expense with id = " + expense.getId() + " created successfully.");
-        entityManager.refresh(savedExpense);
         return savedExpense;
 
     }

@@ -4,13 +4,12 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import spring.workshop.expenses.entities.Employee;
 import spring.workshop.expenses.entities.Expense;
 
-public interface ExpenseRepository extends JpaRepository<Expense, Long> {
+public interface ExpenseRepository extends AbstractRepository<Expense> {
 
     List<Expense> findByDate(LocalDate date);
 

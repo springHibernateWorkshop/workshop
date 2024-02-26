@@ -2,7 +2,6 @@ package spring.workshop.expenses.unit.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -16,10 +15,10 @@ import org.mockito.Mock;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import jakarta.persistence.EntityManager;
 import spring.workshop.expenses.entities.Employee;
 import spring.workshop.expenses.entities.Superior;
 import spring.workshop.expenses.entities.User;
+import spring.workshop.expenses.repositories.AbstractRepositoryHelper;
 import spring.workshop.expenses.repositories.EmployeeRepository;
 import spring.workshop.expenses.security.Role;
 import spring.workshop.expenses.services.EmployeeService;
@@ -35,7 +34,7 @@ public class EmployeeServiceTest {
         EmployeeRepository employeeRepositoryMock;
 
         @Mock
-        EntityManager entityManagerMock;
+        AbstractRepositoryHelper<Employee> abstractRepositoryMock;
 
         @InjectMocks
         private EmployeeService sut = new EmployeeServiceImpl();
@@ -46,8 +45,9 @@ public class EmployeeServiceTest {
                 Employee employee = new Employee("Employee", new User("username", "passw", new Role()),
                                 new Superior("Superior"));
 
-                when(employeeRepositoryMock.saveAndFlush(any(Employee.class))).thenReturn(employee);
-                doNothing().when(entityManagerMock).refresh(any(Employee.class));
+                when(abstractRepositoryMock.saveAndRefresh(any(), any(Employee.class)))
+                                .thenReturn(employee);
+
                 // When
                 Employee response = sut.addEmployee(employee);
                 // Then
@@ -76,12 +76,15 @@ public class EmployeeServiceTest {
                                 new Superior(1L, "Superior"));
                 Employee updatedEmployee = new Employee(1L, "updatedEmployee",
                                 new User(2L, "username", "passw", new Role()),
+
                                 new Superior(2L, "Superior"));
 
                 when(employeeRepositoryMock.findById(any(Long.class)))
                                 .thenReturn(Optional.of(employee));
-                when(employeeRepositoryMock.saveAndFlush(any(Employee.class))).thenReturn(updatedEmployee);
-                doNothing().when(entityManagerMock).refresh(any(Employee.class));
+
+                when(abstractRepositoryMock.saveAndRefresh(any(), any(Employee.class)))
+                                .thenReturn(updatedEmployee);
+
                 // When
                 Employee response = sut.updateEmployee(updatedEmployee);
                 // Then
@@ -119,6 +122,7 @@ public class EmployeeServiceTest {
         public void testGetEmployeeByUser() {
                 // Given
                 User user = new User("User", null, new Role(1L, "ROLE_EMPLOYEE"));
+
                 Employee employee = new Employee(1L, "Employee", user, new Superior());
 
                 when(employeeRepositoryMock.findByUser(any(User.class)))

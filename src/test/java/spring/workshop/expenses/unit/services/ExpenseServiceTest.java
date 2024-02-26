@@ -2,7 +2,6 @@ package spring.workshop.expenses.unit.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -16,7 +15,6 @@ import org.mockito.Mock;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import jakarta.persistence.EntityManager;
 import spring.workshop.expenses.entities.Category;
 import spring.workshop.expenses.entities.Employee;
 import spring.workshop.expenses.entities.Expense;
@@ -24,6 +22,7 @@ import spring.workshop.expenses.entities.Shop;
 import spring.workshop.expenses.entities.Superior;
 import spring.workshop.expenses.entities.User;
 import spring.workshop.expenses.enums.ExpenseStatus;
+import spring.workshop.expenses.repositories.AbstractRepositoryHelper;
 import spring.workshop.expenses.repositories.ExpenseRepository;
 import spring.workshop.expenses.services.ExpenseService;
 import spring.workshop.expenses.services.impl.ExpenseServiceImpl;
@@ -36,7 +35,7 @@ public class ExpenseServiceTest {
     ExpenseRepository expenseRepositoryMock;
 
     @Mock
-    EntityManager entityManagerMock;
+    AbstractRepositoryHelper<Expense> abstractRepositoryMock;
 
     @InjectMocks
     private ExpenseService sut = new ExpenseServiceImpl();
@@ -47,8 +46,7 @@ public class ExpenseServiceTest {
         Expense expense = new Expense("Expense", 100.00F, LocalDate.of(2024, 2, 16), new Category("Category"),
                 new Shop("Shop"), new Employee("Employee", new User(), new Superior()), ExpenseStatus.INITIAL);
 
-        when(expenseRepositoryMock.saveAndFlush(any(Expense.class))).thenReturn(expense);
-        doNothing().when(entityManagerMock).refresh(any(Expense.class));
+        when(abstractRepositoryMock.saveAndRefresh(any(), any(Expense.class))).thenReturn(expense);
         // When
         Expense response = sut.addNewExpense(expense);
         // Then
