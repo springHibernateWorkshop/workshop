@@ -88,7 +88,7 @@ public class ReassignEmployeeUcTest {
                 // When
                 Exception exception = assertThrows(ForbiddenResourceException.class,
                                 () -> sut.reassignEmployee(employee.getId(), superior.getId()));
-                assertEquals("User for Superior with id = " + superior.getId() + "does not exist.",
+                assertEquals("User for Superior with id = " + superior.getId() + " does not exist.",
                                 exception.getMessage());
                 // Then
                 verify(superiorServiceMock).getSuperiorById(superior.getId());
