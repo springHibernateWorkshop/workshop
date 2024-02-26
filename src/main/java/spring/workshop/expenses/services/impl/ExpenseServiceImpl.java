@@ -7,8 +7,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import spring.workshop.expenses.entities.Expense;
 import spring.workshop.expenses.exceptions.ResourceNotFoundException;
 import spring.workshop.expenses.repositories.AbstractRepositoryHelper;
@@ -18,9 +16,6 @@ import spring.workshop.expenses.services.ExpenseService;
 @Service
 public class ExpenseServiceImpl implements ExpenseService {
     private static final Logger LOG = LoggerFactory.getLogger(ExpenseServiceImpl.class);
-
-    @PersistenceContext
-    private EntityManager entityManager;
 
     @Autowired
     private ExpenseRepository expensesRepository;

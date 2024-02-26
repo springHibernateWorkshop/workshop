@@ -9,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import spring.workshop.expenses.entities.Employee;
 import spring.workshop.expenses.entities.User;
 import spring.workshop.expenses.exceptions.ResourceNotFoundException;
@@ -22,9 +20,6 @@ import spring.workshop.expenses.services.EmployeeService;
 public class EmployeeServiceImpl implements EmployeeService {
 
     private static final Logger LOG = LoggerFactory.getLogger(EmployeeServiceImpl.class);
-
-    @PersistenceContext
-    private EntityManager entityManager;
 
     @Autowired
     private EmployeeRepository employeeRepository;
