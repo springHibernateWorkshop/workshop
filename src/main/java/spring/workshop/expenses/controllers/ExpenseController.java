@@ -1,5 +1,6 @@
 package spring.workshop.expenses.controllers;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -40,6 +41,7 @@ public class ExpenseController {
     @ResponseStatus(HttpStatus.CREATED)
     public Expense createExpense(@RequestBody Expense expense) {
         User user = new User(100L, "Victoria", null, "EMPLOYEE");
+        user.setVersion(new Timestamp(new java.util.Date().getTime()));
         return createExpenseUc.createExpense(user, expense);
     }
 
@@ -48,6 +50,7 @@ public class ExpenseController {
     @ResponseStatus(HttpStatus.OK)
     public void deleteExpense(@PathVariable("expense_id") Long expenseId) {
         User user = new User(100L, "Victoria", null, "EMPLOYEE");
+        user.setVersion(new Timestamp(new java.util.Date().getTime()));
         deleteExpenseUc.deleteExpense(user, expenseId);
     }
 
