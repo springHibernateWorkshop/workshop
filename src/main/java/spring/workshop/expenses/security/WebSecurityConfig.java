@@ -4,6 +4,7 @@ import javax.sql.DataSource;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -26,7 +27,9 @@ public class WebSecurityConfig {
 				// .requestMatchers("/categories/**").permitAll()
 				// .requestMatchers("/shops/**").permitAll()
 				.requestMatchers("/users/**").hasRole("ADMINISTRATOR")
-				.requestMatchers("/expenses/**").hasAnyRole("EMPLOYEE", "SUPERIOR")
+				.requestMatchers(HttpMethod.GET, "/expenses/**").hasAnyRole("EMPLOYEE", "SUPERIOR")
+				.requestMatchers(HttpMethod.POST, "/expenses/**").hasRole("EMPLOYEE")
+				.requestMatchers(HttpMethod.PUT, "/expenses/**").hasRole("EMPLOYEE")
 				// .requestMatchers("/reports/**").hasAnyRole("SUPERIOR", "ACCOUNTANT")
 				.requestMatchers("/employees/**").hasRole("ADMINISTRATOR")
 				// .requestMatchers("/superiors/**").hasAnyRole("SUPERIOR", "ACCOUNTANT")
@@ -69,13 +72,10 @@ public class WebSecurityConfig {
 
 	@Bean
 	public UserDetailsService userDetailsServiceFromDB(PasswordEncoder passwordEncoder, DataSource dataSource) {
-		String password = passwordEncoder.encode("password");
 		JdbcUserDetailsManager userDetailsManager = new JdbcUserDetailsManager(dataSource);
 		userDetailsManager.setUsersByUsernameQuery("SELECT username, password, true FROM user_tab WHERE username = ?");
 		userDetailsManager.setAuthoritiesByUsernameQuery(
 				"SELECT u.username, upper(r.name) FROM user_tab u join permission_tab p on u.role_id = p.role_id join right_tab r on r.right_id = p.right_id WHERE username = ?");
-
-		UserDetails bar = userDetailsManager.loadUserByUsername("bartosz");
 		return userDetailsManager;
 	}
 }
