@@ -27,6 +27,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 
     private UserService userService;
 
+    @Autowired
     private AbstractRepositoryHelper<Expense> abstractRepository;
 
     @Override

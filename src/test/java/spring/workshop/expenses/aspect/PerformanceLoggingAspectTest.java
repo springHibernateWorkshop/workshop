@@ -11,11 +11,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
+import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.read.ListAppender;
 import spring.workshop.expenses.aspects.PerformanceLoggingAspect;
 import spring.workshop.expenses.services.impl.ShopServiceImpl;
+import spring.workshop.expenses.useCases.ReassignEmployeeUc;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
@@ -27,6 +29,9 @@ public class PerformanceLoggingAspectTest {
 
     @Autowired
     private ShopServiceImpl shopService;
+
+    @Autowired
+    private ReassignEmployeeUc reassignEmployeeUc;
 
     @BeforeEach
     public void setup() {
@@ -43,23 +48,29 @@ public class PerformanceLoggingAspectTest {
 
     @Test
     public void shouldLogPerformanceGetAllShops() {
+        // Given
+        Logger logger = (Logger) LoggerFactory.getLogger(PerformanceLoggingAspect.class);
+        logger.setLevel(Level.DEBUG);
 
+        // When
         shopService.getAllShops();
 
+        // Then
         ILoggingEvent event = listAppender.list.get(0);
 
-        assertEquals(true, event.getMessage().contains("Execution time of ShopServiceImpl.getAllShops"));
+        assertEquals(true, event.getMessage().contains("Execution time of Service: ShopServiceImpl.getAllShops"));
 
     }
 
     @Test
     public void shouldLogPerformanceGetShop() {
+        // When
+        reassignEmployeeUc.reassignEmployee(100l, 100l);
 
-        shopService.getShop(100l);
-
+        // Then
         ILoggingEvent event = listAppender.list.get(0);
-
-        assertEquals(true, event.getMessage().contains("Execution time of ShopServiceImpl.getShop"));
+        assertEquals(true,
+                event.getMessage().contains("Execution time of UC: ReassignEmployeeUcImpl.reassignEmployee "));
 
     }
 }
