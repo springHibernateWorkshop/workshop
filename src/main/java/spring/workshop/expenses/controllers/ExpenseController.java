@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
 import spring.workshop.expenses.entities.Expense;
 import spring.workshop.expenses.services.ExpenseService;
 import spring.workshop.expenses.useCases.CreateExpenseUc;
@@ -31,7 +32,7 @@ public class ExpenseController {
     private CreateExpenseUc createExpenseUc;
 
     // Method for creating an Expense
-    @PostMapping(path = "/")
+    @PostMapping
     @ResponseStatus(HttpStatus.OK)
     public Expense createExpense(@RequestParam("employee_id") Long employeeId,
             @RequestBody Expense expense) {

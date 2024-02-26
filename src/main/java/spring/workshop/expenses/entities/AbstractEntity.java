@@ -11,11 +11,11 @@ public abstract class AbstractEntity {
     @Version
     private Timestamp version;
 
-    protected Timestamp getVersion() {
+    public Timestamp getVersion() {
         return version;
     }
 
-    protected void setVersion(Timestamp version) {
+    public void setVersion(Timestamp version) {
         this.version = version;
     }
 

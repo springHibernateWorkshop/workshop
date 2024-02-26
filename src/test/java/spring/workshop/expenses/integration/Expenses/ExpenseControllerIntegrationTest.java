@@ -3,6 +3,7 @@ package spring.workshop.expenses.integration.Expenses;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -60,15 +61,22 @@ public class ExpenseControllerIntegrationTest {
         // expense
         HttpHeaders requestHeader = new HttpHeaders();
         requestHeader.setContentType(MediaType.APPLICATION_JSON);
-        Expense expense = new Expense("Expense", 100.00F, LocalDate.of(2024, 02, 16), new Category(100L),
-                new Shop(100L));
+
+        Category category = new Category(100L);
+        category.setVersion(new Timestamp(new java.util.Date().getTime()));
+
+        Shop shop = new Shop(100L);
+        shop.setVersion(new Timestamp(new java.util.Date().getTime()));
+
+        Expense expense = new Expense("Expense", 100.00F, LocalDate.of(2024, 02, 16), category,
+                shop);
         String requestBody = objectMapper.writeValueAsString(expense);
         HttpEntity<String> requestEntity = new HttpEntity<>(requestBody, requestHeader);
 
         // URL for creating an Expense for Employee with
         // employee_id = employeeId (existing)
         Long employeeId = 100L;
-        String url = BASE_URL + "/?employee_id=" + employeeId;
+        String url = BASE_URL + "?employee_id=" + employeeId;
 
         // Send a POST request to create the expense
         ResponseEntity<Expense> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity,
@@ -91,16 +99,23 @@ public class ExpenseControllerIntegrationTest {
         // Constructing the request body with the expense (valid) for creating the
         // expense
         HttpHeaders requestHeader = new HttpHeaders();
+
+        Category category = new Category(100L);
+        category.setVersion(new Timestamp(new java.util.Date().getTime()));
+
+        Shop shop = new Shop(100L);
+        shop.setVersion(new Timestamp(new java.util.Date().getTime()));
+
         requestHeader.setContentType(MediaType.APPLICATION_JSON);
-        Expense expense = new Expense("Expense", 100.00F, LocalDate.of(2024, 02, 16), new Category(100L),
-                new Shop(100L));
+        Expense expense = new Expense("Expense", 100.00F, LocalDate.of(2024, 02, 16), category,
+                shop);
         String requestBody = objectMapper.writeValueAsString(expense);
         HttpEntity<String> requestEntity = new HttpEntity<>(requestBody, requestHeader);
 
         // URL for creating an Expense for Employee with
         // employee_id = employeeId (non-existing)
         Long employeeId = 900L;
-        String url = BASE_URL + "/?employee_id=" + employeeId;
+        String url = BASE_URL + "?employee_id=" + employeeId;
 
         // Send a POST request to create the expense
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity,
@@ -118,15 +133,22 @@ public class ExpenseControllerIntegrationTest {
         // expense
         HttpHeaders requestHeader = new HttpHeaders();
         requestHeader.setContentType(MediaType.APPLICATION_JSON);
-        Expense expense = new Expense(null, 100.00F, LocalDate.of(2024, 02, 16), new Category(100L),
-                new Shop(100L));
+
+        Category category = new Category(100L);
+        category.setVersion(new Timestamp(new java.util.Date().getTime()));
+
+        Shop shop = new Shop(100L);
+        shop.setVersion(new Timestamp(new java.util.Date().getTime()));
+
+        Expense expense = new Expense(null, 100.00F, LocalDate.of(2024, 02, 16), category,
+                shop);
         String requestBody = objectMapper.writeValueAsString(expense);
         HttpEntity<String> requestEntity = new HttpEntity<>(requestBody, requestHeader);
 
         // URL for creating an Expense for Employee with
         // employee_id = employeeId (non-existing)
         Long employeeId = 100L;
-        String url = BASE_URL + "/?employee_id=" + employeeId;
+        String url = BASE_URL + "?employee_id=" + employeeId;
 
         // Send a POST request to create the expense
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity,
@@ -144,15 +166,22 @@ public class ExpenseControllerIntegrationTest {
         // expense
         HttpHeaders requestHeader = new HttpHeaders();
         requestHeader.setContentType(MediaType.APPLICATION_JSON);
-        Expense expense = new Expense("Expense", 100.00F, LocalDate.of(2024, 02, 16), new Category(900L),
-                new Shop(100L));
+
+        Category category = new Category(900L);
+        category.setVersion(new Timestamp(new java.util.Date().getTime()));
+
+        Shop shop = new Shop(100L);
+        shop.setVersion(new Timestamp(new java.util.Date().getTime()));
+
+        Expense expense = new Expense("Expense", 100.00F, LocalDate.of(2024, 02, 16), category,
+                shop);
         String requestBody = objectMapper.writeValueAsString(expense);
         HttpEntity<String> requestEntity = new HttpEntity<>(requestBody, requestHeader);
 
         // URL for creating an Expense for Employee with
         // employee_id = employeeId (non-existing)
         Long employeeId = 100L;
-        String url = BASE_URL + "/?employee_id=" + employeeId;
+        String url = BASE_URL + "?employee_id=" + employeeId;
 
         // Send a POST request to create the expense
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity,
