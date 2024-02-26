@@ -5,9 +5,9 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.actuate.web.exchanges.HttpExchange.Principal;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,6 +26,7 @@ import spring.workshop.expenses.useCases.CreateUserUc;
 
 @RestController
 @RequestMapping(path = "/users")
+@EnableMethodSecurity(prePostEnabled = true)
 public class UserController {
 
   private static final Logger LOG = LoggerFactory.getLogger(CategoryController.class);
@@ -38,7 +39,7 @@ public class UserController {
 
   @PostMapping()
   public ResponseEntity<Person> addUser(@RequestBody User user, @RequestParam String name,
-      @RequestParam(name = "superior_id", required = false) Long superiorId, Principal principal) {
+      @RequestParam(name = "superior_id", required = false) Long superiorId) {
     Person newUser = createUserUc.createUser(user, name, superiorId);
 
     return ResponseEntity

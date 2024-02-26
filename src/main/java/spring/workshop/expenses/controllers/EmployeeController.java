@@ -2,6 +2,8 @@ package spring.workshop.expenses.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +16,7 @@ import spring.workshop.expenses.useCases.ReassignEmployeeUc;
 
 @RestController
 @RequestMapping(path = "/employees")
+@EnableMethodSecurity(prePostEnabled = true)
 public class EmployeeController {
 
   @Autowired
@@ -21,7 +24,7 @@ public class EmployeeController {
 
   // Method for reassigning an employee
   @PutMapping(path = "/{id}")
-  // @PreAuthorize("hasAuthority('REASSIGN_EMPLOYEE')")
+  @PreAuthorize("hasAuthority('REASSIGN_EMPLOYEES')")
   @ResponseStatus(HttpStatus.OK)
   public Employee reassignEmployee(@PathVariable("id") Long employeeId,
       @RequestParam("superior_id") Long superiorId) {

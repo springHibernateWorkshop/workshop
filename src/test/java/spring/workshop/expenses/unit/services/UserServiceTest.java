@@ -7,16 +7,18 @@ import static org.mockito.Mockito.when;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import spring.workshop.expenses.entities.User;
 import spring.workshop.expenses.repositories.UserRepository;
 import spring.workshop.expenses.security.Role;
+import spring.workshop.expenses.services.RoleService;
 import spring.workshop.expenses.services.UserService;
 import spring.workshop.expenses.services.impl.UserServiceImpl;
 
@@ -26,27 +28,34 @@ import spring.workshop.expenses.services.impl.UserServiceImpl;
 @ActiveProfiles("test")
 public class UserServiceTest {
 
-    private UserService sut;
+    @InjectMocks
+    private UserService sut = new UserServiceImpl();
 
     @Mock
     UserRepository userRepositoryMock;
 
-    @BeforeEach
-    public void setup() {
-        // CategoryRepository categoryRepositoryMock =
-        // Mockito.mock(CategoryRepository.class);
-        sut = new UserServiceImpl(userRepositoryMock);
-    }
+    @Mock
+    RoleService roleServiceMock;
+
+    @Mock
+    PasswordEncoder passwordEncoderMock;
+
+    // @BeforeEach
+    // public void setup() {
+    // sut = new UserServiceImpl(userRepositoryMock);
+    // }
 
     @Test
     public void testAddEmployee() {
         // Arrange
         String username = "username";
         String pass = "pass";
-        Role role = new Role("EMPLOYEE");
+        Role role = new Role(1L, "ROLE_EMPLOYEE");
         // Given
         User user = new User(username, pass, role);
         when(userRepositoryMock.save(user)).thenReturn(new User(username, pass, role));
+        when(passwordEncoderMock.encode(any(String.class))).thenReturn(user.getPassword());
+        when(roleServiceMock.findById(any(Long.class))).thenReturn(role);
         // When
         User response = sut.addUser(user);
         // Then
@@ -60,10 +69,12 @@ public class UserServiceTest {
         // Arrange
         String username = "usrname";
         String pass = "pass";
-        Role role = new Role("SUPERIOR");
+        Role role = new Role(2L, "SUPERIOR");
         // Given
         User user = new User(username, pass, role);
         when(userRepositoryMock.save(user)).thenReturn(new User(username, pass, role));
+        when(passwordEncoderMock.encode(any(String.class))).thenReturn(user.getPassword());
+        when(roleServiceMock.findById(any(Long.class))).thenReturn(role);
         // When
         User response = sut.addUser(user);
         // Then
@@ -73,7 +84,6 @@ public class UserServiceTest {
     }
 
     // TODO negative Role != EMPLOYEE or SUPERIOR
-
     @Test
     public void testUpdateUser() {
         // Arrange

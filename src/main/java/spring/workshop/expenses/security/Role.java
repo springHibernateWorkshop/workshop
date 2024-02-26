@@ -30,7 +30,7 @@ public class Role implements GrantedAuthority {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column
+    @Column(nullable = false)
     private String name;
 
     @OneToMany(mappedBy = "role")
@@ -47,9 +47,18 @@ public class Role implements GrantedAuthority {
         this.name = name;
     }
 
+    public Role(Long id) {
+        this.id = id;
+    }
+
     public Role(String name, Set<Right> rights) {
         this.name = name;
         this.rights = rights;
+    }
+
+    public Role(Long id, String name) {
+        this.id = id;
+        this.name = name;
     }
 
     @Override
@@ -59,6 +68,10 @@ public class Role implements GrantedAuthority {
 
     public Set<Right> getRights() {
         return rights;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public void setName(String name) {

@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -28,7 +29,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public ErrorMessage dataIntegrityViolationExceptionHandler(Exception ex,
+    public ErrorMessage dataIntegrityViolationExceptionHandler(DataIntegrityViolationException ex,
             WebRequest request) {
         ErrorMessage message = new ErrorMessage(
                 HttpStatus.BAD_REQUEST.value(),
@@ -41,7 +42,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(PropertyValueException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public ErrorMessage propertyValueExceptionHandler(Exception ex, WebRequest request) {
+    public ErrorMessage propertyValueExceptionHandler(PropertyValueException ex, WebRequest request) {
         ErrorMessage message = new ErrorMessage(
                 HttpStatus.BAD_REQUEST.value(),
                 LocalDate.now(),
@@ -53,7 +54,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public ErrorMessage illegalArgumentExceptionHandler(Exception ex, WebRequest request) {
+    public ErrorMessage illegalArgumentExceptionHandler(IllegalArgumentException ex, WebRequest request) {
         ErrorMessage message = new ErrorMessage(
                 HttpStatus.BAD_REQUEST.value(),
                 LocalDate.now(),
@@ -65,7 +66,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(UnsupportedOperationException.class)
     @ResponseStatus(value = HttpStatus.NOT_IMPLEMENTED)
-    public ErrorMessage unsupportedOperationExceptionHandler(Exception ex, WebRequest request) {
+    public ErrorMessage unsupportedOperationExceptionHandler(UnsupportedOperationException ex, WebRequest request) {
         ErrorMessage message = new ErrorMessage(
                 HttpStatus.NOT_IMPLEMENTED.value(),
                 LocalDate.now(),
@@ -87,4 +88,15 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
         return message;
     }
 
+    @ExceptionHandler(ResourceAccessException.class)
+    @ResponseStatus(value = HttpStatus.ALREADY_REPORTED)
+    public ErrorMessage resourceAccessException(ResourceAccessException ex, WebRequest request) {
+        ErrorMessage message = new ErrorMessage(
+                HttpStatus.ALREADY_REPORTED.value(),
+                LocalDate.now(),
+                ex.getMessage(),
+                request.getDescription(false));
+
+        return message;
+    }
 }

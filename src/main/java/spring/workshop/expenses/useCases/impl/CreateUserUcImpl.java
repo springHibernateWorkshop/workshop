@@ -28,6 +28,7 @@ public class CreateUserUcImpl implements CreateUserUc {
     @Override
     @Transactional
     public Person createUser(User user, String name, Long superiorId) {
+
         User newUser = userService.addUser(user);
 
         if (newUser.getRole().getAuthority().equals("ROLE_EMPLOYEE")) {

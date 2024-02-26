@@ -9,7 +9,6 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.actuate.web.exchanges.HttpExchange.Principal;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
@@ -63,8 +62,9 @@ public class UserControllerSliceTest {
         User user = new User(1L, "usr", "pass", new Role("ROLE_EMPLOYEE"));
         when(createUserUcMock.createUser(any(), any(), any())).thenReturn(new Superior(1L, "Alicja", user));
         // When
-        ResponseEntity<Person> response = sut.addUser(new User("usr", "pass", new Role("ROLE_EMPLOYEE")), "Alicja",
-                300L, new Principal("username"));
+        ResponseEntity<Person> response = sut.addUser(
+                new User("usr", "pass", new Role("ROLE_EMPLOYEE")), "Alicja",
+                300L);
         // Then
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertEquals("usr", response.getBody().getUser().getUsername());

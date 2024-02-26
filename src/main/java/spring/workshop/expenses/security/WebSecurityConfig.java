@@ -26,10 +26,9 @@ public class WebSecurityConfig {
 				// .requestMatchers("/categories/**").permitAll()
 				// .requestMatchers("/shops/**").permitAll()
 				// .requestMatchers("/users/**").hasRole("ADMINISTRATOR")
-				.requestMatchers("/expenses/**").hasAuthority("VIEW_EXPENSES")//
-				// hasAnyRole("EMPLOYEE", "SUPERIOR")
+				.requestMatchers("/expenses/**").hasAnyRole("EMPLOYEE", "SUPERIOR")
 				// .requestMatchers("/reports/**").hasAnyRole("SUPERIOR", "ACCOUNTANT")
-				// .requestMatchers("/employees/**").authenticated()
+				.requestMatchers("/employees/**").hasRole("ADMINISTRATOR")
 				// .requestMatchers("/superiors/**").hasAnyRole("SUPERIOR", "ACCOUNTANT")
 				.anyRequest().permitAll())
 				.csrf(csrf -> csrf.disable())

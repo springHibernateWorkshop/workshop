@@ -29,7 +29,7 @@ public class UserControllerIntegrationTests {
 
     @Test
     public void testAddNewSuperior() throws Exception {
-        User user = new User("superior", "pass", new Role("ROLE_SUPERIOR"));
+        User user = new User("superior", "pass", new Role(2L));
         ResponseEntity<Superior> response = restTemplate.postForEntity(BASE_URL + "?name={name}", user, Superior.class,
                 "Kowalski",
                 null);
@@ -54,7 +54,7 @@ public class UserControllerIntegrationTests {
 
     @Test
     public void testUpdateUser() throws Exception {
-        User user = new User(100L, "username", "pass", new Role("ROLE_EMPLOYEE"));
+        User user = new User(100L, "username", "pass", new Role(1L, "ROLE_EMPLOYEE"));
         User response = restTemplate.getForObject(BASE_URL + "/{id}", User.class, 100L);
         assertEquals("victoria", response.getUsername());
         assertEquals("ROLE_EMPLOYEE", response.getRole().getAuthority());
@@ -63,7 +63,7 @@ public class UserControllerIntegrationTests {
         User responseAfterUpdate = restTemplate.getForObject(BASE_URL + "/{id}", User.class, 100L);
         assertEquals("username", responseAfterUpdate.getUsername());
         assertEquals("pass", responseAfterUpdate.getPassword());
-        assertEquals("ROLE_EMPLOYEE", responseAfterUpdate.getRole());
+        assertEquals("ROLE_EMPLOYEE", responseAfterUpdate.getRole().getAuthority());
     }
 
     @Test

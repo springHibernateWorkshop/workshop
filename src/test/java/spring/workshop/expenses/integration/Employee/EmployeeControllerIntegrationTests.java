@@ -46,7 +46,7 @@ public class EmployeeControllerIntegrationTests {
         String url = BASE_URL + employeeId;
 
         // Send a PUT request to reassign the employee
-        ResponseEntity<Employee> response = restTemplate.withBasicAuth("manton", "password").exchange(url,
+        ResponseEntity<Employee> response = restTemplate.withBasicAuth("manhton", "password").exchange(url,
                 HttpMethod.PUT, requestEntity, Employee.class);
 
         // Assert HTTP status code is OK

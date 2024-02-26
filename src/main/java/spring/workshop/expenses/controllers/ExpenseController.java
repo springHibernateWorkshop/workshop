@@ -6,12 +6,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -34,9 +33,8 @@ import spring.workshop.expenses.useCases.DeleteExpenseUc;
 
 @RestController
 @RequestMapping(path = "/expenses")
+@EnableMethodSecurity(prePostEnabled = true)
 public class ExpenseController {
-
-    private static final Logger LOG = LoggerFactory.getLogger(ExpenseController.class);
 
     @Autowired
     private ExpenseService expenseService;
@@ -52,14 +50,16 @@ public class ExpenseController {
 
     // Method for creating an Expense
     @PostMapping
+    @PreAuthorize("hasAuthority('CREATE_EXPENSES')")
     @ResponseStatus(HttpStatus.CREATED)
-    public Expense createExpense(@RequestBody Expense expense) {
-        User user = new User(100L, "Victoria", null, "EMPLOYEE");
+    public Expense createExpense(@RequestBody Expense expense, Principal principal) {
+        User user = userService.getUserByUsername(principal.getName());
         return createExpenseUc.createExpense(user, expense);
     }
 
     // Method for deleting an Expense
     @DeleteMapping(path = "/{expense_id}")
+    @PreAuthorize("hasAuthority('DELETE_EXPENSES')")
     @ResponseStatus(HttpStatus.OK)
     public void deleteExpense(@PathVariable("expense_id") Long expenseId, Principal principal) {
         User user = userService.getUserByUsername(principal.getName());
@@ -83,12 +83,14 @@ public class ExpenseController {
     }
 
     @GetMapping(path = "/{id}")
+    @PreAuthorize("hasAuthority('VIEW_EXPENSES')")
     @ResponseStatus(HttpStatus.OK)
     public Expense getExpenseById(@PathVariable Long id, Principal principal) {
         return expenseService.getExpenseByIdAndUsername(id, principal.getName());
     }
 
     @PutMapping()
+    @PreAuthorize("hasAuthority('EDIT_EXPENSES')")
     @ResponseStatus(HttpStatus.OK)
     public Expense updateExpense(@RequestBody Expense expense) {
         return expenseService.updateExpense(expense);
@@ -101,18 +103,21 @@ public class ExpenseController {
     }
 
     @GetMapping(path = "/category/{categoryId}")
+    @PreAuthorize("hasAuthority('VIEW_EXPENSES')")
     @ResponseStatus(HttpStatus.OK)
     public List<Expense> findByCategoryId(@PathVariable Long categoryId) {
         return expenseService.findByCategoryId(categoryId);
     }
 
     @GetMapping(path = "/shop/{shopId}")
+    @PreAuthorize("hasAuthority('VIEW_EXPENSES')")
     @ResponseStatus(HttpStatus.OK)
     public List<Expense> findByShopId(@PathVariable Long shopId) {
         return expenseService.findByShopId(shopId);
     }
 
     @GetMapping(path = "/user/{employeeId}")
+    @PreAuthorize("hasAuthority('VIEW_EXPENSES')")
     @ResponseStatus(HttpStatus.OK)
     public List<Expense> getExpensesByEmployeeId(@PathVariable Long employeeId) {
         return expenseService.findByEmployeeId(employeeId);
