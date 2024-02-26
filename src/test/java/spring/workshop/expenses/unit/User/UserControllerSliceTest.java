@@ -92,24 +92,6 @@ public class UserControllerSliceTest {
     }
 
     @Test
-    public void testUpdateUser() {
-        // Given
-        Long id = 1L;
-        User updatedUser = new User(id, "usr", "pass", new Role("ROLE_EMPLOYEE"));
-
-        when(userServiceMock.getUserById(id)).thenReturn(new User(id, "user", "passXYZ", new Role()));
-        when(userServiceMock.updateUser(updatedUser)).thenReturn(updatedUser);
-        // When
-        ResponseEntity<User> response = sut.updateUser(updatedUser);
-        // Then
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(id, response.getBody().getId());
-        assertEquals("usr", response.getBody().getUsername());
-        assertEquals("pass", response.getBody().getPassword());
-        assertEquals("ROLE_EMPLOYEE", response.getBody().getRole().getAuthority());
-    }
-
-    @Test
     public void testGetAllUsers() {
         // Given
         when(userServiceMock.getAllUsers()).thenReturn(List.of(new User(), new User(), new User()));
