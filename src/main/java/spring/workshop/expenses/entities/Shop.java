@@ -10,7 +10,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "shop_tab")
-public class Shop {
+public class Shop extends AbstractEntity {
 
     @Id
     @Column(name = "shop_id")

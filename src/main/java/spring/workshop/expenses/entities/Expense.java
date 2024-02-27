@@ -16,7 +16,7 @@ import spring.workshop.expenses.enums.ExpenseStatus;
 
 @Entity
 @Table(name = "expense_tab")
-public class Expense {
+public class Expense extends AbstractEntity {
 
     @Id
     @Column(name = "expense_id")
