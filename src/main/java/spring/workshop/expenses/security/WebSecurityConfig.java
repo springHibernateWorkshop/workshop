@@ -6,12 +6,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
@@ -19,6 +20,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig {
 
 	@Bean
@@ -28,8 +30,7 @@ public class WebSecurityConfig {
 				// .requestMatchers("/shops/**").permitAll()
 				.requestMatchers("/users/**").hasRole("ADMINISTRATOR")
 				.requestMatchers(HttpMethod.GET, "/expenses/**").hasAnyRole("EMPLOYEE", "SUPERIOR")
-				.requestMatchers(HttpMethod.POST, "/expenses/**").hasRole("EMPLOYEE")
-				.requestMatchers(HttpMethod.PUT, "/expenses/**").hasRole("EMPLOYEE")
+				.requestMatchers("/expenses/**").hasRole("EMPLOYEE")
 				// .requestMatchers("/reports/**").hasAnyRole("SUPERIOR", "ACCOUNTANT")
 				.requestMatchers("/employees/**").hasRole("ADMINISTRATOR")
 				// .requestMatchers("/superiors/**").hasAnyRole("SUPERIOR", "ACCOUNTANT")
@@ -42,12 +43,12 @@ public class WebSecurityConfig {
 
 	@Bean
 	PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
+		return PasswordEncoderFactories.createDelegatingPasswordEncoder();
 	}
 
 	// @Bean
 	// This is an example of how to create users in memory
-	public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
+	public UserDetailsService userDetailsServiceInMemory(PasswordEncoder passwordEncoder) {
 
 		UserDetails bartosz = User
 				.withUsername("bartosz")
@@ -66,12 +67,13 @@ public class WebSecurityConfig {
 				// .roles(Role.EMPLOYEE.name())
 				.authorities("CREATE_USER")
 				.build();
-		return new InMemoryUserDetailsManager(victoria, bartosz, admin);
 
+		return new InMemoryUserDetailsManager(victoria, bartosz, admin);
 	}
 
 	@Bean
 	public UserDetailsService userDetailsServiceFromDB(PasswordEncoder passwordEncoder, DataSource dataSource) {
+		String passString = passwordEncoder.encode("password");
 		JdbcUserDetailsManager userDetailsManager = new JdbcUserDetailsManager(dataSource);
 		userDetailsManager.setUsersByUsernameQuery("SELECT username, password, true FROM user_tab WHERE username = ?");
 		userDetailsManager.setAuthoritiesByUsernameQuery(
