@@ -12,7 +12,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "employee_tab")
-public class Employee implements Person {
+public class Employee extends AbstractEntity implements Person {
 
     @Id
     @Column(name = "employee_id")

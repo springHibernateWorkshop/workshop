@@ -11,7 +11,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "category_tab")
-public class Category {
+public class Category extends AbstractEntity {
 
     @Id
     @Column(name = "category_id")
@@ -54,5 +54,4 @@ public class Category {
     public void setName(@NonNull String name) {
         this.name = name;
     }
-
 }

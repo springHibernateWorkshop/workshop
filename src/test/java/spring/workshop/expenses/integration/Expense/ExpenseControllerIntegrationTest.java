@@ -3,6 +3,7 @@ package spring.workshop.expenses.integration.Expense;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -61,8 +62,15 @@ public class ExpenseControllerIntegrationTest {
                 // expense
                 HttpHeaders requestHeader = new HttpHeaders();
                 requestHeader.setContentType(MediaType.APPLICATION_JSON);
-                Expense expense = new Expense("Expense", 100.00F, LocalDate.of(2024, 02, 16), new Category(100L),
-                                new Shop(100L));
+
+                Category category = new Category(100L);
+                category.setVersion(new Timestamp(new java.util.Date().getTime()));
+
+                Shop shop = new Shop(100L);
+                shop.setVersion(new Timestamp(new java.util.Date().getTime()));
+
+                Expense expense = new Expense("Expense", 100.00F, LocalDate.of(2024, 02, 16), category,
+                                shop);
                 String requestBody = objectMapper.writeValueAsString(expense);
                 HttpEntity<String> requestEntity = new HttpEntity<>(requestBody, requestHeader);
 
@@ -122,8 +130,15 @@ public class ExpenseControllerIntegrationTest {
                 // creating the expense
                 HttpHeaders requestHeader = new HttpHeaders();
                 requestHeader.setContentType(MediaType.APPLICATION_JSON);
-                Expense expense = new Expense(null, 100.00F, LocalDate.of(2024, 02, 16), new Category(100L),
-                                new Shop(100L));
+
+                Category category = new Category(100L);
+                category.setVersion(new Timestamp(new java.util.Date().getTime()));
+
+                Shop shop = new Shop(100L);
+                shop.setVersion(new Timestamp(new java.util.Date().getTime()));
+
+                Expense expense = new Expense(null, 100.00F, LocalDate.of(2024, 02, 16), category,
+                                shop);
                 String requestBody = objectMapper.writeValueAsString(expense);
                 HttpEntity<String> requestEntity = new HttpEntity<>(requestBody, requestHeader);
 
@@ -148,8 +163,15 @@ public class ExpenseControllerIntegrationTest {
                 // category) for creating the expense
                 HttpHeaders requestHeader = new HttpHeaders();
                 requestHeader.setContentType(MediaType.APPLICATION_JSON);
-                Expense expense = new Expense("Expense", 100.00F, LocalDate.of(2024, 02, 16), new Category(900L),
-                                new Shop(100L));
+
+                Category category = new Category(900L);
+                category.setVersion(new Timestamp(new java.util.Date().getTime()));
+
+                Shop shop = new Shop(100L);
+                shop.setVersion(new Timestamp(new java.util.Date().getTime()));
+
+                Expense expense = new Expense("Expense", 100.00F, LocalDate.of(2024, 02, 16), category,
+                                shop);
                 String requestBody = objectMapper.writeValueAsString(expense);
                 HttpEntity<String> requestEntity = new HttpEntity<>(requestBody, requestHeader);
 
@@ -248,7 +270,7 @@ public class ExpenseControllerIntegrationTest {
         public void testDeleteExpenseNegativeExpenseWrongStatus() throws Exception {
 
                 // Defining the parameters for the DELETE request
-                Long expenseId = 200L;
+                Long expenseId = 400L;
 
                 // URL for deleting an Expense with expense_id = expenseId (existing, wrong
                 // status)
