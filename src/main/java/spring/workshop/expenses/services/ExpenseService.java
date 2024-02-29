@@ -23,4 +23,6 @@ public interface ExpenseService {
     public List<Expense> findByShopId(Long shopId);
 
     public List<Expense> findByEmployeeId(Long employeeId);
+
+    public List<Expense> filter(List<Expense> expenses, Integer year, Integer month, Long categoryId, Long shopId);
 }

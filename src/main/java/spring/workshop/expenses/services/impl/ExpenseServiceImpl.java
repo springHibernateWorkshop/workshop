@@ -2,11 +2,14 @@ package spring.workshop.expenses.services.impl;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import spring.workshop.expenses.entities.Expense;
 import spring.workshop.expenses.exceptions.ResourceNotFoundException;
 import spring.workshop.expenses.repositories.AbstractRepositoryHelper;
@@ -84,6 +87,29 @@ public class ExpenseServiceImpl implements ExpenseService {
     @Override
     public List<Expense> findByEmployeeId(Long employeeId) {
         return expensesRepository.findByEmployeeId(employeeId);
+    }
+
+    @Override
+    public List<Expense> filter(List<Expense> expenses, Integer year, Integer month, Long categoryId, Long shopId) {
+
+        if (year == null && month == null) {
+
+        } else if (year != null && month == null) {
+
+        } else if (year == null && month != null) {
+
+        } else if (year != null && month != null) {
+
+        }
+
+        List<Expense> filteredList = expenses.stream()//
+                .filter(e -> categoryId == null || e.getCategory().getId() == categoryId)//
+                .filter(e -> shopId == null || e.getShop().getId() == shopId)//
+                .filter(e -> year != null && month != null && e.getDate().getYear() == year
+                        && e.getDate().getMonth() == month)//
+                .collect(Collectors.toList());
+
+        return null;
     }
 
 }
