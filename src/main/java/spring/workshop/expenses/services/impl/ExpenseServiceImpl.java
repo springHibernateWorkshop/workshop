@@ -91,25 +91,31 @@ public class ExpenseServiceImpl implements ExpenseService {
 
     @Override
     public List<Expense> filter(List<Expense> expenses, Integer year, Integer month, Long categoryId, Long shopId) {
-
-        if (year == null && month == null) {
-
-        } else if (year != null && month == null) {
-
-        } else if (year == null && month != null) {
-
-        } else if (year != null && month != null) {
-
-        }
-
-        List<Expense> filteredList = expenses.stream()//
-                .filter(e -> categoryId == null || e.getCategory().getId() == categoryId)//
-                .filter(e -> shopId == null || e.getShop().getId() == shopId)//
-                .filter(e -> year != null && month != null && e.getDate().getYear() == year
-                        && e.getDate().getMonth() == month)//
+        List<Expense> filte = expenses.stream()
+                .filter(e -> categoryId == null || e.getCategory().getId() == categoryId)
+                .filter(e -> shopId == null || e.getShop().getId() == shopId)
+                .filter(e -> {
+                    if (year == null && month == null) {
+                        return true; // Case 4: Select all expenses
+                    } else if (year != null && month == null) {
+                        return e.getDate().getYear() == year; // Case 2: Select expenses with matching year
+                    } else if (year == null && month != null) {
+                        return e.getDate().getYear() == LocalDate.now().getYear()
+                                && e.getDate().getMonth().getValue() == month; // Case 3: Select expenses with current
+                        // year and matching month
+                    } else {
+                        return e.getDate().getYear() == year && e.getDate().getMonth().getValue() == month; // Case 1:
+                        // Select
+                        // expenses
+                        // with
+                        // matching
+                        // year and
+                        // month
+                    }
+                })
                 .collect(Collectors.toList());
+        return filte;
 
-        return null;
     }
 
 }

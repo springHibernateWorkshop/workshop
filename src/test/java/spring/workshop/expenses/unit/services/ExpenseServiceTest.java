@@ -6,6 +6,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -70,6 +71,79 @@ public class ExpenseServiceTest {
         sut.deleteExpense(expense.getId());
         // Then
         verify(expenseRepositoryMock).deleteById(expense.getId());
+    }
+
+    @Test
+    public void testFilterWithNoCriteria() {
+        // Given
+        List<Expense> expenses = List
+                .of(new Expense(1L, "Expense", 100.00F, LocalDate.of(2023, 2, 19), new Category(100L, "Category"),
+                        new Shop(100L), new Employee("Employee", new User(), new Superior()), ExpenseStatus.INITIAL,
+                        null),
+                        new Expense(2L, "Expense", 100.00F, LocalDate.of(2024, 2, 19), new Category(100L, "Category"),
+                                new Shop(100L), new Employee("Employee", new User(), new Superior()),
+                                ExpenseStatus.INITIAL,
+                                null));
+
+        // When
+        List<Expense> filteredExpenses = sut.filter(expenses, null, null, null, null);
+        // Then
+        assertEquals(2, filteredExpenses.size());
+
+    }
+
+    @Test
+    public void testFilterWithAllCriteria() {
+        // Given
+        List<Expense> expenses = List
+                .of(new Expense(1L, "Expense", 100.00F, LocalDate.of(2023, 2, 19), new Category(1L, "Category"),
+                        new Shop(1L), new Employee("Employee", new User(), new Superior()), ExpenseStatus.INITIAL,
+                        null),
+                        new Expense(2L, "Expense", 100.00F, LocalDate.of(2024, 2, 19), new Category(1L, "Category"),
+                                new Shop(2L), new Employee("Employee", new User(), new Superior()),
+                                ExpenseStatus.INITIAL,
+                                null));
+
+        // When
+        List<Expense> filteredExpenses = sut.filter(expenses, 2024, 2, 1L, 2L);
+        // Then
+        assertEquals(1, filteredExpenses.size());
+    }
+
+    @Test
+    public void testFilterWithDateCriteria() {
+        // Given
+        List<Expense> expenses = List
+                .of(new Expense(1L, "Expense", 100.00F, LocalDate.of(2023, 2, 19), new Category(1L, "Category"),
+                        new Shop(1L), new Employee("Employee", new User(), new Superior()), ExpenseStatus.INITIAL,
+                        null),
+                        new Expense(2L, "Expense", 100.00F, LocalDate.of(2024, 2, 19), new Category(1L, "Category"),
+                                new Shop(2L), new Employee("Employee", new User(), new Superior()),
+                                ExpenseStatus.INITIAL,
+                                null));
+
+        // When
+        List<Expense> filteredExpenses = sut.filter(expenses, null, 2, null, null);
+        // Then
+        assertEquals(1, filteredExpenses.size());
+    }
+
+    @Test
+    public void testFilterWithYearCriteria() {
+        // Given
+        List<Expense> expenses = List
+                .of(new Expense(1L, "Expense", 100.00F, LocalDate.of(2023, 2, 19), new Category(1L, "Category"),
+                        new Shop(1L), new Employee("Employee", new User(), new Superior()), ExpenseStatus.INITIAL,
+                        null),
+                        new Expense(2L, "Expense", 100.00F, LocalDate.of(2024, 2, 19), new Category(1L, "Category"),
+                                new Shop(2L), new Employee("Employee", new User(), new Superior()),
+                                ExpenseStatus.INITIAL,
+                                null));
+
+        // When
+        List<Expense> filteredExpenses = sut.filter(expenses, 2023, null, null, null);
+        // Then
+        assertEquals(1, filteredExpenses.size());
     }
 
 }
