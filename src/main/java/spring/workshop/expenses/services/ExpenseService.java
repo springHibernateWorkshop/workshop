@@ -3,6 +3,7 @@ package spring.workshop.expenses.services;
 import java.time.LocalDate;
 import java.util.List;
 
+import spring.workshop.expenses.entities.Employee;
 import spring.workshop.expenses.entities.Expense;
 
 public interface ExpenseService {
@@ -25,4 +26,6 @@ public interface ExpenseService {
     public List<Expense> findByEmployeeId(Long employeeId);
 
     public List<Expense> filter(List<Expense> expenses, Integer year, Integer month, Long categoryId, Long shopId);
+
+    public List<Expense> getExpenseByEmployee(Employee employee);
 }
