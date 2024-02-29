@@ -3,6 +3,7 @@ package spring.workshop.expenses.services;
 import java.util.List;
 
 import spring.workshop.expenses.entities.Employee;
+import spring.workshop.expenses.entities.Superior;
 import spring.workshop.expenses.entities.User;
 
 public interface EmployeeService {
@@ -18,5 +19,7 @@ public interface EmployeeService {
     Employee getEmployeeById(Long id);
 
     Employee getEmployeeByUser(User user);
+
+    List<Employee> getEmployeesBySuperior(Superior superior);
 
 }

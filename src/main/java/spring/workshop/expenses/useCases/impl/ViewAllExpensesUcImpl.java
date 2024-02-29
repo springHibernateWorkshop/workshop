@@ -1,5 +1,6 @@
 package spring.workshop.expenses.useCases.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ public class ViewAllExpensesUcImpl implements ViewAllExpensesUc {
 
     @Override
     public List<Expense> viewAllExpenses(User user, Integer year, Integer month, Long categoryId, Long shopId) {
-        List<Expense> expenses = null;
+        List<Expense> expenses = new ArrayList<>();
         if (user.getRole() == "EMPLOYEE") { // TODO
             Employee employee = employeeService.getEmployeeByUser(user);
             expenses = expenseService.getExpenseByEmployee(employee);
@@ -42,5 +43,4 @@ public class ViewAllExpensesUcImpl implements ViewAllExpensesUc {
         }
         return expenseService.filter(expenses, year, month, categoryId, shopId);
     }
-
 }

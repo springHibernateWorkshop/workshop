@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import spring.workshop.expenses.entities.Employee;
 import spring.workshop.expenses.entities.Expense;
 import spring.workshop.expenses.exceptions.ResourceNotFoundException;
 import spring.workshop.expenses.repositories.AbstractRepositoryHelper;
@@ -116,6 +117,11 @@ public class ExpenseServiceImpl implements ExpenseService {
                 .collect(Collectors.toList());
         return filte;
 
+    }
+
+    @Override
+    public List<Expense> getExpenseByEmployee(Employee employee) {
+        return expensesRepository.findByEmployee(employee);
     }
 
 }
