@@ -49,7 +49,6 @@ public class ExpenseController {
 
     // Method for creating an Expense
     @PostMapping
-    @PreAuthorize("hasAuthority('CREATE_EXPENSES')")
     @ResponseStatus(HttpStatus.CREATED)
     public Expense createExpense(@RequestBody Expense expense, Principal principal) {
         User user = userService.getUserByUsername(principal.getName());
@@ -59,9 +58,7 @@ public class ExpenseController {
 
     // Method for deleting an Expense
     @DeleteMapping(path = "/{expense_id}")
-    @PreAuthorize("hasAuthority('DELETE_EXPENSES')")
     @ResponseStatus(HttpStatus.OK)
-
     public void deleteExpense(@PathVariable("expense_id") Long expenseId, Principal principal) {
         User user = userService.getUserByUsername(principal.getName());
         user.setVersion(new Timestamp(new java.util.Date().getTime()));

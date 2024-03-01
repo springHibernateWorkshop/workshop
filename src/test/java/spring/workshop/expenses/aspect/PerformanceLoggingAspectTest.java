@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -63,6 +64,7 @@ public class PerformanceLoggingAspectTest {
     }
 
     @Test
+    @WithMockUser(authorities = "REASSIGN_EMPLOYEES")
     public void shouldLogPerformanceGetShop() {
         // When
         reassignEmployeeUc.reassignEmployee(100l, 100l);

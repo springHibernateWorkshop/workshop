@@ -1,6 +1,7 @@
 package spring.workshop.expenses.useCases.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import jakarta.transaction.Transactional;
@@ -27,6 +28,7 @@ public class CreateUserUcImpl implements CreateUserUc {
 
     @Override
     @Transactional
+    @PreAuthorize("hasAuthority('CREATE_USERS')")
     public Person createUser(User user, String name, Long superiorId) {
 
         User newUser = userService.addUser(user);

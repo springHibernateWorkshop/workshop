@@ -2,7 +2,6 @@ package spring.workshop.expenses.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +21,6 @@ public class EmployeeController {
 
   // Method for reassigning an employee
   @PutMapping(path = "/{id}")
-  @PreAuthorize("hasAuthority('REASSIGN_EMPLOYEES')")
   @ResponseStatus(HttpStatus.OK)
   public Employee reassignEmployee(@PathVariable("id") Long employeeId,
       @RequestParam("superior_id") Long superiorId) {
