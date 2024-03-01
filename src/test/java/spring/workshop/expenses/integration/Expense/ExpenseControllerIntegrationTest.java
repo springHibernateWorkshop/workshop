@@ -161,10 +161,8 @@ public class ExpenseControllerIntegrationTest {
                 requestHeader.setContentType(MediaType.APPLICATION_JSON);
 
                 Category category = new Category(900L);
-                category.setVersion(new Timestamp(new java.util.Date().getTime()));
 
                 Shop shop = new Shop(100L);
-                shop.setVersion(new Timestamp(new java.util.Date().getTime()));
 
                 Expense expense = new Expense("Expense", 100.00F, LocalDate.of(2024, 02, 16), category,
                                 shop);
@@ -182,7 +180,7 @@ public class ExpenseControllerIntegrationTest {
                 // Assert HTTP status code is BAD_REQUEST
                 assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
                 assert new JSONObject(response.getBody()).getString("message")
-                                .contains("Referential integrity constraint violation");
+                                .contains("Unable to find spring.workshop.expenses.entities.Category with id 900");
         }
 
         @Test

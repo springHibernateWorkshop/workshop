@@ -1,7 +1,6 @@
 package spring.workshop.expenses.controllers;
 
 import java.security.Principal;
-import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Collections;
@@ -52,7 +51,6 @@ public class ExpenseController {
     @ResponseStatus(HttpStatus.CREATED)
     public Expense createExpense(@RequestBody Expense expense, Principal principal) {
         User user = userService.getUserByUsername(principal.getName());
-        user.setVersion(new Timestamp(new java.util.Date().getTime()));
         return createExpenseUc.createExpense(user, expense);
     }
 
@@ -61,7 +59,6 @@ public class ExpenseController {
     @ResponseStatus(HttpStatus.OK)
     public void deleteExpense(@PathVariable("expense_id") Long expenseId, Principal principal) {
         User user = userService.getUserByUsername(principal.getName());
-        user.setVersion(new Timestamp(new java.util.Date().getTime()));
         deleteExpenseUc.deleteExpense(user, expenseId);
     }
 
