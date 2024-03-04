@@ -7,17 +7,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
+import spring.workshop.expenses.entities.Superior;
 import spring.workshop.expenses.entities.User;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -28,84 +24,53 @@ public class UserControllerIntegrationTests {
     @Autowired
     private TestRestTemplate restTemplate;
 
+    private static final String BASE_URL = "/users";
+
     @Test
-    public void testAddNewUser() throws Exception {
+    public void testAddNewSuperior() throws Exception {
 
-        // Setting up request header and body for the POST request
-        // Constructing the request body with the user's name to be added
-        HttpHeaders requestHeader = new HttpHeaders();
-        requestHeader.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        String requestBody = "name=Test1";
-        HttpEntity<String> requestEntity = new HttpEntity<>(requestBody, requestHeader);
-
-        // URL for adding an user
-        String url = "/users/add";
-
-        // Send a POST request to add the user
-        ResponseEntity<User> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, User.class);
-
-        // Assert HTTP status code is OK
+        User user = new User("superior", "pass", "SUPERIOR");
+        ResponseEntity<Superior> response = restTemplate.postForEntity(BASE_URL + "?name={name}", user, Superior.class,
+                "Kowalski",
+                null);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
 
-        // Asserting that the response body contains the new user indicating
-        // successful adding
-        assertEquals("Test1", response.getBody().getName());
+        Superior createdSuperior = response.getBody();
+        assertEquals("superior", createdSuperior.getUser().getUsername());
     }
 
     @Test
-    public void testDeleteUser() throws Exception {
-
-        // Setting up request header and body for the DELETE request
-        // Constructing the request body with the user's name to be deleted
-        HttpHeaders requestHeader = new HttpHeaders();
-        requestHeader.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        String requestBody = "name=Raffael";
-        HttpEntity<String> requestEntity = new HttpEntity<>(requestBody, requestHeader);
-
-        // URL for deleting an user
-        String url = "/users/delete";
-
-        // Send a DELETE request to delete the user
-        ResponseEntity<Boolean> response = restTemplate.exchange(url, HttpMethod.DELETE, requestEntity, Boolean.class);
-
-        // Assert HTTP status code is OK
+    public void testDeleteUser() {
+        ResponseEntity<User> response = restTemplate.getForEntity(BASE_URL + "/{id}", User.class, 500L);
         assertEquals(HttpStatus.OK, response.getStatusCode());
+        ResponseEntity<Void> deleteResponse = restTemplate.exchange(BASE_URL + "/{id}", HttpMethod.DELETE, null,
+                Void.class, 500L);
+        assertEquals(HttpStatus.OK, deleteResponse.getStatusCode());
 
-        // Asserting that the response body contains true indicating successful deletion
-        assertEquals(true, response.getBody());
+        ResponseEntity<User> responseAfterDelete = restTemplate.getForEntity(BASE_URL
+                + "/{id}", User.class, 500L);
+        assertEquals(HttpStatus.NOT_FOUND, responseAfterDelete.getStatusCode());
     }
 
     @Test
     public void testUpdateUser() throws Exception {
+        User user = new User(100L, "username", "pass", "EMPLOYEE");
+        User response = restTemplate.getForObject(BASE_URL + "/{id}", User.class, 100L);
+        assertEquals("usr1", response.getUsername());
+        assertEquals("pass1", response.getPassword());
+        assertEquals("EMPLOYEE", response.getRole());
 
-        // Setting up request header and body for the PUT request
-        // Constructing the request body with the user to be updated
-        HttpHeaders requestHeader = new HttpHeaders();
-        requestHeader.setContentType(MediaType.APPLICATION_JSON);
-        String requestBody = new ObjectMapper().writeValueAsString(new User(300l, "Test2"));
-        HttpEntity<String> requestEntity = new HttpEntity<>(requestBody, requestHeader);
-
-        String url = "/users/update";
-
-        // Send a DELETE request to delete the user
-        ResponseEntity<User> response = restTemplate.exchange(url, HttpMethod.PUT, requestEntity, User.class);
-
-        // Assert HTTP status code is OK
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-
-        // Asserting that the response body contains the updated user
-        assertEquals(300, response.getBody().getId());
-        assertEquals("Test2", response.getBody().getName());
+        restTemplate.put("/users", user);
+        User responseAfterUpdate = restTemplate.getForObject(BASE_URL + "/{id}", User.class, 100L);
+        assertEquals("username", responseAfterUpdate.getUsername());
+        assertEquals("pass", responseAfterUpdate.getPassword());
+        assertEquals("EMPLOYEE", responseAfterUpdate.getRole());
     }
 
     @Test
     public void testGetAllUsers() throws Exception {
-
-        // URL for retrieving all users
-        String url = "/users/get_all";
-
         // Send a GET request to retrieve all users
-        ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+        ResponseEntity<String> response = restTemplate.getForEntity(BASE_URL, String.class);
 
         // Assert HTTP status code is OK
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -117,11 +82,8 @@ public class UserControllerIntegrationTests {
     @Test
     public void testGetUserById() throws Exception {
 
-        // URL for retrieving the user by ID
-        String url = "/users/get_by_id?id=100";
-
         // Send a GET request to retrieve the user by ID
-        ResponseEntity<User> response = restTemplate.getForEntity(url, User.class);
+        ResponseEntity<User> response = restTemplate.getForEntity(BASE_URL + "/{id}", User.class, 100);
 
         // Assert HTTP status code is OK
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -131,18 +93,12 @@ public class UserControllerIntegrationTests {
     }
 
     @Test
-    public void testGetUserByName() throws Exception {
+    public void testGetUserByIdNegative() throws Exception {
 
-        // URL for retrieving the user by name
-        String url = "/users/get_by_name?name=Victoria";
-
-        // Send a GET request to retrieve the user by name
-        ResponseEntity<User> response = restTemplate.getForEntity(url, User.class);
+        // Send a GET request to retrieve the user by ID, which does not exist
+        ResponseEntity<User> response = restTemplate.getForEntity(BASE_URL + "/{id}", User.class, 1000);
 
         // Assert HTTP status code is OK
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-
-        // Asserting that the response body contains the user
-        assertEquals("Victoria", response.getBody().getName());
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 }

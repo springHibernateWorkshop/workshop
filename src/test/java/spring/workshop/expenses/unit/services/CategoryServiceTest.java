@@ -52,7 +52,7 @@ public class CategoryServiceTest {
     @Test
     public void testGetCategoryById() {
         // Given
-        when(categoryRepositoryMock.findById(any()))
+        when(categoryRepositoryMock.findById(any(Long.class)))
                 .thenReturn(Optional.of(new Category("Category1")));
         // When
         Category category = sut.findById(1l);
@@ -78,7 +78,7 @@ public class CategoryServiceTest {
         Category category = new Category(1l, "Test");
         when(categoryRepositoryMock.save(any()))
                 .thenReturn(category);
-        when(categoryRepositoryMock.findById(any()))
+        when(categoryRepositoryMock.findById(any(Long.class)))
                 .thenReturn(Optional.of(new Category("Category1")));
         // When
         Category updatedCategory = sut.updateCategory(category);

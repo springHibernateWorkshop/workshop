@@ -1,7 +1,5 @@
 package spring.workshop.expenses.entities;
 
-import org.springframework.lang.NonNull;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,15 +12,14 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "employee_tab")
-public class Employee {
+public class Employee extends AbstractEntity implements Person {
 
     @Id
     @Column(name = "employee_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column
-    @NonNull
+    @Column(nullable = false)
     private String name;
 
     @OneToOne(optional = true)
@@ -36,13 +33,13 @@ public class Employee {
     public Employee() {
     }
 
-    public Employee(@NonNull String name, User user, Superior superior) {
+    public Employee(String name, User user, Superior superior) {
         this.name = name;
         this.user = user;
         this.superior = superior;
     }
 
-    public Employee(Long id, @NonNull String name, User user, Superior superior) {
+    public Employee(Long id, String name, User user, Superior superior) {
         this.id = id;
         this.name = name;
         this.user = user;
@@ -61,7 +58,7 @@ public class Employee {
         return name;
     }
 
-    public void setName(@NonNull String name) {
+    public void setName(String name) {
         this.name = name;
     }
 

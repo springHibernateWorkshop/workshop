@@ -70,7 +70,7 @@ public class CategoryControllerIntegrationTests {
      */
     @Test
     public void testAddCategoryPositive() {
-        URI newCategoryLocation = restTemplate.postForLocation(BASE_URL, "Category4");
+        URI newCategoryLocation = restTemplate.postForLocation(BASE_URL, new Category("Category4"));
         ResponseEntity<Category> response = restTemplate.getForEntity(newCategoryLocation, Category.class);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         Category category = response.getBody();
@@ -81,8 +81,8 @@ public class CategoryControllerIntegrationTests {
      * Test case to verify the negative scenario of adding a category.
      * It sends a POST request to the "/categories" endpoint with a category that
      * already exists.
-     * Expects a response with HTTP status code 409 (CONFLICT) because there is an
-     * exception handler for this case.
+     * Expects a response with HTTP status code 400 (BAD_REQUEST) because there is
+     * an exception handler for this case.
      */
     @Test
     public void testAddCategoryNegative() {
@@ -90,7 +90,7 @@ public class CategoryControllerIntegrationTests {
                 Category.class);
         ResponseEntity<Category> response = restTemplate.postForEntity(BASE_URL, new Category(4L, "Category5"),
                 Category.class);
-        assertEquals(HttpStatus.CONFLICT, response.getStatusCode());
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 
     /**

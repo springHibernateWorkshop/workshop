@@ -10,7 +10,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "shop_tab")
-public class Shop {
+public class Shop extends AbstractEntity {
 
     @Id
     @Column(name = "shop_id")
@@ -31,7 +31,16 @@ public class Shop {
         this.id = id;
     }
 
-    public Shop(Long id, String name, String address) {
+    public Shop(@NonNull String name) {
+        this.name = name;
+    }
+
+    public Shop(Long id, @NonNull String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    public Shop(Long id, @NonNull String name, String address) {
         this.id = id;
         this.name = name;
         this.address = address;

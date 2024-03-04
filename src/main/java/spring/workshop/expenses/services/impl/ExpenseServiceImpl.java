@@ -2,23 +2,26 @@ package spring.workshop.expenses.services.impl;
 
 import java.time.LocalDate;
 import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
-
+import org.springframework.transaction.annotation.Transactional;
 import spring.workshop.expenses.entities.Expense;
+import spring.workshop.expenses.exceptions.ResourceNotFoundException;
+import spring.workshop.expenses.repositories.AbstractRepositoryHelper;
 import spring.workshop.expenses.repositories.ExpenseRepository;
 import spring.workshop.expenses.services.ExpenseService;
 
 @Service
 public class ExpenseServiceImpl implements ExpenseService {
     private static final Logger LOG = LoggerFactory.getLogger(ExpenseServiceImpl.class);
+
     @Autowired
     private ExpenseRepository expensesRepository;
+
+    @Autowired
+    private AbstractRepositoryHelper<Expense> abstractRepository;
 
     @Override
     public List<Expense> getAllExpenses() {
@@ -28,9 +31,9 @@ public class ExpenseServiceImpl implements ExpenseService {
 
     @Override
     public Expense getExpenseById(Long id) {
-        Expense expense = expensesRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        return expense;
+        Expense expenses = expensesRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Expense with id = " + id + " not found."));
+        return expenses;
     }
 
     @Override
@@ -44,26 +47,23 @@ public class ExpenseServiceImpl implements ExpenseService {
             upExpenses.setName(expense.getName());
             return expensesRepository.save(upExpenses);
         })
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+                .orElseThrow(
+                        () -> new ResourceNotFoundException("Expense with id = " + expense.getId() + " not found."));
         return replaceExpenses;
     }
 
     @Override
-    public Boolean deleteExpense(Long id) {
-
-        return expensesRepository.findById(id).map(e -> {
-            expensesRepository.delete(e);
-            LOG.info("Expense {} deleted", e.getId());
-            return true;
-        }).orElseGet(() -> {
-            LOG.warn("Expense ID {} not found for delete", id);
-            return false;
-        });
+    public void deleteExpense(Long id) {
+        expensesRepository.deleteById(id);
+        LOG.info("Expense with id = {} deleted successfully.", id);
     }
 
     @Override
-    public Expense addNewExpense(Expense expenses) {
-        return expensesRepository.save(expenses);
+    @Transactional
+    public Expense addNewExpense(Expense expense) {
+        Expense savedExpense = abstractRepository.saveAndRefresh(expensesRepository, expense);
+        LOG.info("Expense with id = " + expense.getId() + " created successfully.");
+        return savedExpense;
     }
 
     @Override

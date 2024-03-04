@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
@@ -18,8 +19,13 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import spring.workshop.expenses.controllers.UserController;
+import spring.workshop.expenses.entities.Person;
+import spring.workshop.expenses.entities.Superior;
 import spring.workshop.expenses.entities.User;
+import spring.workshop.expenses.services.EmployeeService;
+import spring.workshop.expenses.services.SuperiorService;
 import spring.workshop.expenses.services.UserService;
+import spring.workshop.expenses.useCases.impl.CreateUserUcImpl;
 
 // This class contains unit tests for the UserController
 
@@ -27,14 +33,24 @@ import spring.workshop.expenses.services.UserService;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public class UserControllerSliceTest {
 
+    @Autowired
     private UserController sut;
 
     @MockBean
     private UserService userServiceMock;
 
+    @MockBean
+    private CreateUserUcImpl createUserUcMock;
+
+    @MockBean
+    EmployeeService employeeServiceMock;
+
+    @MockBean
+    SuperiorService superiorServiceMock;
+
     @BeforeEach
     public void setUp() throws Exception {
-        sut = new UserController(userServiceMock);
+        // sut = new UserController(userServiceMock, createUserUcMock);
         MockHttpServletRequest request = new MockHttpServletRequest();
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
     }
@@ -42,54 +58,53 @@ public class UserControllerSliceTest {
     @Test
     public void testAddUser() {
         // Given
-        when(userServiceMock.addUser(any())).thenReturn(new User(1L, "Test"));
+        User user = new User(1L, "usr", "pass", "SUPERIOR");
+        // when(userServiceMock.addUser(any())).thenReturn(user);
+        when(createUserUcMock.createUser(any(), any(), any())).thenReturn(new Superior(1L, "Alicja", user));
         // When
-        ResponseEntity<User> response = sut.addUser("Test");
+        ResponseEntity<Person> response = sut.addUser(new User("usr", "pass", "SUPERIOR"), "Alicja", 300L);
         // Then
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        assertEquals("Test", response.getBody().getName());
+        assertEquals("usr", response.getBody().getUser().getUsername());
+        assertEquals("pass", response.getBody().getUser().getPassword());
     }
 
     @Test
     public void testDeleteUserPositive() {
-        // Arrange
-        String name = "Test";
         // Given
-        when(userServiceMock.deleteUser(name)).thenReturn(Boolean.TRUE);
+        Long userId = 1L;
         // When
-        ResponseEntity<Boolean> response = sut.deleteUser(name);
+        ResponseEntity<Void> response = sut.deleteUser(userId);
         // Then
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(true, response.getBody());
     }
 
     @Test
     public void testDeleteCategoryNegative() {
-        // Arrange
-        String name = "Test";
         // Given
-        when(userServiceMock.deleteUser(name)).thenReturn(Boolean.FALSE);
+        Long userId = 1L;
         // When
-        ResponseEntity<Boolean> response = sut.deleteUser(name);
+        ResponseEntity<Void> response = sut.deleteUser(userId);
         // Then
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(false, response.getBody());
     }
 
     @Test
     public void testUpdateUser() {
-        // Arrange
-        Long id = 1L;
-        User updatedUser = new User(id, "Test2");
         // Given
-        when(userServiceMock.getUserById(id)).thenReturn(new User(id, "Test1"));
+        Long id = 1L;
+        User updatedUser = new User(id, "usr", "pass", "EMPLOYEE");
+
+        when(userServiceMock.getUserById(id)).thenReturn(new User(id, "user", "passXYZ", "EMPLOYEE"));
         when(userServiceMock.updateUser(updatedUser)).thenReturn(updatedUser);
         // When
         ResponseEntity<User> response = sut.updateUser(updatedUser);
         // Then
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(id, response.getBody().getId());
-        assertEquals("Test2", response.getBody().getName());
+        assertEquals("usr", response.getBody().getUsername());
+        assertEquals("pass", response.getBody().getPassword());
+        assertEquals("EMPLOYEE", response.getBody().getRole());
     }
 
     @Test
@@ -105,28 +120,18 @@ public class UserControllerSliceTest {
 
     @Test
     public void testGetUserById() {
-        // Arrange
-        Long id = 1L;
         // Given
-        when(userServiceMock.getUserById(id)).thenReturn(new User(1L, "Test"));
+        Long id = 1L;
+
+        when(userServiceMock.getUserById(id)).thenReturn(new User(1L, "username", "pass", "SUPERIOR"));
         // When
         ResponseEntity<User> response = sut.getUserById(id);
         // Then
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(id, response.getBody().getId());
-    }
-
-    @Test
-    public void testGetUserByName() {
-        // Arrange
-        String name = "Test";
-        // Given
-        when(userServiceMock.getUserByName(name)).thenReturn(new User(1L, "Test"));
-        // When
-        ResponseEntity<User> response = sut.getUserByName(name);
-        // Then
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(name, response.getBody().getName());
+        assertEquals("username", response.getBody().getUsername());
+        assertEquals("pass", response.getBody().getPassword());
+        assertEquals("SUPERIOR", response.getBody().getRole());
     }
 
 }

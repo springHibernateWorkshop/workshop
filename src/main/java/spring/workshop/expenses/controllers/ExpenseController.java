@@ -1,5 +1,6 @@
 package spring.workshop.expenses.controllers;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -14,12 +15,15 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import spring.workshop.expenses.entities.Expense;
+import spring.workshop.expenses.entities.User;
 import spring.workshop.expenses.enums.ExpenseStatus;
 import spring.workshop.expenses.services.ExpenseService;
+import spring.workshop.expenses.useCases.CreateExpenseUc;
+import spring.workshop.expenses.useCases.DeleteExpenseUc;
 import spring.workshop.expenses.useCases.ApproveOrRejectExpenseUc;
 
 @RestController
@@ -31,15 +35,28 @@ public class ExpenseController {
     @Autowired
     private ExpenseService expenseService;
 
+    @Autowired
+    private CreateExpenseUc createExpenseUc;
+
+    @Autowired
+    private DeleteExpenseUc deleteExpenseUc;
+
+    // Method for creating an Expense
     @PostMapping
-    public ResponseEntity<Expense> addNewExpense(@RequestBody Expense expense) {
-        Expense newExpense = expenseService.addNewExpense(expense);
-        return ResponseEntity
-                .created(
-                        ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}")
-                                .buildAndExpand(expense.getId())
-                                .toUri())
-                .body(newExpense);
+    @ResponseStatus(HttpStatus.CREATED)
+    public Expense createExpense(@RequestBody Expense expense) {
+        User user = new User(100L, "Victoria", null, "EMPLOYEE");
+        user.setVersion(new Timestamp(new java.util.Date().getTime()));
+        return createExpenseUc.createExpense(user, expense);
+    }
+
+    // Method for deleting an Expense
+    @DeleteMapping(path = "/{expense_id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteExpense(@PathVariable("expense_id") Long expenseId) {
+        User user = new User(100L, "Victoria", null, "EMPLOYEE");
+        user.setVersion(new Timestamp(new java.util.Date().getTime()));
+        deleteExpenseUc.deleteExpense(user, expenseId);
     }
 
     @GetMapping
@@ -55,11 +72,6 @@ public class ExpenseController {
     @PutMapping()
     public ResponseEntity<Expense> updateExpense(@RequestBody Expense expense) {
         return new ResponseEntity<>(expenseService.updateExpense(expense), HttpStatus.OK);
-    }
-
-    @DeleteMapping(path = "/{id}")
-    public ResponseEntity<Boolean> deleteExpense(@PathVariable Long id) {
-        return new ResponseEntity<>(expenseService.deleteExpense(id), HttpStatus.OK);
     }
 
     @GetMapping(path = "/date/{date}")

@@ -2,7 +2,6 @@ package spring.workshop.expenses.entities;
 
 import java.time.LocalDate;
 
-import io.micrometer.common.lang.NonNull;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -17,27 +16,27 @@ import spring.workshop.expenses.enums.ExpenseStatus;
 
 @Entity
 @Table(name = "expense_tab")
-public class Expense {
+public class Expense extends AbstractEntity {
 
     @Id
     @Column(name = "expense_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "total")
-    private Float total;
-
-    @Column(name = "expense_date")
-    private LocalDate date;
-
-    @Column
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column
+    @Column(name = "total", nullable = false)
+    private Float total;
+
+    @Column(name = "expense_date", nullable = false)
+    private LocalDate date;
+
+    @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
     private ExpenseStatus status;
 
-    @Column
+    @Column(name = "note")
     private String note;
 
     @ManyToOne(optional = false)
@@ -56,15 +55,39 @@ public class Expense {
     public Expense() {
     }
 
-    public Expense(Long id, Float total, LocalDate date, Category category, Shop shop, Employee employee, String name) {
-        this.id = id;
+    public Expense(String name, Float total, LocalDate date,
+            Category category, Shop shop) {
+        this.name = name;
+        this.total = total;
+        this.date = date;
+        this.category = category;
+        this.shop = shop;
+    }
+
+    public Expense(String name, Float total, LocalDate date,
+            Category category, Shop shop, Employee employee,
+            ExpenseStatus status) {
+        this.name = name;
         this.total = total;
         this.date = date;
         this.category = category;
         this.shop = shop;
         this.employee = employee;
+        this.status = status;
+    }
+
+    public Expense(Long id, String name, Float total, LocalDate date,
+            Category category, Shop shop, Employee employee,
+            ExpenseStatus status, String note) {
+        this.id = id;
         this.name = name;
-        this.status=ExpenseStatus.INITIAL;
+        this.total = total;
+        this.date = date;
+        this.category = category;
+        this.shop = shop;
+        this.employee = employee;
+        this.status = status;
+        this.note = note;
     }
 
     public Long getId() {
@@ -75,46 +98,6 @@ public class Expense {
         this.id = id;
     }
 
-    public Float getTotal() {
-        return total;
-    }
-
-    public void setTotal(@NonNull Float total) {
-        this.total = total;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public void setDate(@NonNull LocalDate date) {
-        this.date = date;
-    }
-
-    public Category getCategory() {
-        return category;
-    }
-
-    public void setCategory(@NonNull Category categoryId) {
-        this.category = categoryId;
-    }
-
-    public Shop getShop() {
-        return shop;
-    }
-
-    public void setShop(@NonNull Shop shop) {
-        this.shop = shop;
-    }
-
-    public Employee getEmployee() {
-        return employee;
-    }
-
-    public void setEmployee(@NonNull Employee employee) {
-        this.employee = employee;
-    }
-
     public String getName() {
         return name;
     }
@@ -123,13 +106,44 @@ public class Expense {
         this.name = name;
     }
 
-    
-    public ExpenseStatus getStatus() {
-        return status;
+    public Float getTotal() {
+        return total;
     }
 
-    public void setStatus(ExpenseStatus status) {
-        this.status = status;
+    public void setTotal(Float total) {
+        this.total = total;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category categoryId) {
+        this.category = categoryId;
+    }
+
+    public Shop getShop() {
+        return shop;
+    }
+
+    public void setShop(Shop shop) {
+        this.shop = shop;
+    }
+
+    public Employee getEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
     }
 
     public String getNote() {
