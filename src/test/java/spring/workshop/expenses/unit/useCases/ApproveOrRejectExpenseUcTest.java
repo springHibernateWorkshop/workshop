@@ -8,7 +8,6 @@ import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 
-import org.h2.command.dml.MergeUsing.When;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -48,13 +47,11 @@ public class ApproveOrRejectExpenseUcTest {
 
     @Test
     public void approveExpenseTest(){
-        Superior superior=new Superior(2L, "Superior", new User(2L, "User"));
-        Expense expense=new Expense(999L, 999.99f, LocalDate.of(1994, 10, 1), new Category(100L),
+        Superior superior=new Superior(2L, "Superior", new User("Test Superior", "test pass", "SUPERIOR"));
+        Expense expense=new Expense(999L,  "Test Expense", 999.99f, LocalDate.of(1994, 10, 1), new Category(100L),
                                 new Shop(100L),
-                                new Employee(100L, "Test", new User("Test"), superior),
-                                "example_test_note_1");
-
-        expense.setStatus(ExpenseStatus.PENDING);                        
+                                new Employee(100L, "Test", new User("Test user", "test_pass", "EMPLOYEE"), superior), ExpenseStatus.PENDING,
+                                "example_test_note_1");                  
 
         Employee employee= expense.getEmployee();
 
@@ -74,13 +71,11 @@ public class ApproveOrRejectExpenseUcTest {
 
     @Test
     public void rejectExpenseTest(){
-        Superior superior=new Superior(2L, "Superior", new User(2L, "User"));
-        Expense expense=new Expense(999L, 999.99f, LocalDate.of(1994, 10, 1), new Category(100L),
+        Superior superior=new Superior(2L, "Superior", new User("Test Superior", "test pass", "SUPERIOR"));
+        Expense expense=new Expense(999L, "Test_Expense", 999.99f, LocalDate.of(1994, 10, 1), new Category(100L),
                                 new Shop(100L),
-                                new Employee(100L, "Test", new User("Test"), superior),
-                                "example_test_note_1");
-
-        expense.setStatus(ExpenseStatus.PENDING);                        
+                                new Employee(100L, "Test", new User("Test user", "test_pass", "EMPLOYEE"), superior), ExpenseStatus.PENDING,
+                                "example_test_note_1");            
 
         Employee employee= expense.getEmployee();
 
@@ -99,14 +94,12 @@ public class ApproveOrRejectExpenseUcTest {
     @Test
 
     public void acceptExpenseNichtRichtigerSuperiorTest(){
-        Superior superior=new Superior(2L, "Superior", new User(2L, "User"));
+        Superior superior=new Superior(2L, "Superior", new User("Test Superior", "test pass", "SUPERIOR"));
         
-        Expense expense=new Expense(999L, 999.99f, LocalDate.of(1994, 10, 1), new Category(100L),
+        Expense expense=new Expense(999L, "Expense Negative Test", 999.99f, LocalDate.of(1994, 10, 1), new Category(100L),
                                 new Shop(100L),
-                                new Employee(100L, "Test", new User("Test"), superior),
-                                "example_test_note_1");
-
-        expense.setStatus(ExpenseStatus.PENDING);                        
+                                new Employee(100L, "Test", new User("Test user", "test_pass", "EMPLOYEE"), superior), ExpenseStatus.PENDING,
+                                "example_test_note_1");                 
 
         Employee employee= expense.getEmployee();
 

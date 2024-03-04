@@ -51,7 +51,6 @@ public class Expense extends AbstractEntity {
     @JoinColumn(name = "employee_id", referencedColumnName = "employee_id")
     private Employee employee;
 
-
     public Expense() {
     }
 
@@ -146,6 +145,14 @@ public class Expense extends AbstractEntity {
         this.employee = employee;
     }
 
+    public ExpenseStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ExpenseStatus status) {
+        this.status = status;
+    }
+
     public String getNote() {
         return note;
     }
@@ -153,5 +160,5 @@ public class Expense extends AbstractEntity {
     public void setNote(String note) {
         this.note = note;
     }
-
+    
 }
