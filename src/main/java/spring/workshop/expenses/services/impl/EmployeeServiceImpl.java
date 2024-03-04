@@ -25,15 +25,18 @@ public class EmployeeServiceImpl implements EmployeeService {
     private EmployeeRepository employeeRepository;
 
     @Autowired
-    private AbstractRepositoryHelper<Employee> abstractRepository;
+    private AbstractRepositoryHelper<Employee> abstractRepositoryHelper;
 
-    public EmployeeServiceImpl() {
-    };
+    @Autowired
+    public void setEmployeeRepository(EmployeeRepository employeeRepository) {
+        this.employeeRepository = employeeRepository;
+        abstractRepositoryHelper.setEmployeeRepository(employeeRepository);
+    }
 
     @Override
     @Transactional
     public Employee addEmployee(Employee employee) {
-        Employee savedEmployee = abstractRepository.saveAndRefresh(employeeRepository, employee);
+        Employee savedEmployee = abstractRepositoryHelper.saveAndRefresh(employee);
         LOG.info("Employee with id = " + employee.getId() + " created successfully.");
         return savedEmployee;
     }
@@ -58,7 +61,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             updatedEmployee.setName(employee.getName());
             updatedEmployee.setUser(employee.getUser());
             updatedEmployee.setSuperior(employee.getSuperior());
-            Employee savedEmployee = abstractRepository.saveAndRefresh(employeeRepository, updatedEmployee);
+            Employee savedEmployee = abstractRepositoryHelper.saveAndRefresh(updatedEmployee);
             LOG.info("Employee with id = " + updatedEmployee.getId() + " updated succesfully.");
             return savedEmployee;
 

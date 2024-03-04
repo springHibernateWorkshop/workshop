@@ -35,7 +35,7 @@ public class ExpenseServiceTest {
     ExpenseRepository expenseRepositoryMock;
 
     @Mock
-    AbstractRepositoryHelper<Expense> abstractRepositoryMock;
+    AbstractRepositoryHelper<Expense> abstractRepositoryHelperMock;
 
     @InjectMocks
     private ExpenseService sut = new ExpenseServiceImpl();
@@ -46,7 +46,7 @@ public class ExpenseServiceTest {
         Expense expense = new Expense("Expense", 100.00F, LocalDate.of(2024, 2, 16), new Category("Category"),
                 new Shop("Shop"), new Employee("Employee", new User(), new Superior()), ExpenseStatus.INITIAL);
 
-        when(abstractRepositoryMock.saveAndRefresh(any(), any(Expense.class))).thenReturn(expense);
+        when(abstractRepositoryHelperMock.saveAndRefresh(any(Expense.class))).thenReturn(expense);
         // When
         Expense response = sut.addNewExpense(expense);
         // Then
