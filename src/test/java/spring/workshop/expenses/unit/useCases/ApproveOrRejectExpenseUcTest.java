@@ -182,4 +182,17 @@ public class ApproveOrRejectExpenseUcTest {
 
         assertEquals("Expense should have 'Approved' or 'Rejected' status", exception.getMessage());
     }
+
+    @Test
+    public void approveNotExistingExpenseTest() {
+        Superior superior = new Superior(2L, "Superior", new User("Test Superior", "test pass", "SUPERIOR"));
+        Long expenseId=900L;
+
+        when(expenseServiceMock.getExpenseById(any())).thenThrow(new ResourceNotFoundException("Expense with id = " + expenseId + " not found."));
+
+        Exception exception = assertThrows(ResourceNotFoundException.class, ()-> sut.approveOrRejectExpense(expenseId, superior.getId(), ExpenseStatus.APPROVED,
+        "example_not_approve_note_3"));
+
+        assertEquals("Expense with id = " + expenseId + " not found.", exception.getMessage());
+    }
 }
