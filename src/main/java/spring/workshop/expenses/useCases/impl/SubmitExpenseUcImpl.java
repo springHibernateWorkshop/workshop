@@ -22,16 +22,19 @@ public class SubmitExpenseUcImpl implements SubmitExpenseUc {
 
     @Override
     public Expense submitExpense(Long expenseId, Long employeeId) {
-        Expense expense=expenseService.getExpenseById(expenseId);
-        Employee employee= employeeService.getEmployeeById(expense.getEmployee().getId());
-        if(expense.getEmployee().getId()!=employee.getId()){
-            //TODO
+        Expense expense = expenseService.getExpenseById(expenseId);
+        Employee employee = employeeService.getEmployeeById(employeeId);
+        if (expense.getEmployee().getId() != employee.getId()) {
+            // TODO throw new NotAuthorized(msg);
+            throw new ForbiddenResourceException(
+                    "Employee with ID = " + employeeId + " is not authorized to submit this expense");
         }
-        if(expense.getStatus()!=ExpenseStatus.INITIAL){
+        if (expense.getStatus() != ExpenseStatus.INITIAL) {
             throw new ForbiddenResourceException("Expense should have 'Initial' status");
         }
 
         expense.setStatus(ExpenseStatus.PENDING);
+        expenseService.updateExpense(expense);
         return expense;
     }
 

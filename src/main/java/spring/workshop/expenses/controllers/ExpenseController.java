@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,6 +23,7 @@ import spring.workshop.expenses.entities.User;
 import spring.workshop.expenses.services.ExpenseService;
 import spring.workshop.expenses.useCases.CreateExpenseUc;
 import spring.workshop.expenses.useCases.DeleteExpenseUc;
+import spring.workshop.expenses.useCases.SubmitExpenseUc;
 
 @RestController
 @RequestMapping(path = "/expenses")
@@ -35,6 +37,9 @@ public class ExpenseController {
 
     @Autowired
     private DeleteExpenseUc deleteExpenseUc;
+
+    @Autowired
+    private SubmitExpenseUc submitExpenseUc;
 
     // Method for creating an Expense
     @PostMapping
@@ -87,6 +92,11 @@ public class ExpenseController {
     @GetMapping(path = "/user/{employeeId}")
     public ResponseEntity<List<Expense>> getExpensesByEmployeeId(@PathVariable Long employeeId) {
         return new ResponseEntity<>(expenseService.findByEmployeeId(employeeId), HttpStatus.OK);
+    }
+
+    @PutMapping(path = "/submitExpense")
+    public ResponseEntity<Expense> submitExpense(@RequestParam Long expenseId, @RequestParam Long employeeId) {
+        return new ResponseEntity<>(submitExpenseUc.submitExpense(expenseId, employeeId), HttpStatus.OK);
     }
 
 }
