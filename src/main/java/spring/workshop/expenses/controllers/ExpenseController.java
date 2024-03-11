@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -94,9 +93,12 @@ public class ExpenseController {
         return new ResponseEntity<>(expenseService.findByEmployeeId(employeeId), HttpStatus.OK);
     }
 
-    @PutMapping(path = "/submitExpense")
-    public ResponseEntity<Expense> submitExpense(@RequestParam Long expenseId, @RequestParam Long employeeId) {
-        return new ResponseEntity<>(submitExpenseUc.submitExpense(expenseId, employeeId), HttpStatus.OK);
+    @PutMapping(path = "/submit/{expenseId}")
+    public ResponseEntity<Expense> submitExpense(@PathVariable Long expenseId) {
+
+        User user = new User(100L, "Victoria", null, "EMPLOYEE");
+
+        return new ResponseEntity<>(submitExpenseUc.submitExpense(expenseId, user), HttpStatus.OK);
     }
 
 }

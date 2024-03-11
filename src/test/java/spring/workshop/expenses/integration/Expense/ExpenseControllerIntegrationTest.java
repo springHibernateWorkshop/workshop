@@ -337,4 +337,23 @@ public class ExpenseControllerIntegrationTest {
                 assertEquals(200L, expenses.get(0).getShop().getId());
         }
 
+        /*
+         * @Test
+         * public void submitExpenseTest() {
+         * ParameterizedTypeReference<Expense> responseType = new
+         * ParameterizedTypeReference<Expense>() {
+         * };
+         * ResponseEntity<Expense> response = restTemplate.exchange(BASE_URL +
+         * "/submit/{expenseId}",
+         * HttpMethod.PUT,
+         * HttpEntity.EMPTY, responseType, 200L);
+         * assertEquals(HttpStatus.OK, response.getStatusCode());
+         * Expense expense = response.getBody();
+         * assertNotNull(expense);
+         * assertEquals(ExpenseStatus.PENDING, expense.getStatus());
+         * 
+         * }
+         * 
+         */
+
 }
