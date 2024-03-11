@@ -82,7 +82,7 @@ public class ExpenseController {
     @PreAuthorize("hasAuthority('VIEW_EXPENSES')")
     @ResponseStatus(HttpStatus.OK)
     public Expense getExpenseById(@PathVariable Long id, Principal principal) {
-        return expenseService.getExpenseByIdAndUsername(id, principal.getName());
+        return expenseService.getExpenseById(id);
     }
 
     @PutMapping()

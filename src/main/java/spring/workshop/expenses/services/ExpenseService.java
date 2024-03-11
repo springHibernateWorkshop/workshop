@@ -28,6 +28,6 @@ public interface ExpenseService {
 
     public List<Expense> findByUserId(Long userId);
 
-    public List<Expense> getExpensesByUsername(String namename);
+    public List<Expense> getExpensesByUsername(String username);
 
 }

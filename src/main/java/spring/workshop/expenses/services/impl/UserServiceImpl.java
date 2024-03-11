@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import spring.workshop.expenses.entities.User;
 import spring.workshop.expenses.exceptions.ResourceNotFoundException;
 import spring.workshop.expenses.repositories.UserRepository;
-import spring.workshop.expenses.security.Role;
 import spring.workshop.expenses.services.RoleService;
 import spring.workshop.expenses.services.UserService;
 
@@ -37,14 +36,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public User addUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-
-        // Fetch the role information from the database based on role.id
-        Role role = roleService.findById(user.getRole().getId());
-
-        user.setRole(role);
         User createdUser = userRepository.save(user);
-
         LOG.info("User with name = " + user.getUsername() + " created successfully.");
+
         return createdUser;
     }
 

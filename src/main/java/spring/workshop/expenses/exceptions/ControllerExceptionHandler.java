@@ -9,7 +9,6 @@ import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -18,7 +17,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
-    public ErrorMessage resourceNotFoundException(Exception ex, WebRequest request) {
+    public ErrorMessage resourceNotFoundExceptionHandler(Exception ex, WebRequest request) {
         ex.printStackTrace();
         ErrorMessage message = new ErrorMessage(
                 HttpStatus.NOT_FOUND.value(),
@@ -31,7 +30,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(JpaObjectRetrievalFailureException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public ErrorMessage entityNotFoundException(Exception ex, WebRequest request) {
+    public ErrorMessage jpaObjectRetrievalFailureExceptionHandler(Exception ex, WebRequest request) {
         ex.printStackTrace();
         ErrorMessage message = new ErrorMessage(
                 HttpStatus.BAD_REQUEST.value(),
@@ -97,22 +96,10 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ForbiddenResourceException.class)
     @ResponseStatus(value = HttpStatus.FORBIDDEN)
-    public ErrorMessage forbiddenResourceException(Exception ex, WebRequest request) {
+    public ErrorMessage forbiddenResourceExceptionHandler(Exception ex, WebRequest request) {
         ex.printStackTrace();
         ErrorMessage message = new ErrorMessage(
                 HttpStatus.FORBIDDEN.value(),
-                LocalDate.now(),
-                ex.getMessage(),
-                request.getDescription(false));
-
-        return message;
-    }
-
-    @ExceptionHandler(ResourceAccessException.class)
-    @ResponseStatus(value = HttpStatus.ALREADY_REPORTED)
-    public ErrorMessage resourceAccessException(Exception ex, WebRequest request) {
-        ErrorMessage message = new ErrorMessage(
-                HttpStatus.ALREADY_REPORTED.value(),
                 LocalDate.now(),
                 ex.getMessage(),
                 request.getDescription(false));

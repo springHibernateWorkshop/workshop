@@ -1,6 +1,3 @@
-/**
- * The Rights enum represents the different rights or permissions that can be assigned to users.
- */
 package spring.workshop.expenses.security;
 
 import java.util.Set;
