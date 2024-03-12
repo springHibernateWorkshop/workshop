@@ -1,6 +1,7 @@
 package spring.workshop.expenses.useCases.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import spring.workshop.expenses.entities.Employee;
@@ -23,6 +24,7 @@ public class DeleteExpenseUcImpl implements DeleteExpenseUc {
     ExpenseService expenseService;
 
     @Override
+    @PreAuthorize("hasAuthority('DELETE_EXPENSES')")
     public void deleteExpense(User user, Long expenseId) {
 
         // Get Employee by User
