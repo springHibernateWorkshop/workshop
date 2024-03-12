@@ -6,30 +6,39 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import spring.workshop.expenses.entities.User;
 import spring.workshop.expenses.exceptions.ResourceNotFoundException;
 import spring.workshop.expenses.repositories.UserRepository;
+import spring.workshop.expenses.services.RoleService;
 import spring.workshop.expenses.services.UserService;
 
 @Service
 public class UserServiceImpl implements UserService {
 
-    private UserRepository userRepository;
     private static final Logger LOG = LoggerFactory.getLogger(UserServiceImpl.class);
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    PasswordEncoder passwordEncoder;
+
+    @Autowired
+    UserRepository userRepository;
+
+    @Autowired
+    RoleService roleService;
+
+    public UserServiceImpl() {
+
     }
 
     @Override
     public User addUser(User user) {
-
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         User createdUser = userRepository.save(user);
-
         LOG.info("User with name = " + user.getUsername() + " created successfully.");
+
         return createdUser;
     }
 
@@ -70,5 +79,11 @@ public class UserServiceImpl implements UserService {
             throw new ResourceNotFoundException("User with id = " + id + " not found.");
 
         return user.get();
+    }
+
+    @Override
+    public User getUserByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User with username = " + username + " not found."));
     }
 }

@@ -1,6 +1,7 @@
 package spring.workshop.expenses.useCases.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import spring.workshop.expenses.entities.Employee;
@@ -20,6 +21,7 @@ public class ReassignEmployeeUcImpl implements ReassignEmployeeUc {
     private SuperiorService superiorService;
 
     @Override
+    @PreAuthorize("hasAuthority('REASSIGN_EMPLOYEES')")
     public Employee reassignEmployee(Long employeeId, Long superiorId) {
 
         // Get Superior by superior_id
@@ -28,7 +30,7 @@ public class ReassignEmployeeUcImpl implements ReassignEmployeeUc {
         // Check if Superior.user_id != Null
         if (superior.getUser() == null)
             throw new ForbiddenResourceException("User for Superior with id = " +
-                    superiorId + "does not exist.");
+                    superiorId + " does not exist.");
 
         // Get Employee by id
         Employee updatedEmployee = employeeService.getEmployeeById(employeeId);
@@ -39,7 +41,5 @@ public class ReassignEmployeeUcImpl implements ReassignEmployeeUc {
 
         // Return updated and saved Employee
         return savedEmployee;
-
     }
-
 }

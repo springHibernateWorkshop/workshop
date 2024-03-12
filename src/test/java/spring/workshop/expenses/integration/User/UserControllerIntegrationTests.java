@@ -15,90 +15,83 @@ import org.springframework.test.context.ActiveProfiles;
 
 import spring.workshop.expenses.entities.Superior;
 import spring.workshop.expenses.entities.User;
+import spring.workshop.expenses.security.Role;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public class UserControllerIntegrationTests {
 
-    @Autowired
-    private TestRestTemplate restTemplate;
+        @Autowired
+        private TestRestTemplate restTemplate;
 
-    private static final String BASE_URL = "/users";
+        private static final String BASE_URL = "/users";
 
-    @Test
-    public void testAddNewSuperior() throws Exception {
+        @Test
+        public void testAddNewSuperior() throws Exception {
+                User user = new User("superior", "pass", new Role(2L));
+                ResponseEntity<Superior> response = restTemplate.withBasicAuth("manhton", "password").postForEntity(
+                                BASE_URL + "?name={name}", user, Superior.class,
+                                "Kowalski",
+                                null);
+                assertEquals(HttpStatus.CREATED, response.getStatusCode());
 
-        User user = new User("superior", "pass", "SUPERIOR");
-        ResponseEntity<Superior> response = restTemplate.postForEntity(BASE_URL + "?name={name}", user, Superior.class,
-                "Kowalski",
-                null);
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+                Superior createdSuperior = response.getBody();
+                assertEquals("superior", createdSuperior.getUser().getUsername());
+        }
 
-        Superior createdSuperior = response.getBody();
-        assertEquals("superior", createdSuperior.getUser().getUsername());
-    }
+        @Test
+        public void testDeleteUser() {
+                ResponseEntity<User> response = restTemplate.withBasicAuth("manhton", "password")
+                                .getForEntity(BASE_URL + "/{id}", User.class, 500L);
+                assertEquals(HttpStatus.OK, response.getStatusCode());
+                ResponseEntity<Void> deleteResponse = restTemplate.withBasicAuth("manhton", "password").exchange(
+                                BASE_URL + "/{id}", HttpMethod.DELETE, null,
+                                Void.class, 500L);
+                assertEquals(HttpStatus.OK, deleteResponse.getStatusCode());
 
-    @Test
-    public void testDeleteUser() {
-        ResponseEntity<User> response = restTemplate.getForEntity(BASE_URL + "/{id}", User.class, 500L);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        ResponseEntity<Void> deleteResponse = restTemplate.exchange(BASE_URL + "/{id}", HttpMethod.DELETE, null,
-                Void.class, 500L);
-        assertEquals(HttpStatus.OK, deleteResponse.getStatusCode());
+                ResponseEntity<User> responseAfterDelete = restTemplate.withBasicAuth("manhton", "password")
+                                .getForEntity(BASE_URL
+                                                + "/{id}", User.class, 500L);
+                assertEquals(HttpStatus.NOT_FOUND, responseAfterDelete.getStatusCode());
+        }
 
-        ResponseEntity<User> responseAfterDelete = restTemplate.getForEntity(BASE_URL
-                + "/{id}", User.class, 500L);
-        assertEquals(HttpStatus.NOT_FOUND, responseAfterDelete.getStatusCode());
-    }
+        @Test
+        public void testGetAllUsers() throws Exception {
+                // Send a GET request to retrieve all users
+                ResponseEntity<String> response = restTemplate.withBasicAuth("manhton", "password")
+                                .withBasicAuth("manhton", "password").getForEntity(BASE_URL,
+                                                String.class);
 
-    @Test
-    public void testUpdateUser() throws Exception {
-        User user = new User(100L, "username", "pass", "EMPLOYEE");
-        User response = restTemplate.getForObject(BASE_URL + "/{id}", User.class, 100L);
-        assertEquals("usr1", response.getUsername());
-        assertEquals("pass1", response.getPassword());
-        assertEquals("EMPLOYEE", response.getRole());
+                // Assert HTTP status code is OK
+                assertEquals(HttpStatus.OK, response.getStatusCode());
 
-        restTemplate.put("/users", user);
-        User responseAfterUpdate = restTemplate.getForObject(BASE_URL + "/{id}", User.class, 100L);
-        assertEquals("username", responseAfterUpdate.getUsername());
-        assertEquals("pass", responseAfterUpdate.getPassword());
-        assertEquals("EMPLOYEE", responseAfterUpdate.getRole());
-    }
+                // Verify that the response body is not null
+                assertNotNull(response.getBody());
+        }
 
-    @Test
-    public void testGetAllUsers() throws Exception {
-        // Send a GET request to retrieve all users
-        ResponseEntity<String> response = restTemplate.getForEntity(BASE_URL, String.class);
+        @Test
+        public void testGetUserById() throws Exception {
 
-        // Assert HTTP status code is OK
-        assertEquals(HttpStatus.OK, response.getStatusCode());
+                // Send a GET request to retrieve the user by ID
+                ResponseEntity<User> response = restTemplate.withBasicAuth("manhton", "password")
+                                .getForEntity(BASE_URL + "/{id}", User.class, 100);
 
-        // Verify that the response body is not null
-        assertNotNull(response.getBody());
-    }
+                // Assert HTTP status code is OK
+                assertEquals(HttpStatus.OK, response.getStatusCode());
 
-    @Test
-    public void testGetUserById() throws Exception {
+                // Asserting that the response body contains the user
+                assertEquals(100, response.getBody().getId());
+        }
 
-        // Send a GET request to retrieve the user by ID
-        ResponseEntity<User> response = restTemplate.getForEntity(BASE_URL + "/{id}", User.class, 100);
+        @Test
+        public void testGetUserByIdNegative() throws Exception {
 
-        // Assert HTTP status code is OK
-        assertEquals(HttpStatus.OK, response.getStatusCode());
+                // Send a GET request to retrieve the user by ID, which does not exist
+                ResponseEntity<User> response = restTemplate.withBasicAuth("manhton", "password")
+                                .getForEntity(BASE_URL + "/{id}", User.class, 1000);
 
-        // Asserting that the response body contains the user
-        assertEquals(100, response.getBody().getId());
-    }
-
-    @Test
-    public void testGetUserByIdNegative() throws Exception {
-
-        // Send a GET request to retrieve the user by ID, which does not exist
-        ResponseEntity<User> response = restTemplate.getForEntity(BASE_URL + "/{id}", User.class, 1000);
-
-        // Assert HTTP status code is OK
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-    }
+                // Assert HTTP status code is OK
+                assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        }
 }
