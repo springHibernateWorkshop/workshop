@@ -124,11 +124,12 @@ public class ExpenseController {
     }
 
     @PutMapping(path = "/submit/{expenseId}")
-    public ResponseEntity<Expense> submitExpense(@PathVariable Long expenseId) {
+    @ResponseStatus(HttpStatus.OK)
+    public Expense submitExpense(@PathVariable Long expenseId, Principal principal) {
 
-        User user = new User(100L, "Victoria", null, "EMPLOYEE");
+        User user = userService.getUserByUsername(principal.getName());
 
-        return new ResponseEntity<>(submitExpenseUc.submitExpense(expenseId, user), HttpStatus.OK);
+        return submitExpenseUc.submitExpense(expenseId, user);
     }
 
 }

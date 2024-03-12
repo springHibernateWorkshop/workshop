@@ -22,6 +22,7 @@ import spring.workshop.expenses.entities.Superior;
 import spring.workshop.expenses.entities.User;
 import spring.workshop.expenses.enums.ExpenseStatus;
 import spring.workshop.expenses.exceptions.ForbiddenResourceException;
+import spring.workshop.expenses.security.Role;
 import spring.workshop.expenses.services.EmployeeService;
 import spring.workshop.expenses.services.ExpenseService;
 import spring.workshop.expenses.useCases.impl.SubmitExpenseUcImpl;
@@ -44,7 +45,7 @@ public class SubmitExpenseUcTest {
         @Test
         public void submitExpenseTest() {
                 // Given
-                Employee employee = new Employee(200L, "Employee", new User(100L, "Victoria", null, "EMPLOYEE"),
+                Employee employee = new Employee(200L, "Employee", new User(100L, "Victoria", "password", new Role(1L)),
                                 new Superior());
                 Expense expense = new Expense(100L, "Expense", 100.00F, LocalDate.of(2024, 02, 16),
                                 new Category(1L, "Category"), new Shop(1L, "Shop"),
@@ -64,7 +65,7 @@ public class SubmitExpenseUcTest {
         @Test
         public void submitExpenseNegativExpenseStatusIncorrectTest() {
                 // Given
-                Employee employee = new Employee(200L, "Employee", new User(100L, "Victoria", null, "EMPLOYEE"),
+                Employee employee = new Employee(200L, "Employee", new User(100L, "Victoria", "password", new Role(1L)),
                                 new Superior());
                 Expense expense = new Expense(100L, "Expense", 100.00F, LocalDate.of(2024, 02, 16),
                                 new Category(1L, "Category"), new Shop(1L, "Shop"),
@@ -84,7 +85,7 @@ public class SubmitExpenseUcTest {
         @Test
         public void submitExpenseNegativEmployeeIdIncorrectTest() {
                 // Given
-                Employee employee = new Employee(200L, "Employee", new User(100L, "Victoria", null, "EMPLOYEE"),
+                Employee employee = new Employee(200L, "Employee", new User(100L, "Victoria", "password", new Role(1L)),
                                 new Superior());
                 Employee notAuthorizedEmployee = new Employee(300L, "Employee", new User(), new Superior());
                 Expense expense = new Expense(100L, "Expense", 100.00F, LocalDate.of(2024, 02, 16),
