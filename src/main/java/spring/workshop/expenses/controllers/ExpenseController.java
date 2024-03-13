@@ -23,12 +23,15 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import spring.workshop.expenses.entities.Expense;
+import spring.workshop.expenses.entities.Person;
 import spring.workshop.expenses.entities.User;
 import spring.workshop.expenses.security.Role;
 import spring.workshop.expenses.services.ExpenseService;
 import spring.workshop.expenses.services.UserService;
 import spring.workshop.expenses.useCases.CreateExpenseUc;
+import spring.workshop.expenses.useCases.CreateUserUc;
 import spring.workshop.expenses.useCases.DeleteExpenseUc;
+import spring.workshop.expenses.useCases.ViewOneExpenseUc;
 
 @RestController
 @RequestMapping(path = "/expenses")
@@ -45,6 +48,9 @@ public class ExpenseController {
 
     @Autowired
     private DeleteExpenseUc deleteExpenseUc;
+
+    @Autowired
+    private ViewOneExpenseUc viewOneExpenseUc;
 
     // Method for creating an Expense
     @PostMapping
@@ -82,7 +88,10 @@ public class ExpenseController {
     @PreAuthorize("hasAuthority('VIEW_EXPENSES')")
     @ResponseStatus(HttpStatus.OK)
     public Expense getExpenseById(@PathVariable Long id, Principal principal) {
-        return expenseService.getExpenseById(id);
+        User user = userService.getUserByUsername(principal.getName());
+        Expense expense = viewOneExpenseUc.viewOneExpense(user, id); //.createUser(user, name, superiorId);
+
+        return expense;
     }
 
     @PutMapping()
