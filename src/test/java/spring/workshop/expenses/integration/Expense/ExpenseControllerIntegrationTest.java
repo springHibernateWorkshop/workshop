@@ -352,9 +352,9 @@ public class ExpenseControllerIntegrationTest {
         @Test
         public void testSubmitExpensePositive() {
 
-                User user = userService.getUserById(100L);
+                User user = userService.getUserById(300L);
 
-                Expense expense1 = expenseService.getExpenseById(100L);
+                Expense expense1 = expenseService.getExpenseById(500L);
                 ParameterizedTypeReference<Expense> responseType = new ParameterizedTypeReference<Expense>() {
                 };
                 ResponseEntity<Expense> response = restTemplate.withBasicAuth(user.getUsername(), "password")
