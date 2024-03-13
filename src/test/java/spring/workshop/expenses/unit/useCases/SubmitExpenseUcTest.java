@@ -22,6 +22,7 @@ import spring.workshop.expenses.entities.Superior;
 import spring.workshop.expenses.entities.User;
 import spring.workshop.expenses.enums.ExpenseStatus;
 import spring.workshop.expenses.exceptions.ForbiddenResourceException;
+import spring.workshop.expenses.exceptions.ResourceNotFoundException;
 import spring.workshop.expenses.security.Role;
 import spring.workshop.expenses.services.EmployeeService;
 import spring.workshop.expenses.services.ExpenseService;
@@ -98,7 +99,7 @@ public class SubmitExpenseUcTest {
 
                 // When
                 // Then
-                Exception exception = assertThrows(ForbiddenResourceException.class,
+                Exception exception = assertThrows(ResourceNotFoundException.class,
                                 () -> submitExpenseUc.submitExpense(100L, employee.getUser()));
                 assertEquals("Employee with ID = 300 is not authorized to submit this expense", exception.getMessage());
         }

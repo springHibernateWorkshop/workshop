@@ -347,9 +347,11 @@ public class ExpenseControllerIntegrationTest {
 
         @Test
         public void testSubmitExpensePositive() {
+
+                User user = userService.getUserById(100L);
                 ParameterizedTypeReference<Expense> responseType = new ParameterizedTypeReference<Expense>() {
                 };
-                ResponseEntity<Expense> response = restTemplate.withBasicAuth("victoria", "password")
+                ResponseEntity<Expense> response = restTemplate.withBasicAuth(user.getUsername(), "password")
                                 .exchange(BASE_URL +
                                                 "/submit/{expenseId}",
                                                 HttpMethod.PUT,
