@@ -23,7 +23,7 @@ public class EmployeeController {
   @PutMapping(path = "/{id}")
   @ResponseStatus(HttpStatus.OK)
   public Employee reassignEmployee(@PathVariable("id") Long employeeId,
-      @RequestParam("superior_id") Long superiorId) {
+      @RequestParam("superior-id") Long superiorId) {
 
     Employee reassignedEmployee = reassignEmployeeUc.reassignEmployee(employeeId, superiorId);
 
