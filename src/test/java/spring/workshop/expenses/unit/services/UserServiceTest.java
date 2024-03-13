@@ -7,14 +7,15 @@ import static org.mockito.Mockito.when;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import spring.workshop.expenses.entities.User;
+import spring.workshop.expenses.repositories.AbstractRepositoryHelper;
 import spring.workshop.expenses.repositories.UserRepository;
 import spring.workshop.expenses.services.UserService;
 import spring.workshop.expenses.services.impl.UserServiceImpl;
@@ -25,17 +26,14 @@ import spring.workshop.expenses.services.impl.UserServiceImpl;
 @ActiveProfiles("test")
 public class UserServiceTest {
 
-    private UserService sut;
-
     @Mock
     UserRepository userRepositoryMock;
 
-    @BeforeEach
-    public void setup() {
-        // CategoryRepository categoryRepositoryMock =
-        // Mockito.mock(CategoryRepository.class);
-        sut = new UserServiceImpl(userRepositoryMock);
-    }
+    @Mock
+    AbstractRepositoryHelper<User> abstractRepositoryHelperMock;
+
+    @InjectMocks
+    UserService sut = new UserServiceImpl();
 
     @Test
     public void testAddEmployee() {
@@ -45,7 +43,7 @@ public class UserServiceTest {
         String role = "EMPLOYEE";
         // Given
         User user = new User(username, pass, role);
-        when(userRepositoryMock.save(user)).thenReturn(new User(username, pass, role));
+        when(abstractRepositoryHelperMock.saveAndRefresh(user)).thenReturn(new User(username, pass, role));
         // When
         User response = sut.addUser(user);
         // Then
@@ -62,7 +60,7 @@ public class UserServiceTest {
         String role = "SUPERIOR";
         // Given
         User user = new User(username, pass, role);
-        when(userRepositoryMock.save(user)).thenReturn(new User(username, pass, role));
+        when(abstractRepositoryHelperMock.saveAndRefresh(user)).thenReturn(new User(username, pass, role));
         // When
         User response = sut.addUser(user);
         // Then
@@ -80,7 +78,7 @@ public class UserServiceTest {
         User updatedUser = new User(id, "usrname", "passX", "EMPLOYEE");
         // Given
         when(userRepositoryMock.findById(1L)).thenReturn(Optional.of(new User(1L, "usern", "passZ", "EMPLOYEE")));
-        when(userRepositoryMock.save(any())).thenReturn(updatedUser);
+        when(abstractRepositoryHelperMock.saveAndRefresh(any())).thenReturn(updatedUser);
         // When
         User response = sut.updateUser(updatedUser);
         // Then

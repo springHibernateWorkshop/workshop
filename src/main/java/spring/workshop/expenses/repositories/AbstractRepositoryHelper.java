@@ -16,12 +16,8 @@ public class AbstractRepositoryHelper<T> {
     public AbstractRepositoryHelper() {
     }
 
-    public void setExpenseRepository(ExpenseRepository expenseRepository) {
-        this.abstractRepository = (AbstractRepository<T>) expenseRepository;
-    }
-
-    public void setEmployeeRepository(EmployeeRepository employeeRepository) {
-        this.abstractRepository = (AbstractRepository<T>) employeeRepository;
+    public void setRepository(AbstractRepository<T> abstractRepository) {
+        this.abstractRepository = abstractRepository;
     }
 
     public T saveAndRefresh(T object) {

@@ -21,16 +21,15 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     private static final Logger LOG = LoggerFactory.getLogger(EmployeeServiceImpl.class);
 
-    @Autowired
     private EmployeeRepository employeeRepository;
 
     @Autowired
     private AbstractRepositoryHelper<Employee> abstractRepositoryHelper;
 
     @Autowired
-    public void setEmployeeRepository(EmployeeRepository employeeRepository) {
+    private void setEmployeeRepository(EmployeeRepository employeeRepository) {
         this.employeeRepository = employeeRepository;
-        abstractRepositoryHelper.setEmployeeRepository(employeeRepository);
+        abstractRepositoryHelper.setRepository(employeeRepository);
     }
 
     @Override

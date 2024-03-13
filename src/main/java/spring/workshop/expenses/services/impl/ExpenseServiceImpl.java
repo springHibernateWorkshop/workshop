@@ -17,16 +17,15 @@ import spring.workshop.expenses.services.ExpenseService;
 public class ExpenseServiceImpl implements ExpenseService {
     private static final Logger LOG = LoggerFactory.getLogger(ExpenseServiceImpl.class);
 
-    @Autowired
     private ExpenseRepository expenseRepository;
 
     @Autowired
     private AbstractRepositoryHelper<Expense> abstractRepositoryHelper;
 
     @Autowired
-    public void setExpenseRepository(ExpenseRepository expenseRepository) {
+    private void setExpenseRepository(ExpenseRepository expenseRepository) {
         this.expenseRepository = expenseRepository;
-        abstractRepositoryHelper.setExpenseRepository(expenseRepository);
+        abstractRepositoryHelper.setRepository(expenseRepository);
     }
 
     @Override
@@ -51,7 +50,7 @@ public class ExpenseServiceImpl implements ExpenseService {
             upExpenses.setShop(expense.getShop());
             upExpenses.setEmployee(expense.getEmployee());
             upExpenses.setNote(expense.getNote());
-            return expenseRepository.save(upExpenses);
+            return abstractRepositoryHelper.saveAndRefresh(upExpenses);
         })
                 .orElseThrow(
                         () -> new ResourceNotFoundException("Expense with id = " + expense.getId() + " not found."));

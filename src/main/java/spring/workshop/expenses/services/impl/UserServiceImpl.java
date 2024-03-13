@@ -10,24 +10,31 @@ import org.springframework.stereotype.Service;
 
 import spring.workshop.expenses.entities.User;
 import spring.workshop.expenses.exceptions.ResourceNotFoundException;
+import spring.workshop.expenses.repositories.AbstractRepositoryHelper;
 import spring.workshop.expenses.repositories.UserRepository;
 import spring.workshop.expenses.services.UserService;
 
 @Service
 public class UserServiceImpl implements UserService {
 
-    private UserRepository userRepository;
     private static final Logger LOG = LoggerFactory.getLogger(UserServiceImpl.class);
 
+    private UserRepository userRepository;
+
     @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
+    private AbstractRepositoryHelper<User> abstractRepositoryHelper;
+
+    @Autowired
+    private void setUserRepository(UserRepository userRepository) {
         this.userRepository = userRepository;
+        abstractRepositoryHelper.setRepository(userRepository);
+
     }
 
     @Override
     public User addUser(User user) {
 
-        User createdUser = userRepository.save(user);
+        User createdUser = abstractRepositoryHelper.saveAndRefresh(user);
 
         LOG.info("User with name = " + user.getUsername() + " created successfully.");
         return createdUser;
@@ -42,7 +49,7 @@ public class UserServiceImpl implements UserService {
             updatedUser.setPassword(user.getPassword());
             updatedUser.setRole(user.getRole());
             LOG.info("User with id = " + user.getId() + " updated succesfully.");
-            return userRepository.save(updatedUser);
+            return abstractRepositoryHelper.saveAndRefresh(updatedUser);
 
             // TODO Role update check, can role be updated?
         } else {
