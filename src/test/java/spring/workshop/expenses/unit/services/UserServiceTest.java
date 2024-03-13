@@ -57,7 +57,7 @@ public class UserServiceTest {
         when(passwordEncoderMock.encode(any(String.class))).thenReturn(user.getPassword());
         when(roleServiceMock.findById(any(Long.class))).thenReturn(role);
         // When
-        User response = sut.addUser(user);
+        User response = sut.createUser(user);
         // Then
         assertEquals(user.getUsername(), response.getUsername());
         assertEquals(user.getPassword(), response.getPassword());
@@ -76,7 +76,7 @@ public class UserServiceTest {
         when(passwordEncoderMock.encode(any(String.class))).thenReturn(user.getPassword());
         when(roleServiceMock.findById(any(Long.class))).thenReturn(role);
         // When
-        User response = sut.addUser(user);
+        User response = sut.createUser(user);
         // Then
         assertEquals(user.getUsername(), response.getUsername());
         assertEquals(user.getPassword(), response.getPassword());
