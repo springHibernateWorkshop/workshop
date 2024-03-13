@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import spring.workshop.expenses.entities.Category;
@@ -16,6 +17,7 @@ public class CategoryServiceImpl implements CategoryService {
     private CategoryRepository categoryRepository;
     private static final Logger LOG = LoggerFactory.getLogger(CategoryServiceImpl.class);
 
+    @Autowired
     public CategoryServiceImpl(CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
     }
