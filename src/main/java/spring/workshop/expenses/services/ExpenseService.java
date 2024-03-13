@@ -34,4 +34,5 @@ public interface ExpenseService {
     public List<Expense> findByUserId(Long userId);
 
     public List<Expense> getExpensesByUsername(String username);
+
 }
