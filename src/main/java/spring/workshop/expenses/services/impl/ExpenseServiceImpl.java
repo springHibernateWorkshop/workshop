@@ -15,6 +15,7 @@ import spring.workshop.expenses.exceptions.ResourceNotFoundException;
 import spring.workshop.expenses.repositories.AbstractRepositoryHelper;
 import spring.workshop.expenses.repositories.ExpenseRepository;
 import spring.workshop.expenses.services.ExpenseService;
+import spring.workshop.expenses.services.UserService;
 
 @Service
 public class ExpenseServiceImpl implements ExpenseService {
@@ -22,6 +23,10 @@ public class ExpenseServiceImpl implements ExpenseService {
 
     @Autowired
     private ExpenseRepository expensesRepository;
+
+    @Autowired
+
+    private UserService userService;
 
     @Autowired
     private AbstractRepositoryHelper<Expense> abstractRepository;
@@ -36,6 +41,15 @@ public class ExpenseServiceImpl implements ExpenseService {
     public Expense getExpenseById(Long id) {
         Expense expenses = expensesRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Expense with id = " + id + " not found."));
+        return expenses;
+    }
+
+    @Override
+    public Expense getExpenseByIdAndUsername(Long id, String username) {
+        Expense expenses = expensesRepository
+                .findByIdAndUsernameWithEmployee(id, userService.getUserByUsername(username).getUsername())
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Expense with id = " + id + " and for username = " + username + " not found."));
         return expenses;
     }
 
@@ -62,11 +76,13 @@ public class ExpenseServiceImpl implements ExpenseService {
     }
 
     @Override
+
     @Transactional
     public Expense addNewExpense(Expense expense) {
         Expense savedExpense = abstractRepository.saveAndRefresh(expensesRepository, expense);
         LOG.info("Expense with id = " + expense.getId() + " created successfully.");
         return savedExpense;
+
     }
 
     @Override
@@ -90,8 +106,9 @@ public class ExpenseServiceImpl implements ExpenseService {
     }
 
     @Override
+
     public List<Expense> filter(List<Expense> expenses, Integer year, Integer month, Long categoryId, Long shopId) {
-        List<Expense> filte = expenses.stream()
+        List<Expense> filter = expenses.stream()
                 .filter(e -> categoryId == null || e.getCategory().getId() == categoryId)
                 .filter(e -> shopId == null || e.getShop().getId() == shopId)
                 .filter(e -> {
@@ -114,7 +131,16 @@ public class ExpenseServiceImpl implements ExpenseService {
                     }
                 })
                 .collect(Collectors.toList());
-        return filte;
+        return filter;
+    }
+
+    public List<Expense> getExpensesByUsername(String username) {
+        return expensesRepository.findByUserId(userService.getUserByUsername(username).getId());
+    }
+
+    @Override
+    public List<Expense> findByUserId(Long userId) {
+        return expensesRepository.findByUserId(userService.getUserById(userId).getId());
 
     }
 

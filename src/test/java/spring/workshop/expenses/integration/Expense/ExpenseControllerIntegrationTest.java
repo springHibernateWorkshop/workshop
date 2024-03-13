@@ -2,6 +2,7 @@ package spring.workshop.expenses.integration.Expense;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
@@ -31,7 +32,10 @@ import spring.workshop.expenses.controllers.ExpenseController;
 import spring.workshop.expenses.entities.Category;
 import spring.workshop.expenses.entities.Expense;
 import spring.workshop.expenses.entities.Shop;
+import spring.workshop.expenses.entities.User;
 import spring.workshop.expenses.enums.ExpenseStatus;
+import spring.workshop.expenses.services.ExpenseService;
+import spring.workshop.expenses.services.UserService;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
@@ -45,6 +49,12 @@ public class ExpenseControllerIntegrationTest {
 
         @Autowired
         ExpenseController controller;
+
+        @Autowired
+        UserService userService;
+
+        @Autowired
+        ExpenseService expenseService;
 
         private static ObjectMapper objectMapper;
 
@@ -78,7 +88,8 @@ public class ExpenseControllerIntegrationTest {
                 String url = BASE_URL;
 
                 // Send a POST request to create the expense
-                ResponseEntity<Expense> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity,
+                ResponseEntity<Expense> response = restTemplate.withBasicAuth("victoria", "password").exchange(url,
+                                HttpMethod.POST, requestEntity,
                                 Expense.class);
 
                 // Assert HTTP status code is CREATED
@@ -91,36 +102,30 @@ public class ExpenseControllerIntegrationTest {
                 assertEquals(ExpenseStatus.INITIAL, response.getBody().getStatus());
         }
 
-        // Employee for mocked User does not exist
-        // Change id of mocked User in ExpenseController to 900L before running the test
-        // @Test
-        // public void testCreateExpenseNegativNonExistingEmployee() throws Exception {
+        @Test
+        public void testCreateExpenseNegativNonAuthorizedUser() throws Exception {
 
-        // // Setting up request header and body for the POST request
-        // // Constructing the request body with the expense (valid) for
-        // // creating the expense
-        // HttpHeaders requestHeader = new HttpHeaders();
-        // requestHeader.setContentType(MediaType.APPLICATION_JSON);
-        // Expense expense = new Expense(null, 100.00F, LocalDate.of(2024, 02, 16), new
-        // Category(100L),
-        // new Shop(100L));
-        // String requestBody = objectMapper.writeValueAsString(expense);
-        // HttpEntity<String> requestEntity = new HttpEntity<>(requestBody,
-        // requestHeader);
+                // Setting up request header and body for the POST request
+                // Constructing the request body with the expense (valid) for
+                // creating the expense
+                HttpHeaders requestHeader = new HttpHeaders();
+                requestHeader.setContentType(MediaType.APPLICATION_JSON);
+                Expense expense = new Expense(null, 100.00F, LocalDate.of(2024, 02, 16), new Category(100L),
+                                new Shop(100L));
+                String requestBody = objectMapper.writeValueAsString(expense);
+                HttpEntity<String> requestEntity = new HttpEntity<>(requestBody,
+                                requestHeader);
 
-        // // URL for creating an Expense for Employee
-        // String url = BASE_URL;
+                // Send a POST request to create the expense with a user that is not authorized
+                ResponseEntity<String> response = restTemplate.withBasicAuth("manhton", "password").exchange(BASE_URL,
+                                HttpMethod.POST,
+                                requestEntity,
+                                String.class);
 
-        // // Send a POST request to create the expense
-        // ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST,
-        // requestEntity,
-        // String.class);
+                // Assert HTTP status code is BAD_REQUEST
+                assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
 
-        // // Assert HTTP status code is BAD_REQUEST
-        // assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        // assertEquals("Employee for user with id = 900 not found.",
-        // new JSONObject(response.getBody()).getString("message"));
-        // }
+        }
 
         @Test
         public void testCreateExpenseNegativeMissingName() throws Exception {
@@ -146,7 +151,8 @@ public class ExpenseControllerIntegrationTest {
                 String url = BASE_URL;
 
                 // Send a POST request to create the expense
-                ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity,
+                ResponseEntity<String> response = restTemplate.withBasicAuth("victoria", "password").exchange(url,
+                                HttpMethod.POST, requestEntity,
                                 String.class);
 
                 // Assert HTTP status code is BAD_REQUEST
@@ -165,10 +171,8 @@ public class ExpenseControllerIntegrationTest {
                 requestHeader.setContentType(MediaType.APPLICATION_JSON);
 
                 Category category = new Category(900L);
-                category.setVersion(new Timestamp(new java.util.Date().getTime()));
 
                 Shop shop = new Shop(100L);
-                shop.setVersion(new Timestamp(new java.util.Date().getTime()));
 
                 Expense expense = new Expense("Expense", 100.00F, LocalDate.of(2024, 02, 16), category,
                                 shop);
@@ -179,13 +183,14 @@ public class ExpenseControllerIntegrationTest {
                 String url = BASE_URL;
 
                 // Send a POST request to create the expense
-                ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity,
+                ResponseEntity<String> response = restTemplate.withBasicAuth("victoria", "password").exchange(url,
+                                HttpMethod.POST, requestEntity,
                                 String.class);
 
                 // Assert HTTP status code is BAD_REQUEST
                 assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
                 assert new JSONObject(response.getBody()).getString("message")
-                                .contains("Referential integrity constraint violation");
+                                .contains("Unable to find spring.workshop.expenses.entities.Category with id 900");
         }
 
         @Test
@@ -198,34 +203,33 @@ public class ExpenseControllerIntegrationTest {
                 String url = BASE_URL + "/{expenseId}";
 
                 // Send a DELETE request to create the expense
-                ResponseEntity<Void> response = restTemplate.exchange(url, HttpMethod.DELETE, HttpEntity.EMPTY,
+                ResponseEntity<Void> response = restTemplate.withBasicAuth("victoria", "password").exchange(url,
+                                HttpMethod.DELETE, HttpEntity.EMPTY,
                                 void.class, expenseId);
 
                 // Assert HTTP status code is OK
                 assertEquals(HttpStatus.OK, response.getStatusCode());
         }
 
-        // Employee for mocked User does not exist
-        // Change id of mocked User in ExpenseController to 500L before running the test
-        // @Test
-        // public void testDeleteExpenseNonExistingEmployee() throws Exception {
+        @Test
+        public void testDeleteExpenseNonExistingEmployee() throws Exception {
 
-        // // Defining the parameters for the DELETE request
-        // Long expenseId = 100L;
+                // Defining the parameters for the DELETE request
+                Long expenseId = 100L;
 
-        // // URL for deleting an Expense with expense_id = expenseId (existing)
-        // String url = BASE_URL + "/{expenseId}";
+                // URL for deleting an Expense with expense_id = expenseId (existing)
+                String url = BASE_URL + "/{expenseId}";
 
-        // // Send a DELETE request to create the expense
-        // ResponseEntity<String> response = restTemplate.exchange(url,
-        // HttpMethod.DELETE, HttpEntity.EMPTY,
-        // String.class, expenseId);
+                // Send a DELETE request to create the expense
+                ResponseEntity<String> response = restTemplate.withBasicAuth("raffael", "password").exchange(url,
+                                HttpMethod.DELETE, HttpEntity.EMPTY,
+                                String.class, expenseId);
 
-        // // Assert HTTP status code is OK
-        // assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        // assertEquals("Employee for user with id = 500 not found.",
-        // new JSONObject(response.getBody()).getString("message"));
-        // }
+                // Assert HTTP status code is OK
+                assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+                assertEquals("Employee for user with id = 500 not found.",
+                                new JSONObject(response.getBody()).getString("message"));
+        }
 
         @Test
         public void testDeleteExpenseNegativeNonExistingExpense() throws Exception {
@@ -237,7 +241,8 @@ public class ExpenseControllerIntegrationTest {
                 String url = BASE_URL + "/{expenseId}";
 
                 // Send a DELETE request to create the expense
-                ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.DELETE, HttpEntity.EMPTY,
+                ResponseEntity<String> response = restTemplate.withBasicAuth("victoria", "password").exchange(url,
+                                HttpMethod.DELETE, HttpEntity.EMPTY,
                                 String.class, expenseId);
 
                 // Assert HTTP status code is OK
@@ -257,7 +262,8 @@ public class ExpenseControllerIntegrationTest {
                 String url = BASE_URL + "/{expenseId}";
 
                 // Send a DELETE request to create the expense
-                ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.DELETE, HttpEntity.EMPTY,
+                ResponseEntity<String> response = restTemplate.withBasicAuth("victoria", "password").exchange(url,
+                                HttpMethod.DELETE, HttpEntity.EMPTY,
                                 String.class, expenseId);
 
                 // Assert HTTP status code is OK
@@ -277,8 +283,10 @@ public class ExpenseControllerIntegrationTest {
                 String url = BASE_URL + "/{expenseId}";
 
                 // Send a DELETE request to create the expense
-                ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.DELETE, HttpEntity.EMPTY,
-                                String.class, expenseId);
+                ResponseEntity<String> response = restTemplate.withBasicAuth("victoria", "password")
+                                .withBasicAuth("victoria", "password").exchange(url,
+                                                HttpMethod.DELETE, HttpEntity.EMPTY,
+                                                String.class, expenseId);
 
                 // Assert HTTP status code is OK
                 assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
@@ -291,7 +299,8 @@ public class ExpenseControllerIntegrationTest {
          */
         @Test
         public void testGetExpenseByIdPositive() {
-                ResponseEntity<Expense> response = restTemplate.getForEntity(BASE_URL + "/{id}", Expense.class, 200);
+                ResponseEntity<Expense> response = restTemplate.withBasicAuth("victoria", "password")
+                                .getForEntity(BASE_URL + "/{id}", Expense.class, 200);
                 assertEquals(HttpStatus.OK, response.getStatusCode());
                 Expense expense = response.getBody();
                 Assertions.assertNotNull(expense);
@@ -304,7 +313,8 @@ public class ExpenseControllerIntegrationTest {
          */
         @Test
         public void testGetExpenseByIdNegative() {
-                ResponseEntity<String> response = restTemplate.exchange(BASE_URL + "/{id}", HttpMethod.GET,
+                ResponseEntity<String> response = restTemplate.withBasicAuth("victoria", "password").exchange(
+                                BASE_URL + "/{id}", HttpMethod.GET,
                                 HttpEntity.EMPTY, String.class, 10);
                 assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         }
@@ -316,7 +326,8 @@ public class ExpenseControllerIntegrationTest {
         public void testGetAllExpensesPositive() {
                 ParameterizedTypeReference<List<Expense>> responseType = new ParameterizedTypeReference<List<Expense>>() {
                 };
-                ResponseEntity<List<Expense>> response = restTemplate.exchange(BASE_URL, HttpMethod.GET,
+                ResponseEntity<List<Expense>> response = restTemplate.withBasicAuth("victoria", "password").exchange(
+                                BASE_URL, HttpMethod.GET,
                                 HttpEntity.EMPTY, responseType);
                 assertEquals(HttpStatus.OK, response.getStatusCode());
                 assertNotNull(response.getBody());
@@ -329,12 +340,81 @@ public class ExpenseControllerIntegrationTest {
         public void testGetExpensesByShopPositive() {
                 ParameterizedTypeReference<List<Expense>> responseType = new ParameterizedTypeReference<List<Expense>>() {
                 };
-                ResponseEntity<List<Expense>> response = restTemplate.exchange(BASE_URL + "/shop/{id}", HttpMethod.GET,
+                ResponseEntity<List<Expense>> response = restTemplate.withBasicAuth("victoria", "password").exchange(
+                                BASE_URL + "/shop/{id}", HttpMethod.GET,
                                 HttpEntity.EMPTY, responseType, 200L);
                 assertEquals(HttpStatus.OK, response.getStatusCode());
                 List<Expense> expenses = response.getBody();
                 assertNotNull(expenses);
                 assertEquals(200L, expenses.get(0).getShop().getId());
+        }
+
+        @Test
+        public void testSubmitExpensePositive() {
+
+                User user = userService.getUserById(300L);
+
+                Expense expense1 = expenseService.getExpenseById(500L);
+                ParameterizedTypeReference<Expense> responseType = new ParameterizedTypeReference<Expense>() {
+                };
+                ResponseEntity<Expense> response = restTemplate.withBasicAuth(user.getUsername(), "password")
+                                .exchange(BASE_URL +
+                                                "/submit/{expenseId}",
+                                                HttpMethod.PUT,
+                                                HttpEntity.EMPTY, responseType, expense1.getId());
+                assertEquals(HttpStatus.OK, response.getStatusCode());
+                Expense expense = response.getBody();
+                assertNotNull(expense);
+                assertEquals(ExpenseStatus.PENDING, expense.getStatus());
+
+        }
+
+        @Test
+        public void testSubmitExpenseNegativeStatusNotInitial() {
+                ResponseEntity<String> response = restTemplate.withBasicAuth("victoria", "password")
+                                .exchange(BASE_URL +
+                                                "/submit/{expenseId}",
+                                                HttpMethod.PUT,
+                                                HttpEntity.EMPTY, String.class, 200L);
+                assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+
+                assertTrue(response.getBody().contains("Expense should have 'Initial' status"));
+
+        }
+
+        @Test
+        public void testSubmitExpenseNegativeUserNotAuthorized() {
+
+                User user = userService.getUserById(100L);
+
+                ResponseEntity<String> response = restTemplate.withBasicAuth(user.getUsername(), "password")
+                                .exchange(BASE_URL +
+                                                "/submit/{expenseId}",
+                                                HttpMethod.PUT,
+                                                HttpEntity.EMPTY, String.class, 500L);
+                assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+
+                assertTrue(response.getBody()
+                                .contains("Employee with ID = " + user.getId()
+                                                + " is not authorized to submit this expense"));
+
+        }
+
+        @Test
+        public void testSubmitExpenseNegativeExpenseNotFound() {
+
+                User user = userService.getUserById(100L);
+
+                ResponseEntity<String> response = restTemplate.withBasicAuth(user.getUsername(), "password")
+                                .exchange(BASE_URL +
+                                                "/submit/{expenseId}",
+                                                HttpMethod.PUT,
+                                                HttpEntity.EMPTY, String.class, 700L);
+                assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+
+                assertTrue(response.getBody()
+                                .contains("Expense with id = 700 not found."));
+
         }
 
 }

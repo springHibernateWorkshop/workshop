@@ -1,6 +1,7 @@
 package spring.workshop.expenses.useCases.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import jakarta.transaction.Transactional;
@@ -27,13 +28,15 @@ public class CreateUserUcImpl implements CreateUserUc {
 
     @Override
     @Transactional
+    @PreAuthorize("hasAuthority('CREATE_USERS')")
     public Person createUser(User user, String name, Long superiorId) {
+
         User newUser = userService.addUser(user);
 
-        if (newUser.getRole().equals("EMPLOYEE")) {
+        if (newUser.getRole().getAuthority().equals("ROLE_EMPLOYEE")) {
             return employeeService
                     .addEmployee(new Employee(name, newUser, superiorService.getSuperiorById(superiorId)));
-        } else if (newUser.getRole().equals("SUPERIOR")) {
+        } else if (newUser.getRole().getAuthority().equals("ROLE_SUPERIOR")) {
             return superiorService.createSuperior(new Superior(name, user));
         } else {
             throw new IllegalArgumentException(
