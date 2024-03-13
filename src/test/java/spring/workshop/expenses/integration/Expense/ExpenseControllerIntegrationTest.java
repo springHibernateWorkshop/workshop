@@ -24,6 +24,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -319,34 +320,77 @@ public class ExpenseControllerIntegrationTest {
                 assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         }
 
-        /**
-         * Test Case - functionality for getting all expenseses.
-         */
         @Test
-        public void testGetAllExpensesPositive() {
+        public void testGetAllExpensesNoFilter() {
                 ParameterizedTypeReference<List<Expense>> responseType = new ParameterizedTypeReference<List<Expense>>() {
                 };
                 ResponseEntity<List<Expense>> response = restTemplate.withBasicAuth("victoria", "password").exchange(
                                 BASE_URL, HttpMethod.GET,
                                 HttpEntity.EMPTY, responseType);
                 assertEquals(HttpStatus.OK, response.getStatusCode());
-                assertNotNull(response.getBody());
+                assertEquals(response.getBody().size(), 3);
         }
 
-        /**
-         * Test Case - functionality for getting all expenseses of one shop.
-         */
         @Test
-        public void testGetExpensesByShopPositive() {
-                ParameterizedTypeReference<List<Expense>> responseType = new ParameterizedTypeReference<List<Expense>>() {
-                };
-                ResponseEntity<List<Expense>> response = restTemplate.withBasicAuth("victoria", "password").exchange(
-                                BASE_URL + "/shop/{id}", HttpMethod.GET,
-                                HttpEntity.EMPTY, responseType, 200L);
+        public void testGetAllExpensesWithAllFilters() {
+                // given
+                String categoryId = "200";
+                String shopId = "200";
+                int year = 2024;
+                int month = 2;
+                UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(BASE_URL)
+                                .queryParam("category-id", categoryId)
+                                .queryParam("shop-id", shopId)
+                                .queryParam("year", year)
+                                .queryParam("month", month);
+                // when
+                ResponseEntity<List> response = restTemplate.withBasicAuth("victoria", "password")
+                                .getForEntity(builder.toUriString(), List.class);
+                // then
                 assertEquals(HttpStatus.OK, response.getStatusCode());
-                List<Expense> expenses = response.getBody();
-                assertNotNull(expenses);
-                assertEquals(200L, expenses.get(0).getShop().getId());
+                assertEquals(2, response.getBody().size());
+        }
+
+        @Test
+        public void testGetAllExpensesWithMonth() {
+                // given
+                int month = 2;
+                UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(BASE_URL)
+                                .queryParam("month", month);
+                // when
+                ResponseEntity<List> response = restTemplate.withBasicAuth("victoria", "password")
+                                .getForEntity(builder.toUriString(), List.class);
+                // then
+                assertEquals(HttpStatus.OK, response.getStatusCode());
+                assertEquals(2, response.getBody().size());
+        }
+
+        @Test
+        public void testGetAllExpensesForCategory() {
+                // given
+                String categoryId = "200";
+                UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(BASE_URL)
+                                .queryParam("category-id", categoryId);
+                // when
+                ResponseEntity<List> response = restTemplate.withBasicAuth("victoria", "password")
+                                .getForEntity(builder.toUriString(), List.class);
+                // then
+                assertEquals(HttpStatus.OK, response.getStatusCode());
+                assertEquals(2, response.getBody().size());
+        }
+
+        @Test
+        public void testGetAllExpensesForShop() {
+                // given
+                String shopId = "100";
+                UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(BASE_URL)
+                                .queryParam("shop-id", shopId);
+                // when
+                ResponseEntity<List> response = restTemplate.withBasicAuth("victoria", "password")
+                                .getForEntity(builder.toUriString(), List.class);
+                // then
+                assertEquals(HttpStatus.OK, response.getStatusCode());
+                assertEquals(1, response.getBody().size());
         }
 
         @Test
