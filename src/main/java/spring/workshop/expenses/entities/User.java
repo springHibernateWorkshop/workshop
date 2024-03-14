@@ -5,7 +5,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import spring.workshop.expenses.security.Role;
 
 @Entity
 @Table(name = "user_tab")
@@ -20,27 +23,31 @@ public class User extends AbstractEntity {
     private String username;
     // unique should be set at the datenbank level
     // https://stackoverflow.com/questions/3496028/columnunique-true-does-not-seem-to-work
+    // try @Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames
+    // = "username"))
 
-    @Column(nullable = false, name = "password")
-    private String passwd;
+    @Column(nullable = false)
+    private String password;
 
-    @Column(nullable = false, name = "role")
-    private String role;
+    @ManyToOne
+    @JoinColumn(name = "role_id", referencedColumnName = "role_id", nullable = false)
+    private Role role;
 
     public User() {
     }
 
-    public User(String username, String password, String role) {
+    public User(String username, String password, Role role) {
         this.username = username;
-        this.passwd = password;
+        this.password = password;
         this.role = role;
     }
 
-    public User(Long id, String username, String password, String role) {
+    public User(Long id, String username, String password, Role role) {
         this.id = id;
         this.username = username;
-        this.passwd = password;
+        this.password = password;
         this.role = role;
+
     }
 
     public Long getId() {
@@ -59,20 +66,21 @@ public class User extends AbstractEntity {
         this.username = username;
     }
 
-    public String getPassword() {
-        return passwd;
-    }
-
-    public void setPassword(String password) {
-        this.passwd = password;
-    }
-
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(String roleId) {
-        this.role = roleId;
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+
     }
 
 }

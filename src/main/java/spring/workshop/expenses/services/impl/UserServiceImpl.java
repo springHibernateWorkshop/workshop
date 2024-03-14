@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,12 +14,19 @@ import spring.workshop.expenses.entities.User;
 import spring.workshop.expenses.exceptions.ResourceNotFoundException;
 import spring.workshop.expenses.repositories.AbstractRepositoryHelper;
 import spring.workshop.expenses.repositories.UserRepository;
+import spring.workshop.expenses.services.RoleService;
 import spring.workshop.expenses.services.UserService;
 
 @Service
 public class UserServiceImpl implements UserService {
 
     private static final Logger LOG = LoggerFactory.getLogger(UserServiceImpl.class);
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
+    @Autowired
+    RoleService roleService;
 
     private UserRepository userRepository;
 
@@ -29,16 +37,15 @@ public class UserServiceImpl implements UserService {
     private void setUserRepository(UserRepository userRepository) {
         this.userRepository = userRepository;
         abstractRepositoryHelper.setRepository(userRepository);
-
     }
 
     @Override
     @Transactional
     public User addUser(User user) {
-
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         User createdUser = abstractRepositoryHelper.saveAndRefresh(user);
-
         LOG.info("User with name = " + user.getUsername() + " created successfully.");
+
         return createdUser;
     }
 
@@ -80,5 +87,11 @@ public class UserServiceImpl implements UserService {
             throw new ResourceNotFoundException("User with id = " + id + " not found.");
 
         return user.get();
+    }
+
+    @Override
+    public User getUserByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User with username = " + username + " not found."));
     }
 }

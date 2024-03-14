@@ -2,20 +2,27 @@ package spring.workshop.expenses.services.impl;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import spring.workshop.expenses.entities.Expense;
 import spring.workshop.expenses.exceptions.ResourceNotFoundException;
 import spring.workshop.expenses.repositories.AbstractRepositoryHelper;
 import spring.workshop.expenses.repositories.ExpenseRepository;
 import spring.workshop.expenses.services.ExpenseService;
+import spring.workshop.expenses.services.UserService;
 
 @Service
 public class ExpenseServiceImpl implements ExpenseService {
     private static final Logger LOG = LoggerFactory.getLogger(ExpenseServiceImpl.class);
+
+    @Autowired
+    private UserService userService;
 
     private ExpenseRepository expenseRepository;
 
@@ -38,6 +45,15 @@ public class ExpenseServiceImpl implements ExpenseService {
     public Expense getExpenseById(Long id) {
         Expense expenses = expenseRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Expense with id = " + id + " not found."));
+        return expenses;
+    }
+
+    @Override
+    public Expense getExpenseByIdAndUsername(Long id, String username) {
+        Expense expenses = expenseRepository
+                .findByIdAndUsernameWithEmployee(id, userService.getUserByUsername(username).getUsername())
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Expense with id = " + id + " and for username = " + username + " not found."));
         return expenses;
     }
 
@@ -70,6 +86,7 @@ public class ExpenseServiceImpl implements ExpenseService {
         Expense savedExpense = abstractRepositoryHelper.saveAndRefresh(expense);
         LOG.info("Expense with id = " + expense.getId() + " created successfully.");
         return savedExpense;
+
     }
 
     @Override
@@ -90,6 +107,45 @@ public class ExpenseServiceImpl implements ExpenseService {
     @Override
     public List<Expense> findByEmployeeId(Long employeeId) {
         return expenseRepository.findByEmployeeId(employeeId);
+    }
+
+    @Override
+
+    public List<Expense> filter(List<Expense> expenses, Integer year, Integer month, Long categoryId, Long shopId) {
+        List<Expense> filter = expenses.stream()
+                .filter(e -> categoryId == null || e.getCategory().getId() == categoryId)
+                .filter(e -> shopId == null || e.getShop().getId() == shopId)
+                .filter(e -> {
+                    if (year == null && month == null) {
+                        return true; // Case 4: Select all expenses
+                    } else if (year != null && month == null) {
+                        return e.getDate().getYear() == year; // Case 2: Select expenses with matching year
+                    } else if (year == null && month != null) {
+                        return e.getDate().getYear() == LocalDate.now().getYear()
+                                && e.getDate().getMonth().getValue() == month; // Case 3: Select expenses with current
+                        // year and matching month
+                    } else {
+                        return e.getDate().getYear() == year && e.getDate().getMonth().getValue() == month; // Case 1:
+                        // Select
+                        // expenses
+                        // with
+                        // matching
+                        // year and
+                        // month
+                    }
+                })
+                .collect(Collectors.toList());
+        return filter;
+    }
+
+    public List<Expense> getExpensesByUsername(String username) {
+        return expenseRepository.findByUserId(userService.getUserByUsername(username).getId());
+    }
+
+    @Override
+    public List<Expense> findByUserId(Long userId) {
+        return expenseRepository.findByUserId(userService.getUserById(userId).getId());
+
     }
 
 }
