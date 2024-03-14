@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import spring.workshop.expenses.entities.Superior;
 import spring.workshop.expenses.exceptions.ResourceNotFoundException;
@@ -37,6 +38,7 @@ public class SuperiorServiceImpl implements SuperiorService {
     }
 
     @Override
+    @Transactional
     public Superior createSuperior(Superior superior) {
         return abstractRepositoryHelper.saveAndRefresh(superior);
     }

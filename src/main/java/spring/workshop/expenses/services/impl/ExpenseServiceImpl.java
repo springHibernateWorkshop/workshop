@@ -42,6 +42,7 @@ public class ExpenseServiceImpl implements ExpenseService {
     }
 
     @Override
+    @Transactional
     public Expense updateExpense(Expense expense) {
         Expense replaceExpenses = expenseRepository.findById(expense.getId()).map(upExpenses -> {
             upExpenses.setTotal(expense.getTotal());
