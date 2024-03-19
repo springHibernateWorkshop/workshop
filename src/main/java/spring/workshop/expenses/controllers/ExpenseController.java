@@ -25,6 +25,7 @@ import spring.workshop.expenses.useCases.CreateExpenseUc;
 import spring.workshop.expenses.useCases.DeleteExpenseUc;
 import spring.workshop.expenses.useCases.SubmitExpenseUc;
 import spring.workshop.expenses.useCases.ViewAllExpensesUc;
+import spring.workshop.expenses.useCases.ViewOneExpenseUc;
 
 @RestController
 @RequestMapping(path = "/expenses")
@@ -47,6 +48,9 @@ public class ExpenseController {
 
     @Autowired
     private SubmitExpenseUc submitExpenseUc;
+
+    @Autowired
+    private ViewOneExpenseUc viewOneExpenseUc;
 
     // Method for creating an Expense
     @PostMapping
@@ -84,7 +88,10 @@ public class ExpenseController {
     @PreAuthorize("hasAuthority('VIEW_EXPENSES')")
     @ResponseStatus(HttpStatus.OK)
     public Expense getExpenseById(@PathVariable Long id, Principal principal) {
-        return expenseService.getExpenseById(id);
+        User user = userService.getUserByUsername(principal.getName());
+        Expense expense = viewOneExpenseUc.viewOneExpense(user, id); // .createUser(user, name, superiorId);
+
+        return expense;
     }
 
     // TODO Method for updating an Expense
