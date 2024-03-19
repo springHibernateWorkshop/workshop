@@ -25,6 +25,26 @@ public class ValidateDateHelperTest {
     }
 
     @Test
+    public void testValidateDatePositiveYearNull() {
+        // Given
+        int month = 12;
+        // When
+        Boolean result = ValidateDateHelper.validateDate(null, month);
+        // Then
+        assertTrue(result);
+    }
+
+    @Test
+    public void testValidateDatePositiveMonthNull() {
+        // Given
+        int year = 2000;
+        // When
+        Boolean result = ValidateDateHelper.validateDate(year, null);
+        // Then
+        assertTrue(result);
+    }
+
+    @Test
     public void testValidateDateNegativeInvalidYear() {
         // Given
         int year = 999;
