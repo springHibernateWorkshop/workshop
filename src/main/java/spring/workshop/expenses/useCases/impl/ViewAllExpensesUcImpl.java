@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import spring.workshop.expenses.entities.Employee;
@@ -31,6 +32,7 @@ public class ViewAllExpensesUcImpl implements ViewAllExpensesUc {
     SuperiorService superiorService;
 
     @Override
+    @PreAuthorize("hasAuthority('VIEW_EXPENSES')")
     public List<Expense> viewAllExpenses(User user, Integer year, Integer month, Long categoryId, Long shopId) {
         if (!ValidateDateHelper.validateDate(year, month)) {
             throw new IllegalArgumentException("Date is not valid.");

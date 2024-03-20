@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -54,7 +53,6 @@ public class ExpenseController {
 
     // Method for creating an Expense
     @PostMapping
-    @PreAuthorize("hasAuthority('CREATE_EXPENSES')")
     @ResponseStatus(HttpStatus.CREATED)
     public Expense createExpense(@RequestBody Expense expense, Principal principal) {
         User user = userService.getUserByUsername(principal.getName());
@@ -63,7 +61,6 @@ public class ExpenseController {
 
     // Method for deleting an Expense
     @DeleteMapping(path = "/{expense_id}")
-    @PreAuthorize("hasAuthority('DELETE_EXPENSES')")
     @ResponseStatus(HttpStatus.OK)
     public void deleteExpense(@PathVariable("expense_id") Long expenseId, Principal principal) {
         User user = userService.getUserByUsername(principal.getName());
@@ -72,7 +69,6 @@ public class ExpenseController {
 
     // Method for getting all Expenses
     @GetMapping
-    @PreAuthorize("hasAuthority('VIEW_EXPENSES')")
     @ResponseStatus(HttpStatus.OK)
     public List<Expense> getAllExpenses(@RequestParam(required = false) Integer year,
             @RequestParam(required = false) Integer month,
@@ -85,7 +81,6 @@ public class ExpenseController {
 
     // Method for getting an Expense by its ID
     @GetMapping(path = "/{id}")
-    @PreAuthorize("hasAuthority('VIEW_EXPENSES')")
     @ResponseStatus(HttpStatus.OK)
     public Expense getExpenseById(@PathVariable Long id, Principal principal) {
         User user = userService.getUserByUsername(principal.getName());
@@ -96,7 +91,6 @@ public class ExpenseController {
 
     // TODO Method for updating an Expense
     @PutMapping()
-    @PreAuthorize("hasAuthority('EDIT_EXPENSES')")
     @ResponseStatus(HttpStatus.OK)
     public Expense updateExpense(@RequestBody Expense expense) {
         return expenseService.updateExpense(expense);
@@ -104,7 +98,6 @@ public class ExpenseController {
 
     // Method for submitting an Expense
     @PutMapping(path = "/submit/{expenseId}")
-    @PreAuthorize("hasAuthority('SUBMIT_EXPENSES')")
     @ResponseStatus(HttpStatus.OK)
     public Expense submitExpense(@PathVariable Long expenseId, Principal principal) {
 
