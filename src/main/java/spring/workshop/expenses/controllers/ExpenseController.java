@@ -23,13 +23,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import spring.workshop.expenses.entities.Expense;
-import spring.workshop.expenses.entities.Person;
 import spring.workshop.expenses.entities.User;
 import spring.workshop.expenses.security.Role;
 import spring.workshop.expenses.services.ExpenseService;
 import spring.workshop.expenses.services.UserService;
 import spring.workshop.expenses.useCases.CreateExpenseUc;
-import spring.workshop.expenses.useCases.CreateUserUc;
 import spring.workshop.expenses.useCases.DeleteExpenseUc;
 import spring.workshop.expenses.useCases.ViewOneExpenseUc;
 
@@ -89,7 +87,7 @@ public class ExpenseController {
     @ResponseStatus(HttpStatus.OK)
     public Expense getExpenseById(@PathVariable Long id, Principal principal) {
         User user = userService.getUserByUsername(principal.getName());
-        Expense expense = viewOneExpenseUc.viewOneExpense(user, id); //.createUser(user, name, superiorId);
+        Expense expense = viewOneExpenseUc.viewOneExpense(user, id); // .createUser(user, name, superiorId);
 
         return expense;
     }
