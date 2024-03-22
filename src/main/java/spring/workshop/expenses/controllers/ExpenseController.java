@@ -29,6 +29,7 @@ import spring.workshop.expenses.services.ExpenseService;
 import spring.workshop.expenses.services.UserService;
 import spring.workshop.expenses.useCases.CreateExpenseUc;
 import spring.workshop.expenses.useCases.DeleteExpenseUc;
+import spring.workshop.expenses.useCases.SubmitExpenseUc;
 import spring.workshop.expenses.useCases.ViewOneExpenseUc;
 
 @RestController
@@ -49,6 +50,9 @@ public class ExpenseController {
 
     @Autowired
     private ViewOneExpenseUc viewOneExpenseUc;
+
+    @Autowired
+    private SubmitExpenseUc submitExpenseUc;
 
     // Method for creating an Expense
     @PostMapping
@@ -124,6 +128,15 @@ public class ExpenseController {
     @ResponseStatus(HttpStatus.OK)
     public List<Expense> getExpensesByEmployeeId(@PathVariable Long employeeId) {
         return expenseService.findByEmployeeId(employeeId);
+    }
+
+    @PutMapping(path = "/submit/{expenseId}")
+    @ResponseStatus(HttpStatus.OK)
+    public Expense submitExpense(@PathVariable Long expenseId, Principal principal) {
+
+        User user = userService.getUserByUsername(principal.getName());
+
+        return submitExpenseUc.submitExpense(expenseId, user);
     }
 
 }

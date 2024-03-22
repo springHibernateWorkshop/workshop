@@ -2,6 +2,7 @@ package spring.workshop.expenses.services.impl;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -105,6 +106,34 @@ public class ExpenseServiceImpl implements ExpenseService {
     }
 
     @Override
+
+    public List<Expense> filter(List<Expense> expenses, Integer year, Integer month, Long categoryId, Long shopId) {
+        List<Expense> filter = expenses.stream()
+                .filter(e -> categoryId == null || e.getCategory().getId() == categoryId)
+                .filter(e -> shopId == null || e.getShop().getId() == shopId)
+                .filter(e -> {
+                    if (year == null && month == null) {
+                        return true; // Case 4: Select all expenses
+                    } else if (year != null && month == null) {
+                        return e.getDate().getYear() == year; // Case 2: Select expenses with matching year
+                    } else if (year == null && month != null) {
+                        return e.getDate().getYear() == LocalDate.now().getYear()
+                                && e.getDate().getMonth().getValue() == month; // Case 3: Select expenses with current
+                        // year and matching month
+                    } else {
+                        return e.getDate().getYear() == year && e.getDate().getMonth().getValue() == month; // Case 1:
+                        // Select
+                        // expenses
+                        // with
+                        // matching
+                        // year and
+                        // month
+                    }
+                })
+                .collect(Collectors.toList());
+        return filter;
+    }
+
     public List<Expense> getExpensesByUsername(String username) {
         return expensesRepository.findByUserId(userService.getUserByUsername(username).getId());
     }
@@ -112,6 +141,7 @@ public class ExpenseServiceImpl implements ExpenseService {
     @Override
     public List<Expense> findByUserId(Long userId) {
         return expensesRepository.findByUserId(userService.getUserById(userId).getId());
+
     }
 
 }

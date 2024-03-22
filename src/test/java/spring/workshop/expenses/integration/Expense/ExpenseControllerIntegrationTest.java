@@ -2,6 +2,7 @@ package spring.workshop.expenses.integration.Expense;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
@@ -31,7 +32,10 @@ import spring.workshop.expenses.controllers.ExpenseController;
 import spring.workshop.expenses.entities.Category;
 import spring.workshop.expenses.entities.Expense;
 import spring.workshop.expenses.entities.Shop;
+import spring.workshop.expenses.entities.User;
 import spring.workshop.expenses.enums.ExpenseStatus;
+import spring.workshop.expenses.services.ExpenseService;
+import spring.workshop.expenses.services.UserService;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
@@ -45,6 +49,12 @@ public class ExpenseControllerIntegrationTest {
 
         @Autowired
         ExpenseController controller;
+
+        @Autowired
+        UserService userService;
+
+        @Autowired
+        ExpenseService expenseService;
 
         private static ObjectMapper objectMapper;
 
@@ -347,6 +357,74 @@ public class ExpenseControllerIntegrationTest {
                 List<Expense> expenses = response.getBody();
                 assertNotNull(expenses);
                 assertEquals(200L, expenses.get(0).getShop().getId());
+        }
+
+        @Test
+        public void testSubmitExpensePositive() {
+
+                User user = userService.getUserById(300L);
+
+                Expense expense1 = expenseService.getExpenseById(500L);
+                ParameterizedTypeReference<Expense> responseType = new ParameterizedTypeReference<Expense>() {
+                };
+                ResponseEntity<Expense> response = restTemplate.withBasicAuth(user.getUsername(), "password")
+                                .exchange(BASE_URL +
+                                                "/submit/{expenseId}",
+                                                HttpMethod.PUT,
+                                                HttpEntity.EMPTY, responseType, expense1.getId());
+                assertEquals(HttpStatus.OK, response.getStatusCode());
+                Expense expense = response.getBody();
+                assertNotNull(expense);
+                assertEquals(ExpenseStatus.PENDING, expense.getStatus());
+
+        }
+
+        @Test
+        public void testSubmitExpenseNegativeStatusNotInitial() {
+                ResponseEntity<String> response = restTemplate.withBasicAuth("victoria", "password")
+                                .exchange(BASE_URL +
+                                                "/submit/{expenseId}",
+                                                HttpMethod.PUT,
+                                                HttpEntity.EMPTY, String.class, 200L);
+                assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+
+                assertTrue(response.getBody().contains("Expense should have 'Initial' status"));
+
+        }
+
+        @Test
+        public void testSubmitExpenseNegativeUserNotAuthorized() {
+
+                User user = userService.getUserById(100L);
+
+                ResponseEntity<String> response = restTemplate.withBasicAuth(user.getUsername(), "password")
+                                .exchange(BASE_URL +
+                                                "/submit/{expenseId}",
+                                                HttpMethod.PUT,
+                                                HttpEntity.EMPTY, String.class, 500L);
+                assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+
+                assertTrue(response.getBody()
+                                .contains("Employee with ID = " + user.getId()
+                                                + " is not authorized to submit this expense"));
+
+        }
+
+        @Test
+        public void testSubmitExpenseNegativeExpenseNotFound() {
+
+                User user = userService.getUserById(100L);
+
+                ResponseEntity<String> response = restTemplate.withBasicAuth(user.getUsername(), "password")
+                                .exchange(BASE_URL +
+                                                "/submit/{expenseId}",
+                                                HttpMethod.PUT,
+                                                HttpEntity.EMPTY, String.class, 700L);
+                assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+
+                assertTrue(response.getBody()
+                                .contains("Expense with id = 700 not found."));
+
         }
 
 }
