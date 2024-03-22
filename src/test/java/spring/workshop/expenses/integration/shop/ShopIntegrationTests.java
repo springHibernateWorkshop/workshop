@@ -35,7 +35,7 @@ public class ShopIntegrationTests {
         ResponseEntity<List> response = restTemplate.getForEntity(BASE_URL,
                 List.class);
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(3, response.getBody().size());
+        assertEquals(4, response.getBody().size());
     }
 
     /**
