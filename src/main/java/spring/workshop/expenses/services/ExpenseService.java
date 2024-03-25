@@ -1,8 +1,8 @@
 package spring.workshop.expenses.services;
 
-import java.time.LocalDate;
 import java.util.List;
 
+import spring.workshop.expenses.entities.Employee;
 import spring.workshop.expenses.entities.Expense;
 
 public interface ExpenseService {
@@ -10,26 +10,14 @@ public interface ExpenseService {
 
     public Expense getExpenseById(Long id);
 
-    public Expense getExpenseByIdAndUsername(Long id, String username);
-
     public Expense updateExpense(Expense expense);
 
     public void deleteExpense(Long id);
 
-    public Expense addNewExpense(Expense expense);
+    public Expense createExpense(Expense expense);
 
-    public List<Expense> findByDate(LocalDate date);
-
-    public List<Expense> findByCategoryId(Long categoryId);
-
-    public List<Expense> findByShopId(Long shopId);
-
-    public List<Expense> findByEmployeeId(Long employeeId);
+    public List<Expense> getExpenseByEmployee(Employee employee);
 
     public List<Expense> filter(List<Expense> expenses, Integer year, Integer month, Long categoryId, Long shopId);
-
-    public List<Expense> findByUserId(Long userId);
-
-    public List<Expense> getExpensesByUsername(String username);
 
 }

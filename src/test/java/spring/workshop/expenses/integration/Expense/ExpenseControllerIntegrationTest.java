@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.util.List;
 
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
@@ -317,36 +316,6 @@ public class ExpenseControllerIntegrationTest {
                                 BASE_URL + "/{id}", HttpMethod.GET,
                                 HttpEntity.EMPTY, String.class, 10);
                 assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        }
-
-        /**
-         * Test Case - functionality for getting all expenseses.
-         */
-        @Test
-        public void testGetAllExpensesPositive() {
-                ParameterizedTypeReference<List<Expense>> responseType = new ParameterizedTypeReference<List<Expense>>() {
-                };
-                ResponseEntity<List<Expense>> response = restTemplate.withBasicAuth("victoria", "password").exchange(
-                                BASE_URL, HttpMethod.GET,
-                                HttpEntity.EMPTY, responseType);
-                assertEquals(HttpStatus.OK, response.getStatusCode());
-                assertNotNull(response.getBody());
-        }
-
-        /**
-         * Test Case - functionality for getting all expenseses of one shop.
-         */
-        @Test
-        public void testGetExpensesByShopPositive() {
-                ParameterizedTypeReference<List<Expense>> responseType = new ParameterizedTypeReference<List<Expense>>() {
-                };
-                ResponseEntity<List<Expense>> response = restTemplate.withBasicAuth("victoria", "password").exchange(
-                                BASE_URL + "/shop/{id}", HttpMethod.GET,
-                                HttpEntity.EMPTY, responseType, 200L);
-                assertEquals(HttpStatus.OK, response.getStatusCode());
-                List<Expense> expenses = response.getBody();
-                assertNotNull(expenses);
-                assertEquals(200L, expenses.get(0).getShop().getId());
         }
 
         @Test

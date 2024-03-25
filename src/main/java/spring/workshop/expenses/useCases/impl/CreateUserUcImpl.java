@@ -31,7 +31,7 @@ public class CreateUserUcImpl implements CreateUserUc {
     @PreAuthorize("hasAuthority('CREATE_USERS')")
     public Person createUser(User user, String name, Long superiorId) {
 
-        User newUser = userService.addUser(user);
+        User newUser = userService.createUser(user);
 
         if (newUser.getRole().getAuthority().equals("ROLE_EMPLOYEE")) {
             return employeeService

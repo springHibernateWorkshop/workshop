@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User addUser(User user) {
+    public User createUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         User createdUser = userRepository.save(user);
         LOG.info("User with name = " + user.getUsername() + " created successfully.");

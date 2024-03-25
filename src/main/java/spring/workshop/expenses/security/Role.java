@@ -21,10 +21,9 @@ import spring.workshop.expenses.entities.User;
 @Table(name = "role_tab")
 public class Role implements GrantedAuthority {
 
-    public static SimpleGrantedAuthority ROLE_EMPLOYEE = new SimpleGrantedAuthority("ROLE_EMPLOYEE");
-    public static SimpleGrantedAuthority ROLE_SUPERIOR = new SimpleGrantedAuthority("ROLE_SUPERIOR");
-    public static SimpleGrantedAuthority ROLE_ACCOUNTANT = new SimpleGrantedAuthority("ROLE_ACCOUNTANT");
-    public static SimpleGrantedAuthority ROLE_ADMINISTRATOR = new SimpleGrantedAuthority("ROLE_ADMINISTRATOR");
+    public static final String ROLE_EMPLOYEE = "ROLE_EMPLOYEE";
+    public static final String ROLE_SUPERIOR = "ROLE_SUPERIOR";
+
     @Id
     @Column(name = "role_id")
     @GeneratedValue(strategy = GenerationType.AUTO)

@@ -33,8 +33,6 @@ public class CategoryServiceTest {
 
     @BeforeEach
     public void setup() {
-        // CategoryRepository categoryRepositoryMock =
-        // Mockito.mock(CategoryRepository.class);
         sut = new CategoryServiceImpl(categoryRepositoryMock);
     }
 

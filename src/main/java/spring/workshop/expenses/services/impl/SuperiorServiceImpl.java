@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import spring.workshop.expenses.entities.Superior;
+import spring.workshop.expenses.entities.User;
 import spring.workshop.expenses.exceptions.ResourceNotFoundException;
 import spring.workshop.expenses.repositories.SuperiorRepository;
 import spring.workshop.expenses.services.SuperiorService;
@@ -30,6 +31,12 @@ public class SuperiorServiceImpl implements SuperiorService {
     @Override
     public Superior createSuperior(Superior superior) {
         return superiorRepository.save(superior);
+    }
+
+    @Override
+    public Superior getSuperiorByUser(User user) {
+        return superiorRepository.findByUser(user)
+                .orElseThrow(() -> new ResourceNotFoundException("No Superior with user: " + user));
     }
 
 }
