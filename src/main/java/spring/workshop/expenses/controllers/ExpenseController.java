@@ -59,9 +59,9 @@ public class ExpenseController {
     // Method for creating an Expense
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Expense createExpense(@RequestBody Expense expense, Principal principal) {
+    public ExpenseDTO createExpense(@RequestBody Expense expense, Principal principal) {
         User user = userService.getUserByUsername(principal.getName());
-        return createExpenseUc.createExpense(user, expense);
+        return expenseMapper.toDto(createExpenseUc.createExpense(user, expense));
     }
 
     // Method for deleting an Expense
@@ -87,11 +87,9 @@ public class ExpenseController {
     // Method for getting an Expense by its ID
     @GetMapping(path = "/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Expense getExpenseById(@PathVariable Long id, Principal principal) {
+    public ExpenseDTO getExpenseById(@PathVariable Long id, Principal principal) {
         User user = userService.getUserByUsername(principal.getName());
-        Expense expense = viewOneExpenseUc.viewOneExpense(user, id);
-
-        return expense;
+        return expenseMapper.toDto(viewOneExpenseUc.viewOneExpense(user, id));
     }
 
     // Method for updating an Expense
@@ -105,11 +103,9 @@ public class ExpenseController {
     // Method for submitting an Expense
     @PutMapping(path = "/submit/{expenseId}")
     @ResponseStatus(HttpStatus.OK)
-    public Expense submitExpense(@PathVariable Long expenseId, Principal principal) {
-
+    public ExpenseDTO submitExpense(@PathVariable Long expenseId, Principal principal) {
         User user = userService.getUserByUsername(principal.getName());
-
-        return submitExpenseUc.submitExpense(expenseId, user);
+        return expenseMapper.toDto(submitExpenseUc.submitExpense(expenseId, user));
     }
 
 }
