@@ -2,8 +2,6 @@ package spring.workshop.expenses.dto;
 
 import java.time.LocalDate;
 
-import spring.workshop.expenses.entities.Category;
-import spring.workshop.expenses.entities.Shop;
 import spring.workshop.expenses.enums.ExpenseStatus;
 
 public class ExpenseDTO {
@@ -20,9 +18,9 @@ public class ExpenseDTO {
 
     private String note;
 
-    private Category category;
+    private CategoryDTO category;
 
-    private Shop shop;
+    private ShopDTO shop;
 
     private EmployeeDTO employee;
 
@@ -58,19 +56,19 @@ public class ExpenseDTO {
         this.date = date;
     }
 
-    public Category getCategory() {
+    public CategoryDTO getCategory() {
         return category;
     }
 
-    public void setCategory(Category categoryId) {
+    public void setCategory(CategoryDTO categoryId) {
         this.category = categoryId;
     }
 
-    public Shop getShop() {
+    public ShopDTO getShop() {
         return shop;
     }
 
-    public void setShop(Shop shop) {
+    public void setShop(ShopDTO shop) {
         this.shop = shop;
     }
 
