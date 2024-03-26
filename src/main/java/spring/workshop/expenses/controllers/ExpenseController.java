@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import spring.workshop.expenses.dto.ExpenseDTO;
 import spring.workshop.expenses.entities.Expense;
 import spring.workshop.expenses.entities.User;
 import spring.workshop.expenses.services.UserService;
@@ -92,9 +93,9 @@ public class ExpenseController {
     // Method for updating an Expense
     @PutMapping()
     @ResponseStatus(HttpStatus.OK)
-    public Expense updateExpense(@RequestBody Expense expense, Principal principal) {
+    public ExpenseDTO updateExpense(@RequestBody Expense expense, Principal principal) {
         User user = userService.getUserByUsername(principal.getName());
-        Expense updatedExpense = editExpenseUc.editExpense(user, expense);
+        ExpenseDTO updatedExpense = editExpenseUc.editExpense(user, expense);
         return updatedExpense;
     }
 
