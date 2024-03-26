@@ -34,7 +34,7 @@ public class EmployeeServiceTest {
         EmployeeRepository employeeRepositoryMock;
 
         @Mock
-        AbstractRepositoryHelper<Employee> abstractRepositoryMock;
+        AbstractRepositoryHelper<Employee> abstractRepositoryHelperMock;
 
         @InjectMocks
         private EmployeeService sut = new EmployeeServiceImpl();
@@ -45,7 +45,7 @@ public class EmployeeServiceTest {
                 Employee employee = new Employee("Employee", new User("username", "passw", new Role()),
                                 new Superior("Superior"));
 
-                when(abstractRepositoryMock.saveAndRefresh(any(), any(Employee.class)))
+                when(abstractRepositoryHelperMock.saveAndRefresh(any(Employee.class)))
                                 .thenReturn(employee);
 
                 // When
@@ -81,8 +81,7 @@ public class EmployeeServiceTest {
 
                 when(employeeRepositoryMock.findById(any(Long.class)))
                                 .thenReturn(Optional.of(employee));
-
-                when(abstractRepositoryMock.saveAndRefresh(any(), any(Employee.class)))
+                when(abstractRepositoryHelperMock.saveAndRefresh(any(Employee.class)))
                                 .thenReturn(updatedEmployee);
 
                 // When
@@ -95,7 +94,7 @@ public class EmployeeServiceTest {
         }
 
         @Test
-        public void testGetAllUsers() {
+        public void testGetAllEmployees() {
                 // Given
                 when(employeeRepositoryMock.findAll())
                                 .thenReturn(List.of(new Employee(), new Employee(), new Employee()));

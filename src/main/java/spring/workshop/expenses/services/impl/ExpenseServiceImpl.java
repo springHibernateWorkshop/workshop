@@ -21,34 +21,40 @@ import spring.workshop.expenses.services.ExpenseService;
 public class ExpenseServiceImpl implements ExpenseService {
     private static final Logger LOG = LoggerFactory.getLogger(ExpenseServiceImpl.class);
 
-    @Autowired
-    private ExpenseRepository expensesRepository;
+    private ExpenseRepository expenseRepository;
 
     @Autowired
-    private AbstractRepositoryHelper<Expense> abstractRepository;
+    private AbstractRepositoryHelper<Expense> abstractRepositoryHelper;
+
+    @Autowired
+    private void setExpenseRepository(ExpenseRepository expenseRepository) {
+        this.expenseRepository = expenseRepository;
+        abstractRepositoryHelper.setRepository(expenseRepository);
+    }
 
     @Override
     public List<Expense> getAllExpenses() {
-        List<Expense> expenses = expensesRepository.findAll();
+        List<Expense> expenses = expenseRepository.findAll();
         return expenses;
     }
 
     @Override
     public Expense getExpenseById(Long id) {
-        Expense expenses = expensesRepository.findById(id)
+        Expense expenses = expenseRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Expense with id = " + id + " not found."));
         return expenses;
     }
 
     @Override
+    @Transactional
     public Expense updateExpense(Expense expense) {
-        Expense replaceExpenses = expensesRepository.findById(expense.getId()).map(upExpenses -> {
+        Expense replaceExpenses = expenseRepository.findById(expense.getId()).map(upExpenses -> {
             upExpenses.setName(expense.getName());
             upExpenses.setTotal(expense.getTotal());
             upExpenses.setDate(expense.getDate());
             upExpenses.setCategory(expense.getCategory());
             upExpenses.setShop(expense.getShop());
-            return expensesRepository.save(upExpenses);
+            return abstractRepositoryHelper.saveAndRefresh(upExpenses);
         })
                 .orElseThrow(
                         () -> new ResourceNotFoundException("Expense with id = " + expense.getId() + " not found."));
@@ -57,15 +63,15 @@ public class ExpenseServiceImpl implements ExpenseService {
 
     @Override
     public void deleteExpense(Long id) {
-        expensesRepository.deleteById(id);
+        expenseRepository.deleteById(id);
         LOG.info("Expense with id = {} deleted successfully.", id);
     }
 
     @Override
-
     @Transactional
+
     public Expense createExpense(Expense expense) {
-        Expense savedExpense = abstractRepository.saveAndRefresh(expensesRepository, expense);
+        Expense savedExpense = abstractRepositoryHelper.saveAndRefresh(expense);
         LOG.info("Expense with id = " + expense.getId() + " created successfully.");
         return savedExpense;
 
@@ -73,7 +79,7 @@ public class ExpenseServiceImpl implements ExpenseService {
 
     @Override
     public List<Expense> getExpenseByEmployee(Employee employee) {
-        return expensesRepository.findByEmployee(employee);
+        return expenseRepository.findByEmployee(employee);
     }
 
     @Override
@@ -97,5 +103,4 @@ public class ExpenseServiceImpl implements ExpenseService {
                 .collect(Collectors.toList());
         return filter;
     }
-
 }
