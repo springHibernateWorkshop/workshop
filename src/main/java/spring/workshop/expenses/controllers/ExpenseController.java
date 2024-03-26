@@ -71,7 +71,7 @@ public class ExpenseController {
     // Method for getting all Expenses
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<Expense> getAllExpenses(@RequestParam(required = false) Integer year,
+    public List<ExpenseDTO> getAllExpenses(@RequestParam(required = false) Integer year,
             @RequestParam(required = false) Integer month,
             @RequestParam(name = "category-id", required = false) Long categoryId,
             @RequestParam(name = "shop-id", required = false) Long shopId,
