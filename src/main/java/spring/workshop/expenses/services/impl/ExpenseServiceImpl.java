@@ -43,12 +43,11 @@ public class ExpenseServiceImpl implements ExpenseService {
     @Override
     public Expense updateExpense(Expense expense) {
         Expense replaceExpenses = expensesRepository.findById(expense.getId()).map(upExpenses -> {
+            upExpenses.setName(expense.getName());
             upExpenses.setTotal(expense.getTotal());
             upExpenses.setDate(expense.getDate());
             upExpenses.setCategory(expense.getCategory());
             upExpenses.setShop(expense.getShop());
-            upExpenses.setEmployee(expense.getEmployee());
-            upExpenses.setNote(expense.getNote());
             return expensesRepository.save(upExpenses);
         })
                 .orElseThrow(

@@ -18,10 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import spring.workshop.expenses.entities.Expense;
 import spring.workshop.expenses.entities.User;
-import spring.workshop.expenses.services.ExpenseService;
 import spring.workshop.expenses.services.UserService;
 import spring.workshop.expenses.useCases.CreateExpenseUc;
 import spring.workshop.expenses.useCases.DeleteExpenseUc;
+import spring.workshop.expenses.useCases.EditExpenseUc;
 import spring.workshop.expenses.useCases.SubmitExpenseUc;
 import spring.workshop.expenses.useCases.ViewAllExpensesUc;
 import spring.workshop.expenses.useCases.ViewOneExpenseUc;
@@ -29,9 +29,6 @@ import spring.workshop.expenses.useCases.ViewOneExpenseUc;
 @RestController
 @RequestMapping(path = "/expenses")
 public class ExpenseController {
-
-    @Autowired
-    private ExpenseService expenseService;
 
     @Autowired
     private UserService userService;
@@ -47,6 +44,9 @@ public class ExpenseController {
 
     @Autowired
     private SubmitExpenseUc submitExpenseUc;
+
+    @Autowired
+    private EditExpenseUc editExpenseUc;
 
     @Autowired
     private ViewOneExpenseUc viewOneExpenseUc;
@@ -89,11 +89,13 @@ public class ExpenseController {
         return expense;
     }
 
-    // TODO Method for updating an Expense
+    // Method for updating an Expense
     @PutMapping()
     @ResponseStatus(HttpStatus.OK)
-    public Expense updateExpense(@RequestBody Expense expense) {
-        return expenseService.updateExpense(expense);
+    public Expense updateExpense(@RequestBody Expense expense, Principal principal) {
+        User user = userService.getUserByUsername(principal.getName());
+        Expense updatedExpense = editExpenseUc.editExpense(user, expense);
+        return updatedExpense;
     }
 
     // Method for submitting an Expense
