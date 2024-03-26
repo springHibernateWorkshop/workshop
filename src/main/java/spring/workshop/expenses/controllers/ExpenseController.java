@@ -99,8 +99,7 @@ public class ExpenseController {
     @ResponseStatus(HttpStatus.OK)
     public ExpenseDTO updateExpense(@RequestBody Expense expense, Principal principal) {
         User user = userService.getUserByUsername(principal.getName());
-        ExpenseDTO updatedExpense = editExpenseUc.editExpense(user, expense);
-        return updatedExpense;
+        return expenseMapper.toDto(editExpenseUc.editExpense(user, expense));
     }
 
     // Method for submitting an Expense
