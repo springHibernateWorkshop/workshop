@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import spring.workshop.expenses.entities.Employee;
+import spring.workshop.expenses.entities.Superior;
 import spring.workshop.expenses.entities.User;
 import spring.workshop.expenses.exceptions.ResourceNotFoundException;
 import spring.workshop.expenses.repositories.AbstractRepositoryHelper;
@@ -88,5 +89,10 @@ public class EmployeeServiceImpl implements EmployeeService {
             throw new ResourceNotFoundException("Employee for user with id = " + user.getId() + " not found.");
 
         return employee.get();
+    }
+
+    @Override
+    public List<Employee> getEmployeesBySuperior(Superior superior) {
+        return employeeRepository.findBySuperior(superior);
     }
 }
