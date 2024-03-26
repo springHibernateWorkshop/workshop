@@ -1,6 +1,7 @@
 package spring.workshop.expenses.services.impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,8 +36,11 @@ public class SuperiorServiceImpl implements SuperiorService {
 
     @Override
     public Superior getSuperiorByUser(User user) {
-        return superiorRepository.findByUser(user)
-                .orElseThrow(() -> new ResourceNotFoundException("No Superior with user: " + user));
+        Optional<Superior> superior = superiorRepository.findByUser(user);
+        if (!superior.isPresent())
+            throw new ResourceNotFoundException("Superior for user with id = " + user.getId() + " not found.");
+
+        return superior.get();
     }
 
 }
