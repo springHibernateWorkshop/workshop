@@ -1,6 +1,7 @@
 package spring.workshop.expenses.useCases.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import spring.workshop.expenses.entities.Employee;
@@ -27,6 +28,7 @@ public class ViewOneExpenseUcImpl implements ViewOneExpenseUc {
     ExpenseService expenseService;
 
     @Override
+    @PreAuthorize("hasAuthority('VIEW_EXPENSES')")
     public Expense viewOneExpense(User user, Long expenseId) {
 
         // Get Expense by expense_id
@@ -40,14 +42,14 @@ public class ViewOneExpenseUcImpl implements ViewOneExpenseUc {
 
             // Check if Expense.employee_id = employee_id
             if (!expenseEmployee.getId().equals(userEmployee.getId()))
-            throw new ResourceNotFoundException("No expense with given id found for this employee.");
+                throw new ResourceNotFoundException("No expense with given id found for this employee.");
 
         } else if (user.getRole().getAuthority().equals(Role.ROLE_SUPERIOR)) {
             Superior expenseSuperior = expenseEmployee.getSuperior();
             Superior userSuperior = superiorService.getSuperiorByUser(user);
-            
+
             if (!expenseSuperior.getId().equals(userSuperior.getId()))
-            throw new ResourceNotFoundException("No expense with given id found for this superior."); 
+                throw new ResourceNotFoundException("No expense with given id found for this superior.");
 
         } else {
             throw new IllegalArgumentException(
@@ -56,5 +58,5 @@ public class ViewOneExpenseUcImpl implements ViewOneExpenseUc {
 
         return expense;
     }
-    
+
 }

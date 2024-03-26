@@ -35,7 +35,8 @@ public class SuperiorServiceImpl implements SuperiorService {
 
     @Override
     public Superior getSuperiorByUser(User user) {
-        return superiorRepository.findByUser(user);
+        return superiorRepository.findByUser(user)
+                .orElseThrow(() -> new ResourceNotFoundException("No Superior with user: " + user));
     }
 
 }

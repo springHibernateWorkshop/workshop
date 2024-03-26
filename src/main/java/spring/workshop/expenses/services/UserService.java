@@ -6,7 +6,7 @@ import spring.workshop.expenses.entities.User;
 
 public interface UserService {
 
-    User addUser(User user);
+    User createUser(User user);
 
     void deleteUser(Long id);
 
