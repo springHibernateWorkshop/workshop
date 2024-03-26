@@ -9,7 +9,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import spring.workshop.expenses.entities.Employee;
+import spring.workshop.expenses.dto.EmployeeDetailsDTO;
+import spring.workshop.expenses.mapper.EmployeeDetailsMapper;
 import spring.workshop.expenses.useCases.ReassignEmployeeUc;
 
 @RestController
@@ -19,15 +20,15 @@ public class EmployeeController {
   @Autowired
   private ReassignEmployeeUc reassignEmployeeUc;
 
+  @Autowired
+  private EmployeeDetailsMapper employeeDetailsMapper;
+
   // Method for reassigning an employee
   @PutMapping(path = "/{id}")
   @ResponseStatus(HttpStatus.OK)
-  public Employee reassignEmployee(@PathVariable("id") Long employeeId,
+  public EmployeeDetailsDTO reassignEmployee(@PathVariable("id") Long employeeId,
       @RequestParam("superior-id") Long superiorId) {
-
-    Employee reassignedEmployee = reassignEmployeeUc.reassignEmployee(employeeId, superiorId);
-
-    return reassignedEmployee;
+    return employeeDetailsMapper.toDto(reassignEmployeeUc.reassignEmployee(employeeId, superiorId));
   }
 
 }
