@@ -31,7 +31,7 @@ public class CreateExpenseUcImpl implements CreateExpenseUc {
         // Set Employee and status for Expense and create Expense
         expense.setEmployee(employee);
         expense.setStatus(ExpenseStatus.INITIAL);
-        Expense createdExpense = expenseService.addNewExpense(expense);
+        Expense createdExpense = expenseService.createExpense(expense);
 
         // Return created Expense
         return createdExpense;

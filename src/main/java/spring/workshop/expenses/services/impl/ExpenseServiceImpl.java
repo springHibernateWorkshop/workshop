@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import spring.workshop.expenses.entities.Employee;
 import spring.workshop.expenses.entities.Expense;
 import spring.workshop.expenses.exceptions.ResourceNotFoundException;
 import spring.workshop.expenses.repositories.AbstractRepositoryHelper;
@@ -49,24 +50,14 @@ public class ExpenseServiceImpl implements ExpenseService {
     }
 
     @Override
-    public Expense getExpenseByIdAndUsername(Long id, String username) {
-        Expense expenses = expenseRepository
-                .findByIdAndUsernameWithEmployee(id, userService.getUserByUsername(username).getUsername())
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        "Expense with id = " + id + " and for username = " + username + " not found."));
-        return expenses;
-    }
-
-    @Override
     @Transactional
     public Expense updateExpense(Expense expense) {
         Expense replaceExpenses = expenseRepository.findById(expense.getId()).map(upExpenses -> {
+            upExpenses.setName(expense.getName());
             upExpenses.setTotal(expense.getTotal());
             upExpenses.setDate(expense.getDate());
             upExpenses.setCategory(expense.getCategory());
             upExpenses.setShop(expense.getShop());
-            upExpenses.setEmployee(expense.getEmployee());
-            upExpenses.setNote(expense.getNote());
             return abstractRepositoryHelper.saveAndRefresh(upExpenses);
         })
                 .orElseThrow(
@@ -82,7 +73,8 @@ public class ExpenseServiceImpl implements ExpenseService {
 
     @Override
     @Transactional
-    public Expense addNewExpense(Expense expense) {
+
+    public Expense createExpense(Expense expense) {
         Expense savedExpense = abstractRepositoryHelper.saveAndRefresh(expense);
         LOG.info("Expense with id = " + expense.getId() + " created successfully.");
         return savedExpense;
@@ -90,31 +82,15 @@ public class ExpenseServiceImpl implements ExpenseService {
     }
 
     @Override
-    public List<Expense> findByDate(LocalDate date) {
-        return expenseRepository.findByDate(date);
+    public List<Expense> getExpenseByEmployee(Employee employee) {
+        return expenseRepository.findByEmployee(employee);
     }
 
     @Override
-    public List<Expense> findByCategoryId(Long categoryId) {
-        return expenseRepository.findByCategoryId(categoryId);
-    }
-
-    @Override
-    public List<Expense> findByShopId(Long shopId) {
-        return expenseRepository.findByShopId(shopId);
-    }
-
-    @Override
-    public List<Expense> findByEmployeeId(Long employeeId) {
-        return expenseRepository.findByEmployeeId(employeeId);
-    }
-
-    @Override
-
     public List<Expense> filter(List<Expense> expenses, Integer year, Integer month, Long categoryId, Long shopId) {
         List<Expense> filter = expenses.stream()
-                .filter(e -> categoryId == null || e.getCategory().getId() == categoryId)
-                .filter(e -> shopId == null || e.getShop().getId() == shopId)
+                .filter(e -> categoryId == null || e.getCategory().getId().equals(categoryId))
+                .filter(e -> shopId == null || e.getShop().getId().equals(shopId))
                 .filter(e -> {
                     if (year == null && month == null) {
                         return true; // Case 4: Select all expenses
@@ -126,26 +102,9 @@ public class ExpenseServiceImpl implements ExpenseService {
                         // year and matching month
                     } else {
                         return e.getDate().getYear() == year && e.getDate().getMonth().getValue() == month; // Case 1:
-                        // Select
-                        // expenses
-                        // with
-                        // matching
-                        // year and
-                        // month
                     }
                 })
                 .collect(Collectors.toList());
         return filter;
     }
-
-    public List<Expense> getExpensesByUsername(String username) {
-        return expenseRepository.findByUserId(userService.getUserByUsername(username).getId());
-    }
-
-    @Override
-    public List<Expense> findByUserId(Long userId) {
-        return expenseRepository.findByUserId(userService.getUserById(userId).getId());
-
-    }
-
 }

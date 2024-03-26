@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public User addUser(User user) {
+    public User createUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         User createdUser = abstractRepositoryHelper.saveAndRefresh(user);
         LOG.info("User with name = " + user.getUsername() + " created successfully.");
@@ -60,8 +60,6 @@ public class UserServiceImpl implements UserService {
             updatedUser.setRole(user.getRole());
             LOG.info("User with id = " + user.getId() + " updated succesfully.");
             return abstractRepositoryHelper.saveAndRefresh(updatedUser);
-
-            // TODO Role update check, can role be updated?
         } else {
             throw new IllegalArgumentException("User with id = " + user.getId() + " not found.");
         }

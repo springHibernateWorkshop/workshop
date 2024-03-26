@@ -34,12 +34,12 @@ public class EmployeeControllerIntegrationTests {
 
         // Setting up request header and body for the PUT request
         // Constructing the request body with the employee_id (existing) and
-        // superior_id (existing and active) for reassigning
+        // superior-id (existing and active) for reassigning
         HttpHeaders requestHeader = new HttpHeaders();
         requestHeader.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         Long employeeId = 100L;
         Long superiorIdNew = 200L;
-        String requestBody = "superior_id=" + superiorIdNew;
+        String requestBody = "superior-id=" + superiorIdNew;
         HttpEntity<String> requestEntity = new HttpEntity<>(requestBody, requestHeader);
 
         // URL for reassigning the employee
@@ -62,12 +62,12 @@ public class EmployeeControllerIntegrationTests {
 
         // Setting up request header and body for the PUT request
         // Constructing the request body with the employee_id (existing) and
-        // superior_id (non-existing) for reassigning
+        // superior-id (non-existing) for reassigning
         HttpHeaders requestHeader = new HttpHeaders();
         requestHeader.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         Long employeeId = 100L;
         Long superiorIdNew = 900L; // non-existing
-        String requestBody = "superior_id=" + superiorIdNew;
+        String requestBody = "superior-id=" + superiorIdNew;
         HttpEntity<String> requestEntity = new HttpEntity<>(requestBody, requestHeader);
 
         // URL for reassigning the employee
@@ -87,12 +87,12 @@ public class EmployeeControllerIntegrationTests {
 
         // Setting up request header and body for the PUT request
         // Constructing the request body with the employee_id (existing) and
-        // superior_id (existing but inactive) for reassigning
+        // superior-id (existing but inactive) for reassigning
         HttpHeaders requestHeader = new HttpHeaders();
         requestHeader.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         Long employeeId = 100L;
         Long superiorIdNew = 300L; // inactive
-        String requestBody = "superior_id=" + superiorIdNew;
+        String requestBody = "superior-id=" + superiorIdNew;
         HttpEntity<String> requestEntity = new HttpEntity<>(requestBody, requestHeader);
 
         // URL for reassigning the employee
@@ -112,12 +112,12 @@ public class EmployeeControllerIntegrationTests {
 
         // Setting up request header and body for the PUT request
         // Constructing the request body with the employee_id (non-existing) and
-        // superior_id (existing and active) for reassigning
+        // superior-id (existing and active) for reassigning
         HttpHeaders requestHeader = new HttpHeaders();
         requestHeader.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         Long employeeId = 900L; // non-existing
         Long superiorIdNew = 200L;
-        String requestBody = "superior_id=" + superiorIdNew;
+        String requestBody = "superior-id=" + superiorIdNew;
         HttpEntity<String> requestEntity = new HttpEntity<>(requestBody, requestHeader);
 
         // URL for reassigning the employee

@@ -46,15 +46,15 @@ public class ShopControllerMockTests {
      * @throws Exception if an error occurs during the test
      */
     @Test
-    public void TestGetAllShops() throws Exception {
+    public void testGetAllShops() throws Exception {
         // Arrange
-        assertEquals(3, repo.findAll().size());
+        assertEquals(4, repo.findAll().size());
 
         // Act
         mockMvc.perform(get(BASE_URL))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.length()").value(3));
+                .andExpect(jsonPath("$.length()").value(4));
 
     }
 
@@ -66,7 +66,7 @@ public class ShopControllerMockTests {
     @Test
     public void testGetShopById() throws Exception {
         // Arrange
-        assertEquals(3, repo.findAll().size());
+        assertEquals(4, repo.findAll().size());
 
         // Act
         mockMvc.perform(get(BASE_URL + "/{id}", 100))
@@ -85,10 +85,10 @@ public class ShopControllerMockTests {
     public void testAddNewShop() throws Exception {
         // Arrange
         Shop shop = new Shop();
-        shop.setName("shop_name_4");
-        shop.setAddress("shop_address_4");
+        shop.setName("shop_name_5");
+        shop.setAddress("shop_address_5");
 
-        assertEquals(3, repo.findAll().size());
+        assertEquals(4, repo.findAll().size());
 
         // Act
         mockMvc.perform(post(BASE_URL)
@@ -97,7 +97,7 @@ public class ShopControllerMockTests {
                 .andExpect(status().isCreated());
 
         // Assert
-        assertEquals(4, repo.findAll().size());
+        assertEquals(5, repo.findAll().size());
     }
 
     /**
@@ -108,13 +108,13 @@ public class ShopControllerMockTests {
     @Test
     public void testDeleteShop() throws Exception {
         // Arrange
-        assertEquals(3, repo.findAll().size());
+        assertEquals(4, repo.findAll().size());
 
         // Act
-        mockMvc.perform(delete(BASE_URL + "/{id}", 300))
+        mockMvc.perform(delete(BASE_URL + "/{id}", 400))
                 .andExpect(status().isOk());
 
         // Assert
-        assertEquals(2, repo.findAll().size());
+        assertEquals(3, repo.findAll().size());
     }
 }

@@ -50,7 +50,7 @@ public class ExpenseServiceTest {
 
                 when(abstractRepositoryHelperMock.saveAndRefresh(any(Expense.class))).thenReturn(expense);
                 // When
-                Expense response = sut.addNewExpense(expense);
+                Expense response = sut.createExpense(expense);
                 // Then
                 assertEquals("Expense", response.getName());
                 assertEquals(100.00F, response.getTotal());

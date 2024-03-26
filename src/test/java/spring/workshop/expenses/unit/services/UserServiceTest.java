@@ -57,7 +57,7 @@ public class UserServiceTest {
                 when(abstractRepositoryHelperMock.saveAndRefresh(any(User.class)))
                                 .thenReturn(new User(username, pass, role));
                 // When
-                User response = sut.addUser(user);
+                User response = sut.createUser(user);
                 // Then
                 assertEquals(user.getUsername(), response.getUsername());
                 assertEquals(user.getPassword(), response.getPassword());
@@ -77,7 +77,7 @@ public class UserServiceTest {
                 when(abstractRepositoryHelperMock.saveAndRefresh(any(User.class)))
                                 .thenReturn(new User(username, pass, role));
                 // When
-                User response = sut.addUser(user);
+                User response = sut.createUser(user);
                 // Then
                 assertEquals(user.getUsername(), response.getUsername());
                 assertEquals(user.getPassword(), response.getPassword());
