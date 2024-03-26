@@ -2,14 +2,13 @@ package spring.workshop.expenses.unit.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -37,7 +36,7 @@ public class ExpenseServiceTest {
         ExpenseRepository expenseRepositoryMock;
 
         @Mock
-        AbstractRepositoryHelper<Expense> abstractRepositoryMock;
+        AbstractRepositoryHelper<Expense> abstractRepositoryHelperMock;
 
         @InjectMocks
         private ExpenseService sut = new ExpenseServiceImpl();
@@ -49,7 +48,7 @@ public class ExpenseServiceTest {
                                 new Shop("Shop"), new Employee("Employee", new User(), new Superior()),
                                 ExpenseStatus.INITIAL);
 
-                when(abstractRepositoryMock.saveAndRefresh(any(), any(Expense.class))).thenReturn(expense);
+                when(abstractRepositoryHelperMock.saveAndRefresh(any(Expense.class))).thenReturn(expense);
                 // When
                 Expense response = sut.createExpense(expense);
                 // Then
@@ -69,7 +68,7 @@ public class ExpenseServiceTest {
                                 new Shop(), new Employee("Employee", new User(), new Superior()), ExpenseStatus.INITIAL,
                                 null);
 
-                when(expenseRepositoryMock.findById(any(Long.class))).thenReturn(Optional.of(expense));
+                doNothing().when(expenseRepositoryMock).deleteById(any(Long.class));
                 // When
                 sut.deleteExpense(expense.getId());
                 // Then

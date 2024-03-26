@@ -5,18 +5,28 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import spring.workshop.expenses.entities.Superior;
 import spring.workshop.expenses.entities.User;
 import spring.workshop.expenses.exceptions.ResourceNotFoundException;
+import spring.workshop.expenses.repositories.AbstractRepositoryHelper;
 import spring.workshop.expenses.repositories.SuperiorRepository;
 import spring.workshop.expenses.services.SuperiorService;
 
 @Service
 public class SuperiorServiceImpl implements SuperiorService {
 
-    @Autowired
     private SuperiorRepository superiorRepository;
+
+    @Autowired
+    private AbstractRepositoryHelper<Superior> abstractRepositoryHelper;
+
+    @Autowired
+    private void setSuperiorRepository(SuperiorRepository superiorRepository) {
+        this.superiorRepository = superiorRepository;
+        abstractRepositoryHelper.setRepository(superiorRepository);
+    }
 
     @Override
     public Superior getSuperiorById(Long id) {
@@ -30,8 +40,9 @@ public class SuperiorServiceImpl implements SuperiorService {
     }
 
     @Override
+    @Transactional
     public Superior createSuperior(Superior superior) {
-        return superiorRepository.save(superior);
+        return abstractRepositoryHelper.saveAndRefresh(superior);
     }
 
     @Override

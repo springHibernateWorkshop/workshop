@@ -8,9 +8,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import spring.workshop.expenses.entities.User;
 import spring.workshop.expenses.exceptions.ResourceNotFoundException;
+import spring.workshop.expenses.repositories.AbstractRepositoryHelper;
 import spring.workshop.expenses.repositories.UserRepository;
 import spring.workshop.expenses.services.RoleService;
 import spring.workshop.expenses.services.UserService;
@@ -24,25 +26,31 @@ public class UserServiceImpl implements UserService {
     PasswordEncoder passwordEncoder;
 
     @Autowired
-    UserRepository userRepository;
-
-    @Autowired
     RoleService roleService;
 
-    public UserServiceImpl() {
+    private UserRepository userRepository;
 
+    @Autowired
+    private AbstractRepositoryHelper<User> abstractRepositoryHelper;
+
+    @Autowired
+    private void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
+        abstractRepositoryHelper.setRepository(userRepository);
     }
 
     @Override
+    @Transactional
     public User createUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        User createdUser = userRepository.save(user);
+        User createdUser = abstractRepositoryHelper.saveAndRefresh(user);
         LOG.info("User with name = " + user.getUsername() + " created successfully.");
 
         return createdUser;
     }
 
     @Override
+    @Transactional
     public User updateUser(User user) {
         Optional<User> oldUser = userRepository.findById(user.getId());
         if (oldUser.isPresent()) {
@@ -51,9 +59,7 @@ public class UserServiceImpl implements UserService {
             updatedUser.setPassword(user.getPassword());
             updatedUser.setRole(user.getRole());
             LOG.info("User with id = " + user.getId() + " updated succesfully.");
-            return userRepository.save(updatedUser);
-
-            // TODO Role update check, can role be updated?
+            return abstractRepositoryHelper.saveAndRefresh(updatedUser);
         } else {
             throw new IllegalArgumentException("User with id = " + user.getId() + " not found.");
         }
