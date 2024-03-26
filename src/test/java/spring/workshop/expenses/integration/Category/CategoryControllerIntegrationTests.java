@@ -98,11 +98,12 @@ public class CategoryControllerIntegrationTests {
      */
     @Test
     public void testDeleteCategoryPositive() {
-        ResponseEntity<Category> response = restTemplate.getForEntity(BASE_URL + "/{id}", Category.class, 300L);
+        Long categoryId = 400L;
+        ResponseEntity<Category> response = restTemplate.getForEntity(BASE_URL + "/{id}", Category.class, categoryId);
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        restTemplate.delete("/categories/{id}", 300L);
+        restTemplate.delete("/categories/{id}", categoryId);
         ResponseEntity<Category> responseAfterDelete = restTemplate.getForEntity(BASE_URL + "/{id}", Category.class,
-                300L);
+                categoryId);
         assertEquals(HttpStatus.BAD_REQUEST, responseAfterDelete.getStatusCode());
     }
 

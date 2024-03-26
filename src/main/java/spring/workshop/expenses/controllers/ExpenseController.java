@@ -84,7 +84,7 @@ public class ExpenseController {
     @ResponseStatus(HttpStatus.OK)
     public Expense getExpenseById(@PathVariable Long id, Principal principal) {
         User user = userService.getUserByUsername(principal.getName());
-        Expense expense = viewOneExpenseUc.viewOneExpense(user, id); // .createUser(user, name, superiorId);
+        Expense expense = viewOneExpenseUc.viewOneExpense(user, id);
 
         return expense;
     }

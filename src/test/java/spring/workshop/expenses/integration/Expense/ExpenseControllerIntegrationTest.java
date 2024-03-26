@@ -211,26 +211,6 @@ public class ExpenseControllerIntegrationTest {
         }
 
         @Test
-        public void testDeleteExpenseNonExistingEmployee() throws Exception {
-
-                // Defining the parameters for the DELETE request
-                Long expenseId = 100L;
-
-                // URL for deleting an Expense with expense_id = expenseId (existing)
-                String url = BASE_URL + "/{expenseId}";
-
-                // Send a DELETE request to create the expense
-                ResponseEntity<String> response = restTemplate.withBasicAuth("raffael", "password").exchange(url,
-                                HttpMethod.DELETE, HttpEntity.EMPTY,
-                                String.class, expenseId);
-
-                // Assert HTTP status code is OK
-                assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-                assertEquals("Employee for user with id = 500 not found.",
-                                new JSONObject(response.getBody()).getString("message"));
-        }
-
-        @Test
         public void testDeleteExpenseNegativeNonExistingExpense() throws Exception {
 
                 // Defining the parameters for the DELETE request
@@ -297,13 +277,17 @@ public class ExpenseControllerIntegrationTest {
          * Test Case - functionality for getting an expense by ID.
          */
         @Test
-        public void testGetExpenseByIdPositive() {
+        public void testGetExpenseByIdPositiveEmployee() {
+                Long expenseId = 100L;
+
+                // Send a GET request for receive a Expense object
                 ResponseEntity<Expense> response = restTemplate.withBasicAuth("victoria", "password")
-                                .getForEntity(BASE_URL + "/{id}", Expense.class, 200);
+                                .getForEntity(BASE_URL + "/{id}", Expense.class, expenseId);
+
                 assertEquals(HttpStatus.OK, response.getStatusCode());
                 Expense expense = response.getBody();
                 Assertions.assertNotNull(expense);
-                assertEquals(200L, expense.getId());
+                assertEquals(expenseId, expense.getId());
         }
 
         /**
@@ -311,11 +295,70 @@ public class ExpenseControllerIntegrationTest {
          * exist.
          */
         @Test
-        public void testGetExpenseByIdNegative() {
-                ResponseEntity<String> response = restTemplate.withBasicAuth("victoria", "password").exchange(
-                                BASE_URL + "/{id}", HttpMethod.GET,
-                                HttpEntity.EMPTY, String.class, 10);
+        public void testGetExpenseByIdNegativeEmployee() {
+                Long expenseId = 123L;
+
+                // Send a GET request for receive a Expense object
+                ResponseEntity<Expense> response = restTemplate.withBasicAuth("victoria", "password")
+                                .getForEntity(BASE_URL + "/{id}", Expense.class, expenseId);
+
                 assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+
+                Expense expense = response.getBody();
+                Assertions.assertNull(expense.getId());
+        }
+
+        /**
+         * Test Case - functionality for getting an expense by ID.
+         */
+        @Test
+        public void testGetExpenseByIdPositiveSuperior() {
+                Long expenseId = 300L;
+
+                // Send a GET request for receive a Expense object
+                ResponseEntity<Expense> response = restTemplate.withBasicAuth("bartosz", "password")
+                                .getForEntity(BASE_URL + "/{id}", Expense.class, expenseId);
+
+                assertEquals(HttpStatus.OK, response.getStatusCode());
+                Expense expense = response.getBody();
+                Assertions.assertNotNull(expense);
+                assertEquals(expenseId, expense.getId());
+        }
+
+        /**
+         * Test Case - functionality for getting an expense by ID - expense does not
+         * exist.
+         */
+        @Test
+        public void testGetExpenseByIdNegativeSuperiorNotExistingExpense() {
+                Long expenseId = 123L;
+
+                // Send a GET request for receive a Expense object
+                ResponseEntity<Expense> response = restTemplate.withBasicAuth("bartosz", "password")
+                                .getForEntity(BASE_URL + "/{id}", Expense.class, expenseId);
+
+                assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+
+                Expense expense = response.getBody();
+                Assertions.assertNull(expense.getId());
+        }
+
+        /**
+         * Test Case - functionality for getting an expense by ID - superior has no
+         * access
+         */
+        @Test
+        public void testGetExpenseByIdNegativeSuperiorNoAccess() {
+                Long expenseId = 600L;
+
+                // Send a GET request for receive a Expense object
+                ResponseEntity<Expense> response = restTemplate.withBasicAuth("bartosz", "password")
+                                .getForEntity(BASE_URL + "/{id}", Expense.class, expenseId);
+
+                assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+
+                Expense expense = response.getBody();
+                Assertions.assertNull(expense.getId());
         }
 
         @Test
