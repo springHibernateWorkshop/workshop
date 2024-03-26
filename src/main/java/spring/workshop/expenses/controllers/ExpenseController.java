@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import spring.workshop.expenses.dto.ExpenseDTO;
 import spring.workshop.expenses.entities.Expense;
 import spring.workshop.expenses.entities.User;
+import spring.workshop.expenses.mapper.ExpenseMapper;
 import spring.workshop.expenses.services.UserService;
 import spring.workshop.expenses.useCases.CreateExpenseUc;
 import spring.workshop.expenses.useCases.DeleteExpenseUc;
@@ -52,6 +53,9 @@ public class ExpenseController {
     @Autowired
     private ViewOneExpenseUc viewOneExpenseUc;
 
+    @Autowired
+    private ExpenseMapper expenseMapper;
+
     // Method for creating an Expense
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -77,7 +81,7 @@ public class ExpenseController {
             @RequestParam(name = "shop-id", required = false) Long shopId,
             Principal principal) {
         User user = userService.getUserByUsername(principal.getName());
-        return viewAllExpensesUc.viewAllExpenses(user, year, month, categoryId, shopId);
+        return expenseMapper.toDto(viewAllExpensesUc.viewAllExpenses(user, year, month, categoryId, shopId));
     }
 
     // Method for getting an Expense by its ID
