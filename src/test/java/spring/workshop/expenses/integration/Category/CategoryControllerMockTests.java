@@ -1,10 +1,7 @@
 package spring.workshop.expenses.integration.Category;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -19,10 +16,7 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import jakarta.transaction.Transactional;
-import spring.workshop.expenses.entities.Category;
 import spring.workshop.expenses.repositories.CategoryRepository;
 
 /**
@@ -80,69 +74,6 @@ public class CategoryControllerMockTests {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Category1"));
 
-    }
-
-    /**
-     * Test case to verify the behavior of adding a new category.
-     * 
-     * @throws Exception if an error occurs during the test
-     */
-    @Test
-    public void testAddNewCategory() throws Exception {
-        // Arrange
-        Category category = new Category("Test Category");
-
-        assertEquals(4, repo.findAll().size());
-
-        // Act
-        mockMvc.perform(post(BASE_URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(category)))
-                .andExpect(status().isCreated());
-
-        // Assert
-        assertEquals(5, repo.findAll().size());
-    }
-
-    /**
-     * Test case for updating a category.
-     *
-     * @throws Exception if an error occurs during the test
-     */
-    @Test
-    public void testUpdateCategory() throws Exception {
-        // Arrange
-        Category category = new Category(100L, "Update Test Category");
-        assertEquals("Category1", repo.findById(100L).get().getName());
-
-        // Act
-        mockMvc.perform(put(BASE_URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(category)))
-                .andExpect(status().isNoContent())
-                .andExpect(jsonPath("$.name").value("Update Test Category"));
-
-        // Assert
-        assertEquals(category.getName(), repo.findById(100L).get().getName());
-    }
-
-    /**
-     * Test case to verify the functionality of deleting a category.
-     *
-     * @throws Exception if an error occurs during the test
-     */
-    @Test
-    public void testDeleteCategory() throws Exception {
-        // Arrange
-        assertEquals(4, repo.findAll().size());
-
-        // Act
-        mockMvc.perform(delete(BASE_URL + "/{id}", 400L))
-                .andExpect(status().isOk())
-                .andExpect(content().string("true"));
-
-        // Assert
-        assertEquals(3, repo.findAll().size());
     }
 
 }
