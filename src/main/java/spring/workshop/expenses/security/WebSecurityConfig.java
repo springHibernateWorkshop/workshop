@@ -26,15 +26,14 @@ public class WebSecurityConfig {
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.authorizeHttpRequests((requests) -> requests
-				// .requestMatchers("/categories/**").permitAll()
-				// .requestMatchers("/shops/**").permitAll()
+				.requestMatchers(HttpMethod.GET, "/categories/**").permitAll()
+				.requestMatchers(HttpMethod.GET, "/shops/**").permitAll()
+				.requestMatchers("/expenses/**").hasAnyRole("EMPLOYEE", "SUPERIOR")
+				.requestMatchers("/reports/**").hasAnyRole("SUPERIOR", "ACCOUNTANT")
+				.requestMatchers("/superiors/**").hasAnyRole("ADMINISTRATOR", "ACCOUNTANT")
 				.requestMatchers("/users/**").hasRole("ADMINISTRATOR")
-				.requestMatchers(HttpMethod.GET, "/expenses/**").hasAnyRole("EMPLOYEE", "SUPERIOR")
-				.requestMatchers("/expenses/**").hasRole("EMPLOYEE")
-				// .requestMatchers("/reports/**").hasAnyRole("SUPERIOR", "ACCOUNTANT")
 				.requestMatchers("/employees/**").hasRole("ADMINISTRATOR")
-				// .requestMatchers("/superiors/**").hasAnyRole("SUPERIOR", "ACCOUNTANT")
-				.anyRequest().permitAll())
+				.anyRequest().authenticated())
 				.csrf(csrf -> csrf.disable())
 				.httpBasic(Customizer.withDefaults());
 
