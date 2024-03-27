@@ -45,4 +45,11 @@ public class EmployeeController {
     return employeeDetailsMapper.toDto(employeeService.getAllEmployees());
   }
 
+  // Method for getting all employees
+  @GetMapping(path = "/{id}")
+  @ResponseStatus(HttpStatus.OK)
+  public EmployeeDetailsDTO getEmployeeById(@PathVariable("id") Long employeeId) {
+    return employeeDetailsMapper.toDto(employeeService.getEmployeeById(employeeId));
+  }
+
 }
