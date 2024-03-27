@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import spring.workshop.expenses.dto.UserDTO;
 import spring.workshop.expenses.entities.Person;
 import spring.workshop.expenses.entities.User;
+import spring.workshop.expenses.mapper.UserMapper;
 import spring.workshop.expenses.services.UserService;
 import spring.workshop.expenses.useCases.CreateUserUc;
 
@@ -26,6 +28,9 @@ public class UserController {
 
   @Autowired
   private UserService userService;
+
+  @Autowired
+  private UserMapper userMapper;
 
   @Autowired
   private CreateUserUc createUserUc;
@@ -42,6 +47,7 @@ public class UserController {
         .body(newUser);
   }
 
+  // TODO
   @DeleteMapping(path = "/{id}")
   public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
     userService.deleteUser(id);
@@ -49,15 +55,15 @@ public class UserController {
   }
 
   @GetMapping
-  public ResponseEntity<List<User>> getAllUsers() {
+  public ResponseEntity<List<UserDTO>> getAllUsers() {
     return ResponseEntity.status(HttpStatus.OK)
-        .body(userService.getAllUsers());
+        .body(userMapper.toDto(userService.getAllUsers()));
   }
 
   @GetMapping(path = "/{id}")
-  public ResponseEntity<User> getUserById(@PathVariable Long id) {
+  public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
     return ResponseEntity.status(HttpStatus.OK)
-        .body(userService.getUserById(id));
+        .body(userMapper.toDto(userService.getUserById(id)));
   }
 
 }
