@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import spring.workshop.expenses.dto.SuperiorDetailsDTO;
 import spring.workshop.expenses.mapper.SuperiorDetailsMapper;
 import spring.workshop.expenses.services.SuperiorService;
@@ -33,7 +34,8 @@ public class SuperiorController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Get a superior", description = "Fetche the superior with the given id from the database")
-    public ResponseEntity<SuperiorDetailsDTO> getSuperior(@PathVariable Long id) {
+    public ResponseEntity<SuperiorDetailsDTO> getSuperior(
+            @PathVariable @Parameter(description = "ID of the superior") Long id) {
         return new ResponseEntity<>(superiorDetailsMapper.toDto(superiorService.getSuperiorById(id)), HttpStatus.OK);
     }
 

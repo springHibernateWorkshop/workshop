@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import spring.workshop.expenses.dto.UserDTO;
 import spring.workshop.expenses.entities.Person;
 import spring.workshop.expenses.entities.User;
@@ -38,8 +39,9 @@ public class UserController {
 
   @PostMapping()
   @Operation(summary = "Add a user", description = "Adds a new user to the database")
-  public ResponseEntity<Person> addUser(@RequestBody User user, @RequestParam String name,
-      @RequestParam(name = "superior_id", required = false) Long superiorId) {
+  public ResponseEntity<Person> addUser(@RequestBody @Parameter(description = "The user to be created") User user,
+      @RequestParam @Parameter(description = "Name of the person") String name,
+      @RequestParam(name = "superior_id", required = false) @Parameter(description = "ID of the superior") Long superiorId) {
     Person newUser = createUserUc.createUser(user, name, superiorId);
 
     return ResponseEntity
@@ -52,7 +54,8 @@ public class UserController {
   // TODO
   @DeleteMapping(path = "/{id}")
   @Operation(summary = "Delete a user", description = "Deletes a new user from the database")
-  public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+  public ResponseEntity<Void> deleteUser(
+      @PathVariable @Parameter(description = "ID of the user to be deleted") Long id) {
     userService.deleteUser(id);
     return new ResponseEntity<>(HttpStatus.OK);
   }
@@ -66,7 +69,7 @@ public class UserController {
 
   @GetMapping(path = "/{id}")
   @Operation(summary = "Get a user", description = "Fetche the user with the given id from the database")
-  public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
+  public ResponseEntity<UserDTO> getUserById(@PathVariable @Parameter(description = "ID of the user") Long id) {
     return ResponseEntity.status(HttpStatus.OK)
         .body(userMapper.toDto(userService.getUserById(id)));
   }
