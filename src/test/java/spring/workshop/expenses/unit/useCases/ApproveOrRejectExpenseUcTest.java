@@ -48,10 +48,10 @@ public class ApproveOrRejectExpenseUcTest {
 
     @Test
     public void approveExpenseTest() {
-        Superior superior = new Superior(2L, "Superior", new User("Test Superior", "test pass", "SUPERIOR"));
+        Superior superior = new Superior(2L, "Superior", new User());
         Expense expense = new Expense(999L, "Test Expense", 999.99f, LocalDate.of(1994, 10, 1), new Category(100L),
                 new Shop(100L),
-                new Employee(100L, "Test", new User("Test user", "test_pass", "EMPLOYEE"), superior),
+                new Employee(100L, "Test", new User(), superior),
                 ExpenseStatus.PENDING,
                 "example_test_note_1");
 
@@ -73,10 +73,10 @@ public class ApproveOrRejectExpenseUcTest {
 
     @Test
     public void rejectExpenseTest() {
-        Superior superior = new Superior(2L, "Superior", new User("Test Superior", "test pass", "SUPERIOR"));
+        Superior superior = new Superior(2L, "Superior", new User());
         Expense expense = new Expense(999L, "Test_Expense", 999.99f, LocalDate.of(1994, 10, 1), new Category(100L),
                 new Shop(100L),
-                new Employee(100L, "Test", new User("Test user", "test_pass", "EMPLOYEE"), superior),
+                new Employee(100L, "Test", new User(), superior),
                 ExpenseStatus.PENDING,
                 "example_test_note_1");
 
@@ -97,12 +97,12 @@ public class ApproveOrRejectExpenseUcTest {
 
     @Test
     public void acceptExpenseNichtRichtigerSuperiorTest() {
-        Superior superior = new Superior(2L, "Superior", new User("Test Superior", "test pass", "SUPERIOR"));
+        Superior superior = new Superior(2L, "Superior", new User());
 
         Expense expense = new Expense(999L, "Expense Negative Test", 999.99f, LocalDate.of(1994, 10, 1),
                 new Category(100L),
                 new Shop(100L),
-                new Employee(100L, "Test", new User("Test user", "test_pass", "EMPLOYEE"), superior),
+                new Employee(100L, "Test", new User(), superior),
                 ExpenseStatus.PENDING,
                 "example_test_note_1");
 
@@ -119,32 +119,33 @@ public class ApproveOrRejectExpenseUcTest {
     }
 
     @Test
-    public void approveExpenseNichtRichtigerParameterStatusTest(){
-        Superior superior=new Superior(2L, "Superior", new User("Test Superior", "test pass", "SUPERIOR"));
-        Expense expense=new Expense(999L,  "Test Expense", 999.99f, LocalDate.of(1994, 10, 1), new Category(100L),
-                                new Shop(100L),
-                                new Employee(100L, "Test", new User("Test user", "test_pass", "EMPLOYEE"), superior), ExpenseStatus.INITIAL,
-                                "example_test_note_1");                  
+    public void approveExpenseNichtRichtigerParameterStatusTest() {
+        Superior superior = new Superior(2L, "Superior", new User());
+        Expense expense = new Expense(999L, "Test Expense", 999.99f, LocalDate.of(1994, 10, 1), new Category(100L),
+                new Shop(100L),
+                new Employee(100L, "Test", new User(), superior), ExpenseStatus.INITIAL,
+                "example_test_note_1");
 
-        Employee employee= expense.getEmployee();
+        Employee employee = expense.getEmployee();
 
         when(expenseServiceMock.getExpenseById(any())).thenReturn(expense);
         when(employeeServiceMock.getEmployeeById(any())).thenReturn(employee);
         when(superiorServiceMock.getSuperiorById(any())).thenReturn(superior);
         when(expenseServiceMock.updateExpense(any())).thenReturn(expense);
 
-        Exception exception = assertThrows(ForbiddenResourceException.class, ()-> sut.approveOrRejectExpense(expense.getId(), superior.getId(), ExpenseStatus.APPROVED,
-        "example_approve_note_2"));
+        Exception exception = assertThrows(ForbiddenResourceException.class,
+                () -> sut.approveOrRejectExpense(expense.getId(), superior.getId(), ExpenseStatus.APPROVED,
+                        "example_approve_note_2"));
 
         assertEquals("Expense should have 'Pending' status", exception.getMessage());
     }
 
     @Test
     public void rejectExpenseNichtRichtigerAusgangsstatusInitialTest() {
-        Superior superior = new Superior(2L, "Superior", new User("Test Superior", "test pass", "SUPERIOR"));
+        Superior superior = new Superior(2L, "Superior", new User());
         Expense expense = new Expense(999L, "Test_Expense", 999.99f, LocalDate.of(1994, 10, 1), new Category(100L),
                 new Shop(100L),
-                new Employee(100L, "Test", new User("Test user", "test_pass", "EMPLOYEE"), superior),
+                new Employee(100L, "Test", new User(), superior),
                 ExpenseStatus.PENDING,
                 "example_test_note_3");
 
@@ -155,18 +156,19 @@ public class ApproveOrRejectExpenseUcTest {
         when(superiorServiceMock.getSuperiorById(any())).thenReturn(superior);
         when(expenseServiceMock.updateExpense(any())).thenReturn(expense);
 
-        Exception exception = assertThrows(IllegalArgumentException.class, ()-> sut.approveOrRejectExpense(expense.getId(), superior.getId(), ExpenseStatus.INITIAL,
-        "example_reject_note_3"));
+        Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> sut.approveOrRejectExpense(expense.getId(), superior.getId(), ExpenseStatus.INITIAL,
+                        "example_reject_note_3"));
 
         assertEquals("Expense should have 'Approved' or 'Rejected' status", exception.getMessage());
     }
 
     @Test
     public void rejectExpenseNichtRichtigerAusgangsstatusPendingTest() {
-        Superior superior = new Superior(2L, "Superior", new User("Test Superior", "test pass", "SUPERIOR"));
+        Superior superior = new Superior(2L, "Superior", new User());
         Expense expense = new Expense(999L, "Test_Expense", 999.99f, LocalDate.of(1994, 10, 1), new Category(100L),
                 new Shop(100L),
-                new Employee(100L, "Test", new User("Test user", "test_pass", "EMPLOYEE"), superior),
+                new Employee(100L, "Test", new User(), superior),
                 ExpenseStatus.PENDING,
                 "example_test_note_3");
 
@@ -177,21 +179,24 @@ public class ApproveOrRejectExpenseUcTest {
         when(superiorServiceMock.getSuperiorById(any())).thenReturn(superior);
         when(expenseServiceMock.updateExpense(any())).thenReturn(expense);
 
-        Exception exception = assertThrows(IllegalArgumentException.class, ()-> sut.approveOrRejectExpense(expense.getId(), superior.getId(), ExpenseStatus.PENDING,
-        "example_reject_note_3"));
+        Exception exception = assertThrows(IllegalArgumentException.class,
+                () -> sut.approveOrRejectExpense(expense.getId(), superior.getId(), ExpenseStatus.PENDING,
+                        "example_reject_note_3"));
 
         assertEquals("Expense should have 'Approved' or 'Rejected' status", exception.getMessage());
     }
 
     @Test
     public void approveNotExistingExpenseTest() {
-        Superior superior = new Superior(2L, "Superior", new User("Test Superior", "test pass", "SUPERIOR"));
-        Long expenseId=900L;
+        Superior superior = new Superior(2L, "Superior", new User());
+        Long expenseId = 900L;
 
-        when(expenseServiceMock.getExpenseById(any())).thenThrow(new ResourceNotFoundException("Expense with id = " + expenseId + " not found."));
+        when(expenseServiceMock.getExpenseById(any()))
+                .thenThrow(new ResourceNotFoundException("Expense with id = " + expenseId + " not found."));
 
-        Exception exception = assertThrows(ResourceNotFoundException.class, ()-> sut.approveOrRejectExpense(expenseId, superior.getId(), ExpenseStatus.APPROVED,
-        "example_not_approve_note_3"));
+        Exception exception = assertThrows(ResourceNotFoundException.class,
+                () -> sut.approveOrRejectExpense(expenseId, superior.getId(), ExpenseStatus.APPROVED,
+                        "example_not_approve_note_3"));
 
         assertEquals("Expense with id = " + expenseId + " not found.", exception.getMessage());
     }
