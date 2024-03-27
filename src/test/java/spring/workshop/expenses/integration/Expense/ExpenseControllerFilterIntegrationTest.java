@@ -113,6 +113,20 @@ public class ExpenseControllerFilterIntegrationTest {
         }
 
         @Test
+        public void testGetAllExpensesForEmployee() {
+                // given
+                String employeeId = "100";
+                UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(BASE_URL)
+                                .queryParam("employee-id", employeeId);
+                // when
+                ResponseEntity<List> response = restTemplate.withBasicAuth("bartosz", "password")
+                                .getForEntity(builder.toUriString(), List.class);
+                // then
+                assertEquals(HttpStatus.OK, response.getStatusCode());
+                assertEquals(3, response.getBody().size());
+        }
+
+        @Test
         public void testGetAllExpensesForShop() {
                 // given
                 String shopId = "100";

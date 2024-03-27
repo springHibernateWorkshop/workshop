@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -92,7 +93,7 @@ public class ExpenseServiceTest {
                                                                 null));
 
                 // When
-                List<Expense> filteredExpenses = sut.filter(expenses, null, null, null, null);
+                List<Expense> filteredExpenses = sut.filter(expenses, null, null, null, null, null);
                 // Then
                 assertEquals(2, filteredExpenses.size());
 
@@ -104,18 +105,19 @@ public class ExpenseServiceTest {
                 List<Expense> expenses = List
                                 .of(new Expense(1L, "Expense", 100.00F, LocalDate.of(2023, 2, 19),
                                                 new Category(1L, "Category"),
-                                                new Shop(1L), new Employee("Employee", new User(), new Superior()),
+                                                new Shop(1L), new Employee(1L, "Employee", new User(), new Superior()),
                                                 ExpenseStatus.INITIAL,
                                                 null),
                                                 new Expense(2L, "Expense", 100.00F, LocalDate.of(2024, 2, 19),
                                                                 new Category(1L, "Category"),
                                                                 new Shop(2L),
-                                                                new Employee("Employee", new User(), new Superior()),
+                                                                new Employee(1L, "Employee", new User(),
+                                                                                new Superior()),
                                                                 ExpenseStatus.INITIAL,
                                                                 null));
 
                 // When
-                List<Expense> filteredExpenses = sut.filter(expenses, 2024, 2, 1L, 2L);
+                List<Expense> filteredExpenses = sut.filter(expenses, 2024, 2, 1L, 2L, 1L);
                 // Then
                 assertEquals(1, filteredExpenses.size());
         }
@@ -137,9 +139,39 @@ public class ExpenseServiceTest {
                                                                 null));
 
                 // When
-                List<Expense> filteredExpenses = sut.filter(expenses, null, 2, null, null);
+                List<Expense> filteredExpenses = sut.filter(expenses, null, 2, null, null, null);
                 // Then
                 assertEquals(1, filteredExpenses.size());
+        }
+
+        @Test
+        public void testFilterWithEmployeeCriteria() {
+                // Given
+                List<Expense> expenses = List
+                                .of(new Expense(1L, "Expense", 100.00F, LocalDate.of(2023, 3, 19),
+                                                new Category(1L, "Category"),
+                                                new Shop(1L), new Employee(1L, "Employee", new User(), new Superior()),
+                                                ExpenseStatus.INITIAL,
+                                                null),
+                                                new Expense(2L, "Expense2", 102.00F, LocalDate.of(2022, 2, 19),
+                                                                new Category(1L, "Category"),
+                                                                new Shop(2L),
+                                                                new Employee(2L, "Employee", new User(),
+                                                                                new Superior()),
+                                                                ExpenseStatus.PENDING,
+                                                                null),
+                                                new Expense(3L, "Expense3", 103.00F, LocalDate.of(2024, 12, 19),
+                                                                new Category(1L, "Category"),
+                                                                new Shop(2L),
+                                                                new Employee(2L, "Employee", new User(),
+                                                                                new Superior()),
+                                                                ExpenseStatus.INITIAL,
+                                                                null));
+
+                // When
+                List<Expense> filteredExpenses = sut.filter(expenses, null, null, null, null, 2L);
+                // Then
+                assertEquals(2, filteredExpenses.size());
         }
 
         @Test
@@ -159,7 +191,7 @@ public class ExpenseServiceTest {
                                                                 null));
 
                 // When
-                List<Expense> filteredExpenses = sut.filter(expenses, 2023, null, null, null);
+                List<Expense> filteredExpenses = sut.filter(expenses, 2023, null, null, null, null);
                 // Then
                 assertEquals(1, filteredExpenses.size());
         }
@@ -170,7 +202,7 @@ public class ExpenseServiceTest {
                 List<Expense> expenses = new ArrayList<>();
 
                 // When
-                List<Expense> filteredExpenses = sut.filter(expenses, 2023, null, null, null);
+                List<Expense> filteredExpenses = sut.filter(expenses, 2023, null, null, null, null);
                 // Then
                 assertEquals(0, filteredExpenses.size());
         }

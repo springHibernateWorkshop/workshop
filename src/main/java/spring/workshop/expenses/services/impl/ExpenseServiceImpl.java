@@ -83,8 +83,10 @@ public class ExpenseServiceImpl implements ExpenseService {
     }
 
     @Override
-    public List<Expense> filter(List<Expense> expenses, Integer year, Integer month, Long categoryId, Long shopId) {
+    public List<Expense> filter(List<Expense> expenses, Integer year, Integer month, Long categoryId, Long shopId,
+            Long employeeId) {
         List<Expense> filter = expenses.stream()
+                .filter(e -> employeeId == null || e.getEmployee().getId().equals(employeeId))
                 .filter(e -> categoryId == null || e.getCategory().getId().equals(categoryId))
                 .filter(e -> shopId == null || e.getShop().getId().equals(shopId))
                 .filter(e -> {

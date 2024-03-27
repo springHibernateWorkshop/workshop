@@ -33,7 +33,8 @@ public class ViewAllExpensesUcImpl implements ViewAllExpensesUc {
 
     @Override
     @PreAuthorize("hasAuthority('VIEW_EXPENSES')")
-    public List<Expense> viewAllExpenses(User user, Integer year, Integer month, Long categoryId, Long shopId) {
+    public List<Expense> viewAllExpenses(User user, Integer year, Integer month, Long categoryId, Long shopId,
+            Long employeeId) {
         if (!ValidateDateHelper.validateDate(year, month)) {
             throw new IllegalArgumentException("Date is not valid.");
         }
@@ -50,6 +51,6 @@ public class ViewAllExpensesUcImpl implements ViewAllExpensesUc {
             }
         } else
             throw new ForbiddenResourceException("User role not allowed.");
-        return expenseService.filter(expenses, year, month, categoryId, shopId);
+        return expenseService.filter(expenses, year, month, categoryId, shopId, employeeId);
     }
 }

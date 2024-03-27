@@ -88,9 +88,11 @@ public class ExpenseController {
             @RequestParam(required = false) @Parameter(description = "Month of the expenses") Integer month,
             @RequestParam(name = "category-id", required = false) @Parameter(description = "Category ID of the expenses") Long categoryId,
             @RequestParam(name = "shop-id", required = false) @Parameter(description = "Shop ID of the expenses") Long shopId,
+            @RequestParam(name = "employee-id", required = false) @Parameter(description = "Only expenses of this employee") Long employeeId,
             Principal principal) {
         User user = userService.getUserByUsername(principal.getName());
-        return expenseMapper.toDto(viewAllExpensesUc.viewAllExpenses(user, year, month, categoryId, shopId));
+        return expenseMapper
+                .toDto(viewAllExpensesUc.viewAllExpenses(user, year, month, categoryId, shopId, employeeId));
     }
 
     // Method for getting an Expense by its ID
