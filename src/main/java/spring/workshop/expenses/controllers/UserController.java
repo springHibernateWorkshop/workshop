@@ -39,7 +39,7 @@ public class UserController {
 
   @PostMapping()
   @Operation(summary = "Add a user", description = "Adds a new user to the database")
-  public ResponseEntity<Person> addUser(@RequestBody @Parameter(description = "The user to be created") User user,
+  public ResponseEntity<Person> addUser(@RequestBody User user,
       @RequestParam @Parameter(description = "Name of the person") String name,
       @RequestParam(name = "superior_id", required = false) @Parameter(description = "ID of the superior") Long superiorId) {
     Person newUser = createUserUc.createUser(user, name, superiorId);
