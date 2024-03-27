@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import spring.workshop.expenses.entities.Employee;
+import spring.workshop.expenses.entities.Superior;
 import spring.workshop.expenses.entities.User;
 import spring.workshop.expenses.exceptions.ResourceNotFoundException;
 import spring.workshop.expenses.repositories.AbstractRepositoryHelper;
@@ -21,19 +22,21 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     private static final Logger LOG = LoggerFactory.getLogger(EmployeeServiceImpl.class);
 
-    @Autowired
     private EmployeeRepository employeeRepository;
 
     @Autowired
-    private AbstractRepositoryHelper<Employee> abstractRepository;
+    private AbstractRepositoryHelper<Employee> abstractRepositoryHelper;
 
-    public EmployeeServiceImpl() {
-    };
+    @Autowired
+    private void setEmployeeRepository(EmployeeRepository employeeRepository) {
+        this.employeeRepository = employeeRepository;
+        abstractRepositoryHelper.setRepository(employeeRepository);
+    }
 
     @Override
     @Transactional
     public Employee addEmployee(Employee employee) {
-        Employee savedEmployee = abstractRepository.saveAndRefresh(employeeRepository, employee);
+        Employee savedEmployee = abstractRepositoryHelper.saveAndRefresh(employee);
         LOG.info("Employee with id = " + employee.getId() + " created successfully.");
         return savedEmployee;
     }
@@ -58,7 +61,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             updatedEmployee.setName(employee.getName());
             updatedEmployee.setUser(employee.getUser());
             updatedEmployee.setSuperior(employee.getSuperior());
-            Employee savedEmployee = abstractRepository.saveAndRefresh(employeeRepository, updatedEmployee);
+            Employee savedEmployee = abstractRepositoryHelper.saveAndRefresh(updatedEmployee);
             LOG.info("Employee with id = " + updatedEmployee.getId() + " updated succesfully.");
             return savedEmployee;
 
@@ -88,5 +91,10 @@ public class EmployeeServiceImpl implements EmployeeService {
             throw new ResourceNotFoundException("Employee for user with id = " + user.getId() + " not found.");
 
         return employee.get();
+    }
+
+    @Override
+    public List<Employee> getEmployeesBySuperior(Superior superior) {
+        return employeeRepository.findBySuperior(superior);
     }
 }

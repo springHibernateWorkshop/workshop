@@ -20,6 +20,7 @@ import spring.workshop.expenses.entities.Superior;
 import spring.workshop.expenses.entities.User;
 import spring.workshop.expenses.repositories.AbstractRepositoryHelper;
 import spring.workshop.expenses.repositories.EmployeeRepository;
+import spring.workshop.expenses.security.Role;
 import spring.workshop.expenses.services.EmployeeService;
 import spring.workshop.expenses.services.impl.EmployeeServiceImpl;
 
@@ -33,7 +34,7 @@ public class EmployeeServiceTest {
         EmployeeRepository employeeRepositoryMock;
 
         @Mock
-        AbstractRepositoryHelper<Employee> abstractRepositoryMock;
+        AbstractRepositoryHelper<Employee> abstractRepositoryHelperMock;
 
         @InjectMocks
         private EmployeeService sut = new EmployeeServiceImpl();
@@ -41,11 +42,12 @@ public class EmployeeServiceTest {
         @Test
         public void testAddEmployee() {
                 // Given
-                Employee employee = new Employee("Employee", new User("username", "passw", "EMPLOYEE"),
+                Employee employee = new Employee("Employee", new User("username", "passw", new Role()),
                                 new Superior("Superior"));
 
-                when(abstractRepositoryMock.saveAndRefresh(any(), any(Employee.class)))
+                when(abstractRepositoryHelperMock.saveAndRefresh(any(Employee.class)))
                                 .thenReturn(employee);
+
                 // When
                 Employee response = sut.addEmployee(employee);
                 // Then
@@ -70,16 +72,18 @@ public class EmployeeServiceTest {
         @Test
         public void testUpdateEmployee() {
                 // Given
-                Employee employee = new Employee(1L, "Employee", new User(1L, "username", "passw", "EMPLOYEE"),
+                Employee employee = new Employee(1L, "Employee", new User(1L, "username", "passw", new Role()),
                                 new Superior(1L, "Superior"));
                 Employee updatedEmployee = new Employee(1L, "updatedEmployee",
-                                new User(2L, "username", "passw", "EMPLOYEE"),
+                                new User(2L, "username", "passw", new Role()),
+
                                 new Superior(2L, "Superior"));
 
                 when(employeeRepositoryMock.findById(any(Long.class)))
                                 .thenReturn(Optional.of(employee));
-                when(abstractRepositoryMock.saveAndRefresh(any(), any(Employee.class)))
+                when(abstractRepositoryHelperMock.saveAndRefresh(any(Employee.class)))
                                 .thenReturn(updatedEmployee);
+
                 // When
                 Employee response = sut.updateEmployee(updatedEmployee);
                 // Then
@@ -90,7 +94,7 @@ public class EmployeeServiceTest {
         }
 
         @Test
-        public void testGetAllUsers() {
+        public void testGetAllEmployees() {
                 // Given
                 when(employeeRepositoryMock.findAll())
                                 .thenReturn(List.of(new Employee(), new Employee(), new Employee()));
@@ -116,7 +120,8 @@ public class EmployeeServiceTest {
         @Test
         public void testGetEmployeeByUser() {
                 // Given
-                User user = new User("User", null, "EMPLOYEE");
+                User user = new User("User", null, new Role(1L, "ROLE_EMPLOYEE"));
+
                 Employee employee = new Employee(1L, "Employee", user, new Superior());
 
                 when(employeeRepositoryMock.findByUser(any(User.class)))

@@ -1,6 +1,7 @@
 package spring.workshop.expenses.useCases.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 
 import spring.workshop.expenses.entities.Employee;
@@ -21,6 +22,7 @@ public class CreateExpenseUcImpl implements CreateExpenseUc {
     private ExpenseService expenseService;
 
     @Override
+    @PreAuthorize("hasAuthority('CREATE_EXPENSES')")
     public Expense createExpense(User user, Expense expense) {
 
         // Get Employee by User
@@ -29,7 +31,7 @@ public class CreateExpenseUcImpl implements CreateExpenseUc {
         // Set Employee and status for Expense and create Expense
         expense.setEmployee(employee);
         expense.setStatus(ExpenseStatus.INITIAL);
-        Expense createdExpense = expenseService.addNewExpense(expense);
+        Expense createdExpense = expenseService.createExpense(expense);
 
         // Return created Expense
         return createdExpense;

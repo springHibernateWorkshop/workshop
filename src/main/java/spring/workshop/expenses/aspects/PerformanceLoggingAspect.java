@@ -17,7 +17,30 @@ public class PerformanceLoggingAspect {
 
 	// AOP expression for which methods shall be intercepted
 	@Around("execution(* spring.workshop.expenses.services..*(..)))")
-	public Object profileAllMethods(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
+	public Object profileAllServiceMethods(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
+		MethodSignature methodSignature = (MethodSignature) proceedingJoinPoint.getSignature();
+
+		// Get intercepted method details
+		String className = methodSignature.getDeclaringType().getSimpleName();
+		String methodName = methodSignature.getName();
+
+		final StopWatch stopWatch = new StopWatch();
+
+		// Measure method execution time
+		stopWatch.start();
+		Object result = proceedingJoinPoint.proceed();
+		stopWatch.stop();
+
+		// Log method execution time
+		LOGGER.debug(
+				"Execution time of Service: " + className + "." + methodName + " :: " + stopWatch.getTotalTimeMillis()
+						+ " ms");
+
+		return result;
+	}
+
+	@Around("execution(* spring.workshop.expenses.useCases..*(..)))")
+	public Object profileAllUcMethods(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
 		MethodSignature methodSignature = (MethodSignature) proceedingJoinPoint.getSignature();
 
 		// Get intercepted method details
@@ -33,7 +56,8 @@ public class PerformanceLoggingAspect {
 
 		// Log method execution time
 		LOGGER.info(
-				"Execution time of " + className + "." + methodName + " :: " + stopWatch.getTotalTimeMillis() + " ms");
+				"Execution time of UC: " + className + "." + methodName + " :: " + stopWatch.getTotalTimeMillis()
+						+ " ms");
 
 		return result;
 	}

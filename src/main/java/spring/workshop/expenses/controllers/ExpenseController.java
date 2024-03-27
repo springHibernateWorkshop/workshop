@@ -1,7 +1,6 @@
 package spring.workshop.expenses.controllers;
 
-import java.sql.Timestamp;
-import java.time.LocalDate;
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +21,13 @@ import spring.workshop.expenses.entities.Expense;
 import spring.workshop.expenses.entities.User;
 import spring.workshop.expenses.enums.ExpenseStatus;
 import spring.workshop.expenses.services.ExpenseService;
+import spring.workshop.expenses.services.UserService;
+import spring.workshop.expenses.useCases.ApproveOrRejectExpenseUc;
 import spring.workshop.expenses.useCases.CreateExpenseUc;
 import spring.workshop.expenses.useCases.DeleteExpenseUc;
-import spring.workshop.expenses.useCases.ApproveOrRejectExpenseUc;
+import spring.workshop.expenses.useCases.SubmitExpenseUc;
+import spring.workshop.expenses.useCases.ViewAllExpensesUc;
+import spring.workshop.expenses.useCases.ViewOneExpenseUc;
 
 @RestController
 @RequestMapping(path = "/expenses")
@@ -36,70 +39,84 @@ public class ExpenseController {
     private ExpenseService expenseService;
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
     private CreateExpenseUc createExpenseUc;
+
+    @Autowired
+    private ViewAllExpensesUc viewAllExpensesUc;
 
     @Autowired
     private DeleteExpenseUc deleteExpenseUc;
 
+    @Autowired
+    private SubmitExpenseUc submitExpenseUc;
+
+    @Autowired
+    private ViewOneExpenseUc viewOneExpenseUc;
+
     // Method for creating an Expense
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Expense createExpense(@RequestBody Expense expense) {
-        User user = new User(100L, "Victoria", null, "EMPLOYEE");
-        user.setVersion(new Timestamp(new java.util.Date().getTime()));
+    public Expense createExpense(@RequestBody Expense expense, Principal principal) {
+        User user = userService.getUserByUsername(principal.getName());
         return createExpenseUc.createExpense(user, expense);
     }
 
     // Method for deleting an Expense
     @DeleteMapping(path = "/{expense_id}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteExpense(@PathVariable("expense_id") Long expenseId) {
-        User user = new User(100L, "Victoria", null, "EMPLOYEE");
-        user.setVersion(new Timestamp(new java.util.Date().getTime()));
+    public void deleteExpense(@PathVariable("expense_id") Long expenseId, Principal principal) {
+        User user = userService.getUserByUsername(principal.getName());
         deleteExpenseUc.deleteExpense(user, expenseId);
     }
 
+    // Method for getting all Expenses
     @GetMapping
-    public ResponseEntity<List<Expense>> getAllExpenses() {
-        return new ResponseEntity<>(expenseService.getAllExpenses(), HttpStatus.OK);
+    @ResponseStatus(HttpStatus.OK)
+    public List<Expense> getAllExpenses(@RequestParam(required = false) Integer year,
+            @RequestParam(required = false) Integer month,
+            @RequestParam(name = "category-id", required = false) Long categoryId,
+            @RequestParam(name = "shop-id", required = false) Long shopId,
+            Principal principal) {
+        User user = userService.getUserByUsername(principal.getName());
+        return viewAllExpensesUc.viewAllExpenses(user, year, month, categoryId, shopId);
     }
 
+    // Method for getting an Expense by its ID
     @GetMapping(path = "/{id}")
-    public ResponseEntity<Expense> getExpenseById(@PathVariable Long id) {
-        return new ResponseEntity<>(expenseService.getExpenseById(id), HttpStatus.OK);
+    @ResponseStatus(HttpStatus.OK)
+    public Expense getExpenseById(@PathVariable Long id, Principal principal) {
+        User user = userService.getUserByUsername(principal.getName());
+        Expense expense = viewOneExpenseUc.viewOneExpense(user, id);
+
+        return expense;
     }
 
+    // TODO Method for updating an Expense
     @PutMapping()
-    public ResponseEntity<Expense> updateExpense(@RequestBody Expense expense) {
-        return new ResponseEntity<>(expenseService.updateExpense(expense), HttpStatus.OK);
+    @ResponseStatus(HttpStatus.OK)
+    public Expense updateExpense(@RequestBody Expense expense) {
+        return expenseService.updateExpense(expense);
     }
 
-    @GetMapping(path = "/date/{date}")
-    public ResponseEntity<List<Expense>> findByDate(@PathVariable LocalDate date) {
-        return new ResponseEntity<>(expenseService.findByDate(date), HttpStatus.OK);
+    // Method for submitting an Expense
+    @PutMapping(path = "/submit/{expenseId}")
+    @ResponseStatus(HttpStatus.OK)
+    public Expense submitExpense(@PathVariable Long expenseId, Principal principal) {
+
+        User user = userService.getUserByUsername(principal.getName());
+
+        return submitExpenseUc.submitExpense(expenseId, user);
     }
 
-    @GetMapping(path = "/category/{categoryId}")
-    public ResponseEntity<List<Expense>> findByCategoryId(@PathVariable Long categoryId) {
-        return new ResponseEntity<>(expenseService.findByCategoryId(categoryId), HttpStatus.OK);
-    }
-
-    @GetMapping(path = "/shop/{shopId}")
-    public ResponseEntity<List<Expense>> findByShopId(@PathVariable Long shopId) {
-        return new ResponseEntity<>(expenseService.findByShopId(shopId), HttpStatus.OK);
-    }
-
-    @GetMapping(path = "/user/{employeeId}")
-    public ResponseEntity<List<Expense>> getExpensesByEmployeeId(@PathVariable Long employeeId) {
-        return new ResponseEntity<>(expenseService.findByEmployeeId(employeeId), HttpStatus.OK);
-    }
-
-    @PutMapping(path="/{id}")
-    public ResponseEntity<Void> approveOrReject(@PathVariable Long id, @RequestParam ExpenseStatus status, @RequestParam String note){
-        //TODO implement superiorID retrieval
+    @PutMapping(path = "/{id}")
+    public ResponseEntity<Void> approveOrReject(@PathVariable Long id, @RequestParam ExpenseStatus status,
+            @RequestParam String note) {
+        // TODO implement superiorID retrieval
         approveOrRejectExpenseUc.approveOrRejectExpense(id, 2L, status, note);
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
 
 }

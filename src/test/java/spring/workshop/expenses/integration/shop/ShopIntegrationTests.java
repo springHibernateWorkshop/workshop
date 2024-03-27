@@ -1,7 +1,6 @@
 package spring.workshop.expenses.integration.shop;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.List;
 
@@ -33,17 +32,19 @@ public class ShopIntegrationTests {
 
     @Test
     public void testGetAllShops() {
-        ResponseEntity<List> response = restTemplate.getForEntity(BASE_URL, List.class);
+        ResponseEntity<List> response = restTemplate.getForEntity(BASE_URL,
+                List.class);
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertNotNull(response.getBody());
+        assertEquals(4, response.getBody().size());
     }
 
     /**
      * Test case to verify the positive scenario of getting a shop by its ID.
      */
     @Test
-    public void testGetSHopByIdPositive() {
-        ResponseEntity<Shop> response = restTemplate.getForEntity(BASE_URL + "/{id}", Shop.class, 200);
+    public void testGetShopByIdPositive() {
+        ResponseEntity<Shop> response = restTemplate.getForEntity(BASE_URL + "/{id}",
+                Shop.class, 200);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         Shop shop = response.getBody();
         assertEquals("shop_2", shop.getName());

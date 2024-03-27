@@ -6,34 +6,51 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import spring.workshop.expenses.entities.User;
 import spring.workshop.expenses.exceptions.ResourceNotFoundException;
+import spring.workshop.expenses.repositories.AbstractRepositoryHelper;
 import spring.workshop.expenses.repositories.UserRepository;
+import spring.workshop.expenses.services.RoleService;
 import spring.workshop.expenses.services.UserService;
 
 @Service
 public class UserServiceImpl implements UserService {
 
-    private UserRepository userRepository;
     private static final Logger LOG = LoggerFactory.getLogger(UserServiceImpl.class);
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
+    PasswordEncoder passwordEncoder;
+
+    @Autowired
+    RoleService roleService;
+
+    private UserRepository userRepository;
+
+    @Autowired
+    private AbstractRepositoryHelper<User> abstractRepositoryHelper;
+
+    @Autowired
+    private void setUserRepository(UserRepository userRepository) {
         this.userRepository = userRepository;
+        abstractRepositoryHelper.setRepository(userRepository);
     }
 
     @Override
-    public User addUser(User user) {
-
-        User createdUser = userRepository.save(user);
-
+    @Transactional
+    public User createUser(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        User createdUser = abstractRepositoryHelper.saveAndRefresh(user);
         LOG.info("User with name = " + user.getUsername() + " created successfully.");
+
         return createdUser;
     }
 
     @Override
+    @Transactional
     public User updateUser(User user) {
         Optional<User> oldUser = userRepository.findById(user.getId());
         if (oldUser.isPresent()) {
@@ -42,9 +59,7 @@ public class UserServiceImpl implements UserService {
             updatedUser.setPassword(user.getPassword());
             updatedUser.setRole(user.getRole());
             LOG.info("User with id = " + user.getId() + " updated succesfully.");
-            return userRepository.save(updatedUser);
-
-            // TODO Role update check, can role be updated?
+            return abstractRepositoryHelper.saveAndRefresh(updatedUser);
         } else {
             throw new IllegalArgumentException("User with id = " + user.getId() + " not found.");
         }
@@ -70,5 +85,11 @@ public class UserServiceImpl implements UserService {
             throw new ResourceNotFoundException("User with id = " + id + " not found.");
 
         return user.get();
+    }
+
+    @Override
+    public User getUserByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User with username = " + username + " not found."));
     }
 }

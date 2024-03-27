@@ -9,7 +9,7 @@ import jakarta.persistence.Version;
 public abstract class AbstractEntity {
 
     @Version
-    private Timestamp version;
+    private Timestamp version = new Timestamp(System.currentTimeMillis());
 
     public Timestamp getVersion() {
         return version;

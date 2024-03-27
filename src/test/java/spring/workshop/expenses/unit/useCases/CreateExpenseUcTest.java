@@ -51,7 +51,7 @@ public class CreateExpenseUcTest {
 
                 when(employeeServiceMock.getEmployeeByUser(any(User.class)))
                                 .thenReturn(employee);
-                when(expenseServiceMock.addNewExpense(any(Expense.class)))
+                when(expenseServiceMock.createExpense(any(Expense.class)))
                                 .thenReturn(expense);
                 // When
                 Expense response = sut.createExpense(user, expense);
@@ -76,7 +76,7 @@ public class CreateExpenseUcTest {
 
                 when(employeeServiceMock.getEmployeeByUser(any(User.class)))
                                 .thenReturn(employee);
-                when(expenseServiceMock.addNewExpense(any(Expense.class)))
+                when(expenseServiceMock.createExpense(any(Expense.class)))
                                 .thenThrow(new PropertyValueException(
                                                 "not-null property references a null or transient value"));
                 // When
@@ -87,7 +87,7 @@ public class CreateExpenseUcTest {
                                 exception.getMessage());
                 // Then
                 verify(employeeServiceMock).getEmployeeByUser(user);
-                verify(expenseServiceMock).addNewExpense(expense);
+                verify(expenseServiceMock).createExpense(expense);
 
         }
 

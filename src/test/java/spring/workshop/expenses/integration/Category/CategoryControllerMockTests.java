@@ -56,13 +56,13 @@ public class CategoryControllerMockTests {
     @Test
     public void TestGetAllCategories() throws Exception {
         // Arrange
-        assertEquals(3, repo.findAll().size());
+        assertEquals(4, repo.findAll().size());
 
         // Act & Assert
         mockMvc.perform(get(BASE_URL))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.length()").value(3));
+                .andExpect(jsonPath("$.length()").value(4));
 
     }
 
@@ -92,7 +92,7 @@ public class CategoryControllerMockTests {
         // Arrange
         Category category = new Category("Test Category");
 
-        assertEquals(3, repo.findAll().size());
+        assertEquals(4, repo.findAll().size());
 
         // Act
         mockMvc.perform(post(BASE_URL)
@@ -101,7 +101,7 @@ public class CategoryControllerMockTests {
                 .andExpect(status().isCreated());
 
         // Assert
-        assertEquals(4, repo.findAll().size());
+        assertEquals(5, repo.findAll().size());
     }
 
     /**
@@ -134,15 +134,15 @@ public class CategoryControllerMockTests {
     @Test
     public void testDeleteCategory() throws Exception {
         // Arrange
-        assertEquals(3, repo.findAll().size());
+        assertEquals(4, repo.findAll().size());
 
         // Act
-        mockMvc.perform(delete(BASE_URL + "/{id}", 300L))
+        mockMvc.perform(delete(BASE_URL + "/{id}", 400L))
                 .andExpect(status().isOk())
                 .andExpect(content().string("true"));
 
         // Assert
-        assertEquals(2, repo.findAll().size());
+        assertEquals(3, repo.findAll().size());
     }
 
 }

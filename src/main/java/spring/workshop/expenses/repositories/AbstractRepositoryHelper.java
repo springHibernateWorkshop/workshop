@@ -11,7 +11,16 @@ public class AbstractRepositoryHelper<T> {
     @PersistenceContext
     EntityManager entityManager;
 
-    public T saveAndRefresh(AbstractRepository<T> abstractRepository, T object) {
+    AbstractRepository<T> abstractRepository;
+
+    public AbstractRepositoryHelper() {
+    }
+
+    public void setRepository(AbstractRepository<T> abstractRepository) {
+        this.abstractRepository = abstractRepository;
+    }
+
+    public T saveAndRefresh(T object) {
         T savedObject = abstractRepository.saveAndFlush(object);
         entityManager.refresh(savedObject);
         return savedObject;
