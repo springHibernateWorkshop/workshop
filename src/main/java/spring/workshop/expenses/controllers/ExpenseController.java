@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,8 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import spring.workshop.expenses.entities.Expense;
 import spring.workshop.expenses.entities.User;
+import spring.workshop.expenses.enums.ExpenseStatus;
 import spring.workshop.expenses.services.ExpenseService;
 import spring.workshop.expenses.services.UserService;
+import spring.workshop.expenses.useCases.ApproveOrRejectExpenseUc;
 import spring.workshop.expenses.useCases.CreateExpenseUc;
 import spring.workshop.expenses.useCases.DeleteExpenseUc;
 import spring.workshop.expenses.useCases.SubmitExpenseUc;
@@ -30,6 +33,8 @@ import spring.workshop.expenses.useCases.ViewOneExpenseUc;
 @RequestMapping(path = "/expenses")
 public class ExpenseController {
 
+    @Autowired
+    private ApproveOrRejectExpenseUc approveOrRejectExpenseUc;
     @Autowired
     private ExpenseService expenseService;
 
@@ -104,6 +109,14 @@ public class ExpenseController {
         User user = userService.getUserByUsername(principal.getName());
 
         return submitExpenseUc.submitExpense(expenseId, user);
+    }
+
+    @PutMapping(path = "/{id}")
+    public ResponseEntity<Void> approveOrReject(@PathVariable Long id, @RequestParam ExpenseStatus status,
+            @RequestParam String note) {
+        // TODO implement superiorID retrieval
+        approveOrRejectExpenseUc.approveOrRejectExpense(id, 2L, status, note);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

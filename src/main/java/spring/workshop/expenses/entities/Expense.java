@@ -160,5 +160,5 @@ public class Expense extends AbstractEntity {
     public void setNote(String note) {
         this.note = note;
     }
-
+    
 }
