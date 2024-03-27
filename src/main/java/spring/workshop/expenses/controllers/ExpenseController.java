@@ -16,12 +16,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import spring.workshop.expenses.dto.ExpenseDTO;
 import spring.workshop.expenses.entities.Expense;
 import spring.workshop.expenses.entities.User;
-import spring.workshop.expenses.services.ExpenseService;
+import spring.workshop.expenses.mapper.ExpenseMapper;
 import spring.workshop.expenses.services.UserService;
 import spring.workshop.expenses.useCases.CreateExpenseUc;
 import spring.workshop.expenses.useCases.DeleteExpenseUc;
+import spring.workshop.expenses.useCases.EditExpenseUc;
 import spring.workshop.expenses.useCases.SubmitExpenseUc;
 import spring.workshop.expenses.useCases.ViewAllExpensesUc;
 import spring.workshop.expenses.useCases.ViewOneExpenseUc;
@@ -29,9 +33,6 @@ import spring.workshop.expenses.useCases.ViewOneExpenseUc;
 @RestController
 @RequestMapping(path = "/expenses")
 public class ExpenseController {
-
-    @Autowired
-    private ExpenseService expenseService;
 
     @Autowired
     private UserService userService;
@@ -49,20 +50,31 @@ public class ExpenseController {
     private SubmitExpenseUc submitExpenseUc;
 
     @Autowired
+    private EditExpenseUc editExpenseUc;
+
+    @Autowired
     private ViewOneExpenseUc viewOneExpenseUc;
+
+    @Autowired
+    private ExpenseMapper expenseMapper;
 
     // Method for creating an Expense
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Expense createExpense(@RequestBody Expense expense, Principal principal) {
+    @Operation(summary = "Create an expense", description = "Creates a new expense in the database")
+    public ExpenseDTO createExpense(@RequestBody Expense expense,
+            Principal principal) {
         User user = userService.getUserByUsername(principal.getName());
-        return createExpenseUc.createExpense(user, expense);
+        return expenseMapper.toDto(createExpenseUc.createExpense(user, expense));
     }
 
     // Method for deleting an Expense
-    @DeleteMapping(path = "/{expense_id}")
+    @DeleteMapping(path = "/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteExpense(@PathVariable("expense_id") Long expenseId, Principal principal) {
+    @Operation(summary = "Delete an expense", description = "Deletes an expense from the database")
+    public void deleteExpense(
+            @PathVariable("id") @Parameter(description = "ID of the expense to be deleted") Long expenseId,
+            Principal principal) {
         User user = userService.getUserByUsername(principal.getName());
         deleteExpenseUc.deleteExpense(user, expenseId);
     }
@@ -70,40 +82,46 @@ public class ExpenseController {
     // Method for getting all Expenses
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<Expense> getAllExpenses(@RequestParam(required = false) Integer year,
-            @RequestParam(required = false) Integer month,
-            @RequestParam(name = "category-id", required = false) Long categoryId,
-            @RequestParam(name = "shop-id", required = false) Long shopId,
+    @Operation(summary = "Get all expenses", description = "Fetches all expenses from the database")
+    public List<ExpenseDTO> getAllExpenses(
+            @RequestParam(required = false) @Parameter(description = "Year of the expenses") Integer year,
+            @RequestParam(required = false) @Parameter(description = "Month of the expenses") Integer month,
+            @RequestParam(name = "category-id", required = false) @Parameter(description = "Category ID of the expenses") Long categoryId,
+            @RequestParam(name = "shop-id", required = false) @Parameter(description = "Shop ID of the expenses") Long shopId,
             Principal principal) {
         User user = userService.getUserByUsername(principal.getName());
-        return viewAllExpensesUc.viewAllExpenses(user, year, month, categoryId, shopId);
+        return expenseMapper.toDto(viewAllExpensesUc.viewAllExpenses(user, year, month, categoryId, shopId));
     }
 
     // Method for getting an Expense by its ID
     @GetMapping(path = "/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Expense getExpenseById(@PathVariable Long id, Principal principal) {
+    @Operation(summary = "Get an expense", description = "Fetches the expense with the given id from the database")
+    public ExpenseDTO getExpenseById(@PathVariable @Parameter(description = "ID of the expense") Long id,
+            Principal principal) {
         User user = userService.getUserByUsername(principal.getName());
-        Expense expense = viewOneExpenseUc.viewOneExpense(user, id);
-
-        return expense;
+        return expenseMapper.toDto(viewOneExpenseUc.viewOneExpense(user, id));
     }
 
-    // TODO Method for updating an Expense
+    // Method for updating an Expense
     @PutMapping()
     @ResponseStatus(HttpStatus.OK)
-    public Expense updateExpense(@RequestBody Expense expense) {
-        return expenseService.updateExpense(expense);
+    @Operation(summary = "Update an expense", description = "Updates an expense in the database")
+    public ExpenseDTO updateExpense(@RequestBody Expense expense,
+            Principal principal) {
+        User user = userService.getUserByUsername(principal.getName());
+        return expenseMapper.toDto(editExpenseUc.editExpense(user, expense));
     }
 
     // Method for submitting an Expense
-    @PutMapping(path = "/submit/{expenseId}")
+    @PutMapping(path = "/submit/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Expense submitExpense(@PathVariable Long expenseId, Principal principal) {
-
+    @Operation(summary = "Submit an expense", description = "Submits an expense for approval")
+    public ExpenseDTO submitExpense(
+            @PathVariable @Parameter(description = "ID of the expense to be submitted") Long id,
+            Principal principal) {
         User user = userService.getUserByUsername(principal.getName());
-
-        return submitExpenseUc.submitExpense(expenseId, user);
+        return expenseMapper.toDto(submitExpenseUc.submitExpense(id, user));
     }
 
 }

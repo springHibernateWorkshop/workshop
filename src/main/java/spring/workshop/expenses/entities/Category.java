@@ -19,7 +19,6 @@ public class Category extends AbstractEntity {
     private Long id;
 
     @Column
-    @NonNull
     private String name;
 
     public Category() {

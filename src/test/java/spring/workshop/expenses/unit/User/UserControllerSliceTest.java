@@ -2,6 +2,7 @@ package spring.workshop.expenses.unit.User;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -19,9 +20,11 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import spring.workshop.expenses.controllers.UserController;
+import spring.workshop.expenses.dto.UserDTO;
 import spring.workshop.expenses.entities.Person;
 import spring.workshop.expenses.entities.Superior;
 import spring.workshop.expenses.entities.User;
+import spring.workshop.expenses.mapper.UserMapper;
 import spring.workshop.expenses.security.Role;
 import spring.workshop.expenses.services.EmployeeService;
 import spring.workshop.expenses.services.SuperiorService;
@@ -39,6 +42,9 @@ public class UserControllerSliceTest {
 
     @MockBean
     private UserService userServiceMock;
+
+    @MockBean
+    private UserMapper userMapperMock;
 
     @MockBean
     private CreateUserUcImpl createUserUcMock;
@@ -95,8 +101,9 @@ public class UserControllerSliceTest {
     public void testGetAllUsers() {
         // Given
         when(userServiceMock.getAllUsers()).thenReturn(List.of(new User(), new User(), new User()));
+        when(userMapperMock.toDto(anyList())).thenReturn(List.of(new UserDTO(), new UserDTO(), new UserDTO()));
         // When
-        ResponseEntity<List<User>> response = sut.getAllUsers();
+        ResponseEntity<List<UserDTO>> response = sut.getAllUsers();
         // Then
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(3, response.getBody().size());
@@ -106,15 +113,17 @@ public class UserControllerSliceTest {
     public void testGetUserById() {
         // Given
         Long id = 1L;
-
-        when(userServiceMock.getUserById(id)).thenReturn(new User(1L, "username", "pass", new Role("ROLE_SUPERIOR")));
+        User user = new User(1L, "username", "pass", new Role("ROLE_SUPERIOR"));
+        UserDTO userDto = new UserDTO();
+        userDto.setId(id);
+        userDto.setRole(new Role("ROLE_SUPERIOR"));
+        when(userServiceMock.getUserById(id)).thenReturn(user);
+        when(userMapperMock.toDto(user)).thenReturn(userDto);
         // When
-        ResponseEntity<User> response = sut.getUserById(id);
+        ResponseEntity<UserDTO> response = sut.getUserById(id);
         // Then
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(id, response.getBody().getId());
-        assertEquals("username", response.getBody().getUsername());
-        assertEquals("pass", response.getBody().getPassword());
         assertEquals("ROLE_SUPERIOR", response.getBody().getRole().getAuthority());
 
     }

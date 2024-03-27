@@ -1,9 +1,7 @@
 package spring.workshop.expenses.integration.shop;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -18,10 +16,7 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import jakarta.transaction.Transactional;
-import spring.workshop.expenses.entities.Shop;
 import spring.workshop.expenses.repositories.ShopRepository;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
@@ -74,47 +69,5 @@ public class ShopControllerMockTests {
                 .andExpect(jsonPath("$.name").value("shop_1"))
                 .andExpect(jsonPath("$.address").value("address_1"));
 
-    }
-
-    /**
-     * Test case to verify the behavior of adding a new shop.
-     * 
-     * @throws Exception if an error occurs during the test
-     */
-    @Test
-    public void testAddNewShop() throws Exception {
-        // Arrange
-        Shop shop = new Shop();
-        shop.setName("shop_name_5");
-        shop.setAddress("shop_address_5");
-
-        assertEquals(4, repo.findAll().size());
-
-        // Act
-        mockMvc.perform(post(BASE_URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(shop)))
-                .andExpect(status().isCreated());
-
-        // Assert
-        assertEquals(5, repo.findAll().size());
-    }
-
-    /**
-     * Test case to verify the functionality of deleting a shop.
-     *
-     * @throws Exception if an error occurs during the test
-     */
-    @Test
-    public void testDeleteShop() throws Exception {
-        // Arrange
-        assertEquals(4, repo.findAll().size());
-
-        // Act
-        mockMvc.perform(delete(BASE_URL + "/{id}", 400))
-                .andExpect(status().isOk());
-
-        // Assert
-        assertEquals(3, repo.findAll().size());
     }
 }

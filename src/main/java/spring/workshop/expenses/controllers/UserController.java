@@ -15,8 +15,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import spring.workshop.expenses.dto.UserDTO;
 import spring.workshop.expenses.entities.Person;
 import spring.workshop.expenses.entities.User;
+import spring.workshop.expenses.mapper.UserMapper;
 import spring.workshop.expenses.services.UserService;
 import spring.workshop.expenses.useCases.CreateUserUc;
 
@@ -28,11 +32,16 @@ public class UserController {
   private UserService userService;
 
   @Autowired
+  private UserMapper userMapper;
+
+  @Autowired
   private CreateUserUc createUserUc;
 
   @PostMapping()
-  public ResponseEntity<Person> addUser(@RequestBody User user, @RequestParam String name,
-      @RequestParam(name = "superior_id", required = false) Long superiorId) {
+  @Operation(summary = "Add a user", description = "Adds a new user to the database")
+  public ResponseEntity<Person> addUser(@RequestBody User user,
+      @RequestParam @Parameter(description = "Name of the person") String name,
+      @RequestParam(name = "superior_id", required = false) @Parameter(description = "ID of the superior") Long superiorId) {
     Person newUser = createUserUc.createUser(user, name, superiorId);
 
     return ResponseEntity
@@ -42,22 +51,27 @@ public class UserController {
         .body(newUser);
   }
 
+  // TODO
   @DeleteMapping(path = "/{id}")
-  public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+  @Operation(summary = "Delete a user", description = "Deletes a new user from the database")
+  public ResponseEntity<Void> deleteUser(
+      @PathVariable @Parameter(description = "ID of the user to be deleted") Long id) {
     userService.deleteUser(id);
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
   @GetMapping
-  public ResponseEntity<List<User>> getAllUsers() {
+  @Operation(summary = "Get all users", description = "Fetches all users from the database")
+  public ResponseEntity<List<UserDTO>> getAllUsers() {
     return ResponseEntity.status(HttpStatus.OK)
-        .body(userService.getAllUsers());
+        .body(userMapper.toDto(userService.getAllUsers()));
   }
 
   @GetMapping(path = "/{id}")
-  public ResponseEntity<User> getUserById(@PathVariable Long id) {
+  @Operation(summary = "Get a user", description = "Fetche the user with the given id from the database")
+  public ResponseEntity<UserDTO> getUserById(@PathVariable @Parameter(description = "ID of the user") Long id) {
     return ResponseEntity.status(HttpStatus.OK)
-        .body(userService.getUserById(id));
+        .body(userMapper.toDto(userService.getUserById(id)));
   }
 
 }
