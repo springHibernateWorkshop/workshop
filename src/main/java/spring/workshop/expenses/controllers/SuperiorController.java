@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
 import spring.workshop.expenses.dto.SuperiorDetailsDTO;
 import spring.workshop.expenses.mapper.SuperiorDetailsMapper;
 import spring.workshop.expenses.services.SuperiorService;
@@ -25,11 +26,13 @@ public class SuperiorController {
     private SuperiorDetailsMapper superiorDetailsMapper;
 
     @GetMapping
+    @Operation(summary = "Get all superiors", description = "Fetches all superiors from the database")
     public ResponseEntity<List<SuperiorDetailsDTO>> getAllSuperiors() {
         return new ResponseEntity<>(superiorDetailsMapper.toDto(superiorService.getAllSuperiors()), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Get a superior", description = "Fetche the superior with the given id from the database")
     public ResponseEntity<SuperiorDetailsDTO> getSuperior(@PathVariable Long id) {
         return new ResponseEntity<>(superiorDetailsMapper.toDto(superiorService.getSuperiorById(id)), HttpStatus.OK);
     }

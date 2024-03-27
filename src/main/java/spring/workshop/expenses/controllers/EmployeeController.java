@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
 import spring.workshop.expenses.dto.EmployeeDetailsDTO;
 import spring.workshop.expenses.mapper.EmployeeDetailsMapper;
 import spring.workshop.expenses.services.EmployeeService;
@@ -33,6 +34,7 @@ public class EmployeeController {
   // Method for reassigning an employee
   @PutMapping(path = "/{id}")
   @ResponseStatus(HttpStatus.OK)
+  @Operation(summary = "Reassign an employee", description = "Reassigns an employee to a new superior")
   public EmployeeDetailsDTO reassignEmployee(@PathVariable("id") Long employeeId,
       @RequestParam("superior-id") Long superiorId) {
     return employeeDetailsMapper.toDto(reassignEmployeeUc.reassignEmployee(employeeId, superiorId));
@@ -41,6 +43,7 @@ public class EmployeeController {
   // Method for getting all employees
   @GetMapping
   @ResponseStatus(HttpStatus.OK)
+  @Operation(summary = "Get all employees", description = "Fetches all employees from the database")
   public List<EmployeeDetailsDTO> getEmployees() {
     return employeeDetailsMapper.toDto(employeeService.getAllEmployees());
   }
@@ -48,6 +51,7 @@ public class EmployeeController {
   // Method for getting all employees
   @GetMapping(path = "/{id}")
   @ResponseStatus(HttpStatus.OK)
+  @Operation(summary = "Get an employee", description = "Fetche the employee with the given id from the database")
   public EmployeeDetailsDTO getEmployeeById(@PathVariable("id") Long employeeId) {
     return employeeDetailsMapper.toDto(employeeService.getEmployeeById(employeeId));
   }

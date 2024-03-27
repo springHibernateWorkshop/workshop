@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
 import spring.workshop.expenses.entities.Category;
 import spring.workshop.expenses.services.CategoryService;
 
@@ -20,11 +21,13 @@ public class CategoryController {
   private CategoryService categoryService;
 
   @GetMapping()
+  @Operation(summary = "Get all categories", description = "Fetches all categories from the database")
   public List<Category> getAllCategories() {
     return categoryService.findAll();
   }
 
   @GetMapping(path = "/{id}")
+  @Operation(summary = "Get a category", description = "Fetche the category with the given id from the database")
   public ResponseEntity<Category> getCategoryById(@PathVariable Long id) {
     return ResponseEntity.ok().body(categoryService.findById(id));
   }

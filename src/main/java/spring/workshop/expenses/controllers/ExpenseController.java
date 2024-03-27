@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.v3.oas.annotations.Operation;
 import spring.workshop.expenses.dto.ExpenseDTO;
 import spring.workshop.expenses.entities.Expense;
 import spring.workshop.expenses.entities.User;
@@ -59,6 +60,7 @@ public class ExpenseController {
     // Method for creating an Expense
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @Operation(summary = "Create an expense", description = "Creates a new expense in the database")
     public ExpenseDTO createExpense(@RequestBody Expense expense, Principal principal) {
         User user = userService.getUserByUsername(principal.getName());
         return expenseMapper.toDto(createExpenseUc.createExpense(user, expense));
@@ -67,6 +69,7 @@ public class ExpenseController {
     // Method for deleting an Expense
     @DeleteMapping(path = "/{expense_id}")
     @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Delete an expense", description = "Deletes an expense from the database")
     public void deleteExpense(@PathVariable("expense_id") Long expenseId, Principal principal) {
         User user = userService.getUserByUsername(principal.getName());
         deleteExpenseUc.deleteExpense(user, expenseId);
@@ -75,6 +78,7 @@ public class ExpenseController {
     // Method for getting all Expenses
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Get all expenses", description = "Fetches all expenses from the database")
     public List<ExpenseDTO> getAllExpenses(@RequestParam(required = false) Integer year,
             @RequestParam(required = false) Integer month,
             @RequestParam(name = "category-id", required = false) Long categoryId,
@@ -87,6 +91,7 @@ public class ExpenseController {
     // Method for getting an Expense by its ID
     @GetMapping(path = "/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Get an expense", description = "Fetches the expense with the given id from the database")
     public ExpenseDTO getExpenseById(@PathVariable Long id, Principal principal) {
         User user = userService.getUserByUsername(principal.getName());
         return expenseMapper.toDto(viewOneExpenseUc.viewOneExpense(user, id));
@@ -95,6 +100,7 @@ public class ExpenseController {
     // Method for updating an Expense
     @PutMapping()
     @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Update an expense", description = "Updates an expense in the database")
     public ExpenseDTO updateExpense(@RequestBody Expense expense, Principal principal) {
         User user = userService.getUserByUsername(principal.getName());
         return expenseMapper.toDto(editExpenseUc.editExpense(user, expense));
@@ -103,6 +109,7 @@ public class ExpenseController {
     // Method for submitting an Expense
     @PutMapping(path = "/submit/{expenseId}")
     @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Submit an expense", description = "Submits an expense for approval")
     public ExpenseDTO submitExpense(@PathVariable Long expenseId, Principal principal) {
         User user = userService.getUserByUsername(principal.getName());
         return expenseMapper.toDto(submitExpenseUc.submitExpense(expenseId, user));
