@@ -22,7 +22,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import spring.workshop.expenses.controllers.ExpenseController;
-import spring.workshop.expenses.entities.Expense;
+import spring.workshop.expenses.dto.ExpenseDTO;
 import spring.workshop.expenses.services.ExpenseService;
 import spring.workshop.expenses.services.UserService;
 
@@ -55,9 +55,9 @@ public class ExpenseControllerFilterIntegrationTest {
 
         @Test
         public void testGetAllExpensesNoFilter() {
-                ParameterizedTypeReference<List<Expense>> responseType = new ParameterizedTypeReference<List<Expense>>() {
+                ParameterizedTypeReference<List<ExpenseDTO>> responseType = new ParameterizedTypeReference<List<ExpenseDTO>>() {
                 };
-                ResponseEntity<List<Expense>> response = restTemplate.withBasicAuth("victoria", "password").exchange(
+                ResponseEntity<List<ExpenseDTO>> response = restTemplate.withBasicAuth("victoria", "password").exchange(
                                 BASE_URL, HttpMethod.GET,
                                 HttpEntity.EMPTY, responseType);
                 assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -110,6 +110,20 @@ public class ExpenseControllerFilterIntegrationTest {
                 // then
                 assertEquals(HttpStatus.OK, response.getStatusCode());
                 assertEquals(2, response.getBody().size());
+        }
+
+        @Test
+        public void testGetAllExpensesForEmployee() {
+                // given
+                String employeeId = "100";
+                UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(BASE_URL)
+                                .queryParam("employee-id", employeeId);
+                // when
+                ResponseEntity<List> response = restTemplate.withBasicAuth("bartosz", "password")
+                                .getForEntity(builder.toUriString(), List.class);
+                // then
+                assertEquals(HttpStatus.OK, response.getStatusCode());
+                assertEquals(3, response.getBody().size());
         }
 
         @Test

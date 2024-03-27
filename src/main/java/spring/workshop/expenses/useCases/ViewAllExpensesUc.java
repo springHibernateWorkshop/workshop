@@ -7,6 +7,7 @@ import spring.workshop.expenses.entities.User;
 
 public interface ViewAllExpensesUc {
 
-    List<Expense> viewAllExpenses(User user, Integer year, Integer month, Long categoryId, Long shopId);
+    List<Expense> viewAllExpenses(User user, Integer year, Integer month, Long categoryId, Long shopId,
+            Long employeeId);
 
 }

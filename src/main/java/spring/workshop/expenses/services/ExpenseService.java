@@ -18,6 +18,7 @@ public interface ExpenseService {
 
     public List<Expense> getExpenseByEmployee(Employee employee);
 
-    public List<Expense> filter(List<Expense> expenses, Integer year, Integer month, Long categoryId, Long shopId);
+    public List<Expense> filter(List<Expense> expenses, Integer year, Integer month, Long categoryId, Long shopId,
+            Long employeeId);
 
 }

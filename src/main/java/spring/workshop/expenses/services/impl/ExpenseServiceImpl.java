@@ -16,14 +16,10 @@ import spring.workshop.expenses.exceptions.ResourceNotFoundException;
 import spring.workshop.expenses.repositories.AbstractRepositoryHelper;
 import spring.workshop.expenses.repositories.ExpenseRepository;
 import spring.workshop.expenses.services.ExpenseService;
-import spring.workshop.expenses.services.UserService;
 
 @Service
 public class ExpenseServiceImpl implements ExpenseService {
     private static final Logger LOG = LoggerFactory.getLogger(ExpenseServiceImpl.class);
-
-    @Autowired
-    private UserService userService;
 
     private ExpenseRepository expenseRepository;
 
@@ -87,8 +83,10 @@ public class ExpenseServiceImpl implements ExpenseService {
     }
 
     @Override
-    public List<Expense> filter(List<Expense> expenses, Integer year, Integer month, Long categoryId, Long shopId) {
+    public List<Expense> filter(List<Expense> expenses, Integer year, Integer month, Long categoryId, Long shopId,
+            Long employeeId) {
         List<Expense> filter = expenses.stream()
+                .filter(e -> employeeId == null || e.getEmployee().getId().equals(employeeId))
                 .filter(e -> categoryId == null || e.getCategory().getId().equals(categoryId))
                 .filter(e -> shopId == null || e.getShop().getId().equals(shopId))
                 .filter(e -> {

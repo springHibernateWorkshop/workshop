@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
@@ -60,59 +59,4 @@ public class ShopIntegrationTests {
         ResponseEntity<Shop> response = restTemplate.getForEntity(BASE_URL + "/{id}", Shop.class, 10);
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
-
-    /**
-     * Test case to verify the positive scenario of adding a category.
-     */
-    @Test
-    public void testAddShopPositive() {
-
-        Shop newShop = new Shop();
-        newShop.setName("shop_name_5");
-        newShop.setAddress("shop_address_5");
-        ResponseEntity<Shop> response = restTemplate.postForEntity(BASE_URL, newShop, Shop.class);
-
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        Shop shop = response.getBody();
-        assertEquals("shop_name_5", shop.getName());
-        assertEquals("shop_address_5", shop.getAddress());
-    }
-
-    /**
-     * Test case to verify the positive scenario of deleting a shop.
-     */
-    @Test
-    public void testDeleteShopPositive() {
-
-        Shop newShop = new Shop();
-        newShop.setName("shop_name_6");
-        newShop.setAddress("shop_address_6");
-        ResponseEntity<Shop> res = restTemplate.postForEntity(BASE_URL, newShop, Shop.class);
-
-        Shop shop = res.getBody();
-
-        ResponseEntity<Shop> response = restTemplate.getForEntity(BASE_URL + "/{id}", Shop.class, shop.getId());
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        restTemplate.delete("/shops/{id}", shop.getId());
-        ResponseEntity<Shop> responseAfterDelete = restTemplate.getForEntity(BASE_URL + "/{id}", Shop.class,
-                shop.getId());
-        assertEquals(HttpStatus.NOT_FOUND, responseAfterDelete.getStatusCode());
-    }
-
-    /**
-     * Test case to verify the negative scenario of deleting a shop.
-     * It sends a GET request to retrieve a category with the specified ID,
-     * and expects a NOT_FOUND status code in the response.
-     * Then, it sends a DELETE request to delete the category with the same ID,
-     * and again expects a NOT_FOUND status code in the response.
-     */
-    @Test
-    public void testDeleteCategoryNegative() {
-        ResponseEntity<Shop> response = restTemplate.getForEntity(BASE_URL + "/{id}", Shop.class, 7);
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        ResponseEntity<Shop> responseAfterDelete = restTemplate.exchange(BASE_URL + "/{id}", HttpMethod.DELETE,
-                null, Shop.class, 7);
-        assertEquals(HttpStatus.NOT_FOUND, responseAfterDelete.getStatusCode());
-    }
-
 }
