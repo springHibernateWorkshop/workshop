@@ -72,7 +72,6 @@ public class WebSecurityConfig {
 
 	@Bean
 	public UserDetailsService userDetailsServiceFromDB(PasswordEncoder passwordEncoder, DataSource dataSource) {
-		String passString = passwordEncoder.encode("password");
 		JdbcUserDetailsManager userDetailsManager = new JdbcUserDetailsManager(dataSource);
 		userDetailsManager.setUsersByUsernameQuery("SELECT username, password, true FROM user_tab WHERE username = ?");
 		userDetailsManager.setAuthoritiesByUsernameQuery(

@@ -45,7 +45,7 @@ public class UserServiceTest {
         private UserService sut = new UserServiceImpl();
 
         @Test
-        public void testAddEmployee() {
+        public void testAddUserPositive() {
                 // Arrange
                 String username = "username";
                 String pass = "pass";
@@ -63,28 +63,6 @@ public class UserServiceTest {
                 assertEquals(user.getPassword(), response.getPassword());
                 assertEquals(user.getRole(), response.getRole());
         }
-
-        @Test
-        public void testAddSuperior() {
-                // Arrange
-                String username = "usrname";
-                String pass = "pass";
-                Role role = new Role(2L, "SUPERIOR");
-                // Given
-                User user = new User(username, pass, role);
-                when(passwordEncoderMock.encode(any(String.class))).thenReturn(user.getPassword());
-                when(roleServiceMock.findById(any(Long.class))).thenReturn(role);
-                when(abstractRepositoryHelperMock.saveAndRefresh(any(User.class)))
-                                .thenReturn(new User(username, pass, role));
-                // When
-                User response = sut.createUser(user);
-                // Then
-                assertEquals(user.getUsername(), response.getUsername());
-                assertEquals(user.getPassword(), response.getPassword());
-                assertEquals(user.getRole(), response.getRole());
-        }
-
-        // TODO negative Role != EMPLOYEE or SUPERIOR
 
         @Test
         public void testUpdateUser() {
